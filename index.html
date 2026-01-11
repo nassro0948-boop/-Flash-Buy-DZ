@@ -3,99 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy DZ | المتجر الرسمي</title>
+    <title>Flash-Buy DZ | متجر نصرو الرسمي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --gold: #D4AF37; --black: #0a0a0a; --dark: #1a1a1a; --green: #2ecc71; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--black); color: white; }
+        body { margin: 0; font-family: 'Cairo', sans-serif; background: #f4f4f4; color: #333; }
         
-        /* القائمة */
-        nav { background: #000; border-bottom: 2px solid var(--gold); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        /* الهيدر */
+        header { background: var(--black); color: white; padding: 15px 5%; border-bottom: 3px solid var(--gold); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .logo { font-size: 24px; font-weight: 900; color: var(--gold); text-decoration: none; }
-        
-        /* البحث */
-        .search-box { background: var(--dark); padding: 20px 5%; text-align: center; }
-        .search-bar { width: 100%; max-width: 600px; padding: 12px 20px; border-radius: 25px; border: 2px solid var(--gold); background: #000; color: white; outline: none; }
+
+        /* شريط البحث */
+        .search-area { background: var(--dark); padding: 20px; text-align: center; }
+        .search-input { width: 80%; max-width: 500px; padding: 12px; border-radius: 25px; border: 2px solid var(--gold); outline: none; }
 
         /* الشبكة */
-        .container { padding: 30px 5%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .card { background: var(--dark); border-radius: 12px; padding: 15px; border: 1px solid #222; text-align: center; transition: 0.3s; }
-        .card:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
-        .category { font-size: 12px; color: var(--gold); display: block; margin-top: 10px; }
-        .p-name { font-size: 16px; margin: 10px 0; height: 40px; overflow: hidden; font-weight: bold; }
-        .p-price { color: var(--green); font-size: 20px; font-weight: bold; }
+        .container { padding: 20px 5%; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
         
-        .buy-btn { width: 100%; padding: 10px; background: var(--gold); border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        /* بطاقة المنتج */
+        .product-card { background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border: 1px solid #eee; cursor: pointer; transition: 0.3s; text-align: center; }
+        .product-card:hover { transform: scale(1.02); border-color: var(--gold); }
+        .product-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
+        .category { font-size: 12px; color: #777; margin-top: 10px; display: block; }
+        .product-name { font-size: 17px; font-weight: bold; margin: 10px 0; color: #222; }
+        .price { color: var(--green); font-size: 22px; font-weight: 800; display: block; }
+
+        /* نافذة الشراء (المودال) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; border-top: 5px solid var(--gold); }
+        .close-btn { background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<nav>
+<header>
     <a href="#" class="logo">FLASH-BUY DZ ⚡</a>
-    <div style="font-size: 14px;">9000+ منتج متوفر</div>
-</nav>
+    <div style="font-size: 12px; background: var(--gold); color: black; padding: 5px 10px; border-radius: 20px; font-weight: bold;">+9000 منتج</div>
+</header>
 
-<div class="search-box">
-    <input type="text" id="searchInput" class="search-bar" placeholder="ابحث عن ملابس، أدوات منزلية، أو زينة..." onkeyup="search()">
+<div class="search-area">
+    <input type="text" id="srch" class="search-input" placeholder="ابحث عن ملابس، أدوات مطبخ، ديكور..." onkeyup="filter()">
 </div>
 
 <div class="container">
-    <div class="grid" id="productGrid">
+    <div class="grid" id="box">
         </div>
 </div>
 
+<div class="modal" id="orderModal">
+    <div class="modal-content">
+        <h2 id="modalTitle" style="color:#222"></h2>
+        <p style="color:#666">تأكيد طلب الشراء عبر بريدي موب</p>
+        <div style="background:#f9f9f9; padding:15px; border:1px dashed var(--gold); font-size:1.2rem; font-weight:bold; margin:15px 0;">
+            00799999000012345678
+        </div>
+        <p style="font-size:13px">بعد الدفع، يرجى إرسال الوصل لتأكيد الشحن.</p>
+        <button class="close-btn" onclick="closeModal()">إغلاق</button>
+    </div>
+</div>
+
 <script>
-    // بضاعة حقيقية ومعقولة يا نصرو
-    const realProducts = [
-        // ملابس
-        { name: "طقم رياضي رجالي (Survêtement)", price: "5,800 DA", cat: "ملابس", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300" },
-        { name: "حذاء نايكي Air Force 1", price: "12,500 DA", cat: "ملابس", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300" },
-        { name: "فستان سهرة عصري", price: "7,500 DA", cat: "ملابس", img: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=300" },
-        
-        // أدوات منزلية
-        { name: "خلاط كهربائي (Mixeur) 3 في 1", price: "4,200 DA", cat: "أدوات منزلية", img: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=300" },
-        { name: "طقم أواني طهي 12 قطعة", price: "18,000 DA", cat: "أدوات منزلية", img: "https://images.unsplash.com/photo-1584990344119-a7660d629931?w=300" },
-        { name: "مكنسة كهربائية ذكية", price: "22,000 DA", cat: "أدوات منزلية", img: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=300" },
-        
-        // زينة وديكور
-        { name: "طقم إضاءة LED للغرف", price: "1,500 DA", cat: "زينة", img: "https://images.unsplash.com/photo-1550537687-c91072c4792d?w=300" },
-        { name: "ساعة حائط فخمة", price: "3,200 DA", cat: "زينة", img: "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?w=300" },
-        { name: "فازة كريستال للصالون", price: "4,500 DA", cat: "زينة", img: "https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=300" }
+    // السلع الحقيقية التي طلبتها يا نصرو
+    const products = [
+        { name: "سيرفيتومو رجالي قطن", price: "5,500 DA", cat: "ملابس", img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400" },
+        { name: "طقم أواني غرانيت 10 قطع", price: "16,500 DA", cat: "أدوات منزلية", img: "https://images.unsplash.com/photo-1584990344119-a7660d629931?w=400" },
+        { name: "ساعة حائط ليد ديكور", price: "2,800 DA", cat: "زينة", img: "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?w=400" },
+        { name: "خلاط كهربائي سلفر كريست", price: "4,900 DA", cat: "أدوات منزلية", img: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=400" },
+        { name: "حذاء رياضي Air Max", price: "8,900 DA", cat: "ملابس", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" },
+        { name: "طقم إضاءة ليد للغرف", price: "1,200 DA", cat: "زينة", img: "https://images.unsplash.com/photo-1550537687-c91072c4792d?w=400" }
     ];
 
-    // لتحدي الـ 9000، سنكرر هذه المنتجات برمجياً بأسماء مختلفة
-    let finalDatabase = [];
-    for(let i=0; i<1000; i++) {
-        realProducts.forEach(p => {
-            finalDatabase.push({...p, name: p.name + " " + (finalDatabase.length + 1)});
-        });
+    // تكرار السلع للوصول للعدد الضخم
+    let data = [];
+    for(let i=0; i<1500; i++) {
+        products.forEach(p => data.push({...p, id: data.length}));
     }
 
-    function render(list) {
-        const grid = document.getElementById('productGrid');
-        grid.innerHTML = "";
-        list.slice(0, 50).forEach(p => {
-            grid.innerHTML += `
-                <div class="card">
-                    <img src="${p.img}">
-                    <span class="category">${p.cat}</span>
-                    <div class="p-name">${p.name}</div>
-                    <div class="p-price">${p.price}</div>
-                    <button class="buy-btn">طلب عبر بريدي موب</button>
+    function show(list) {
+        const box = document.getElementById('box');
+        box.innerHTML = "";
+        list.slice(0, 60).forEach(item => {
+            box.innerHTML += `
+                <div class="product-card" onclick="openModal('${item.name}')">
+                    <img src="${item.img}">
+                    <span class="category">${item.cat}</span>
+                    <div class="product-name">${item.name}</div>
+                    <span class="price">${item.price}</span>
                 </div>
             `;
         });
     }
 
-    function search() {
-        let val = document.getElementById('searchInput').value.toLowerCase();
-        let filtered = finalDatabase.filter(p => p.name.toLowerCase().includes(val) || p.cat.toLowerCase().includes(val));
-        render(filtered);
+    function openModal(name) {
+        document.getElementById('modalTitle').innerText = name;
+        document.getElementById('orderModal').style.display = 'flex';
     }
 
-    window.onload = () => render(finalDatabase);
+    function closeModal() {
+        document.getElementById('orderModal').style.display = 'none';
+    }
+
+    function filter() {
+        let val = document.getElementById('srch').value.toLowerCase();
+        let f = data.filter(p => p.name.toLowerCase().includes(val));
+        show(f);
+    }
+
+    window.onload = () => show(data);
 </script>
 
 </body>
