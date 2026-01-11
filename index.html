@@ -3,96 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy DZ | متجر نصرو الرسمي</title>
+    <title>Flash-Buy DZ | النسخة الاحترافية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --black: #0a0a0a; --dark: #1a1a1a; --green: #2ecc71; }
-        body { margin: 0; font-family: 'Cairo', sans-serif; background: #f4f4f4; color: #333; }
+        :root { --gold: #D4AF37; --black: #0a0a0a; --dark: #1a1a1a; --green: #2ecc71; --gray: #f8f9fa; }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--gray); color: #333; }
         
-        /* الهيدر */
-        header { background: var(--black); color: white; padding: 15px 5%; border-bottom: 3px solid var(--gold); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        /* Navbar */
+        nav { background: var(--black); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--gold); }
         .logo { font-size: 24px; font-weight: 900; color: var(--gold); text-decoration: none; }
-
-        /* شريط البحث */
-        .search-area { background: var(--dark); padding: 20px; text-align: center; }
-        .search-input { width: 80%; max-width: 500px; padding: 12px; border-radius: 25px; border: 2px solid var(--gold); outline: none; }
-
-        /* الشبكة */
-        .container { padding: 20px 5%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
         
-        /* بطاقة المنتج */
-        .product-card { background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border: 1px solid #eee; cursor: pointer; transition: 0.3s; text-align: center; }
-        .product-card:hover { transform: scale(1.02); border-color: var(--gold); }
-        .product-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
-        .category { font-size: 12px; color: #777; margin-top: 10px; display: block; }
-        .product-name { font-size: 17px; font-weight: bold; margin: 10px 0; color: #222; }
-        .price { color: var(--green); font-size: 22px; font-weight: 800; display: block; }
+        /* Search Section */
+        .search-container { background: var(--dark); padding: 30px 5%; text-align: center; }
+        .search-bar { width: 90%; max-width: 700px; padding: 15px 25px; border-radius: 50px; border: 2px solid var(--gold); font-size: 18px; outline: none; }
 
-        /* نافذة الشراء (المودال) */
+        /* Grid */
+        .container { padding: 40px 5%; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
+        
+        /* Card Style */
+        .product-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #eee; cursor: pointer; position: relative; }
+        .product-card:hover { transform: translateY(-10px); border-color: var(--gold); }
+        .image-box { width: 100%; height: 230px; background: #eee; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .product-card img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .info { padding: 15px; text-align: right; }
+        .tag { color: var(--gold); font-size: 12px; font-weight: bold; }
+        .name { font-size: 18px; font-weight: bold; margin: 8px 0; color: #222; height: 45px; overflow: hidden; }
+        .price { color: var(--green); font-size: 22px; font-weight: 800; }
+        
+        /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; border-top: 5px solid var(--gold); }
-        .close-btn { background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+        .modal-content { background: white; padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 450px; border-top: 6px solid var(--gold); }
     </style>
 </head>
 <body>
 
-<header>
+<nav>
     <a href="#" class="logo">FLASH-BUY DZ ⚡</a>
-    <div style="font-size: 12px; background: var(--gold); color: black; padding: 5px 10px; border-radius: 20px; font-weight: bold;">+9000 منتج</div>
-</header>
+    <div style="color:white"><i class="fas fa-shopping-cart"></i> السلة</div>
+</nav>
 
-<div class="search-area">
-    <input type="text" id="srch" class="search-input" placeholder="ابحث عن ملابس، أدوات مطبخ، ديكور..." onkeyup="filter()">
+<div class="search-container">
+    <input type="text" id="srch" class="search-bar" placeholder="ابحث في 9000 منتج (أدوات منزلية، ملابس، زينة...)" onkeyup="filter()">
 </div>
 
 <div class="container">
-    <div class="grid" id="box">
+    <div class="grid" id="main-grid">
         </div>
 </div>
 
 <div class="modal" id="orderModal">
     <div class="modal-content">
-        <h2 id="modalTitle" style="color:#222"></h2>
-        <p style="color:#666">تأكيد طلب الشراء عبر بريدي موب</p>
-        <div style="background:#f9f9f9; padding:15px; border:1px dashed var(--gold); font-size:1.2rem; font-weight:bold; margin:15px 0;">
-            00799999000012345678
-        </div>
-        <p style="font-size:13px">بعد الدفع، يرجى إرسال الوصل لتأكيد الشحن.</p>
-        <button class="close-btn" onclick="closeModal()">إغلاق</button>
+        <h2 id="modalTitle">اسم المنتج</h2>
+        <p>لحجز الطلب، يرجى تحويل العربون عبر بريدي موب:</p>
+        <div style="background:#000; color:var(--gold); padding:20px; font-size:1.4rem; font-weight:bold; border-radius:10px; margin:20px 0;">00799999000012345678</div>
+        <button onclick="closeModal()" style="background:#e74c3c; color:white; border:none; padding:12px 30px; border-radius:8px; cursor:pointer;">إغلاق</button>
     </div>
 </div>
 
 <script>
-    // السلع الحقيقية التي طلبتها يا نصرو
-    const products = [
-        { name: "سيرفيتومو رجالي قطن", price: "5,500 DA", cat: "ملابس", img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400" },
-        { name: "طقم أواني غرانيت 10 قطع", price: "16,500 DA", cat: "أدوات منزلية", img: "https://images.unsplash.com/photo-1584990344119-a7660d629931?w=400" },
-        { name: "ساعة حائط ليد ديكور", price: "2,800 DA", cat: "زينة", img: "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?w=400" },
-        { name: "خلاط كهربائي سلفر كريست", price: "4,900 DA", cat: "أدوات منزلية", img: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=400" },
-        { name: "حذاء رياضي Air Max", price: "8,900 DA", cat: "ملابس", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" },
-        { name: "طقم إضاءة ليد للغرف", price: "1,200 DA", cat: "زينة", img: "https://images.unsplash.com/photo-1550537687-c91072c4792d?w=400" }
+    // بيانات حقيقية ومنوعة لضمان عدم التكرار المزعج
+    const rawData = [
+        { n: "خلاط كهربائي عالي القوة", p: "4,500 DA", c: "أدوات منزلية", i: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=400" },
+        { n: "طقم سكاكين احترافي", p: "3,200 DA", c: "أدوات منزلية", i: "https://images.unsplash.com/photo-1593611664162-dd0df562cc49?w=400" },
+        { n: "ساعة ذكية Ultra النسخة الجديدة", p: "6,800 DA", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" },
+        { n: "حذاء رياضي Air فخم", p: "9,500 DA", c: "ملابس", i: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" },
+        { n: "حقيبة سفر جلدية كبيرة", p: "12,000 DA", c: "ملابس", i: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400" },
+        { n: "طقم إضاءة ليد ديكور", p: "1,800 DA", c: "زينة", i: "https://images.unsplash.com/photo-1550537687-c91072c4792d?w=400" },
+        { n: "ماكينة قهوة اسبريسو", p: "18,500 DA", c: "أدوات منزلية", i: "https://images.unsplash.com/photo-1585336261022-69c66d11fe6d?w=400" },
+        { n: "عطر رجالي ملكي 100مل", p: "4,200 DA", c: "زينة", i: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400" },
+        { n: "سماعات بلوتوث عازلة للصوت", p: "5,500 DA", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" },
+        { n: "طقم أواني طبخ غرانيت", p: "22,000 DA", c: "أدوات منزلية", i: "https://images.unsplash.com/photo-1584990344119-a7660d629931?w=400" }
     ];
 
-    // تكرار السلع للوصول للعدد الضخم
-    let data = [];
-    for(let i=0; i<1500; i++) {
-        products.forEach(p => data.push({...p, id: data.length}));
+    // توليد 9000 منتج بأسماء مختلفة لتجنب التكرار البحت
+    let allProducts = [];
+    for(let i=1; i<=9000; i++) {
+        let template = rawData[i % rawData.length];
+        allProducts.push({
+            name: template.n + " موديل " + i,
+            price: template.p,
+            cat: template.c,
+            img: template.i
+        });
     }
 
-    function show(list) {
-        const box = document.getElementById('box');
-        box.innerHTML = "";
-        list.slice(0, 60).forEach(item => {
-            box.innerHTML += `
-                <div class="product-card" onclick="openModal('${item.name}')">
-                    <img src="${item.img}">
-                    <span class="category">${item.cat}</span>
-                    <div class="product-name">${item.name}</div>
-                    <span class="price">${item.price}</span>
+    function render(list) {
+        const grid = document.getElementById('main-grid');
+        grid.innerHTML = "";
+        list.slice(0, 80).forEach(p => {
+            grid.innerHTML += `
+                <div class="product-card" onclick="openModal('${p.name}')">
+                    <div class="image-box"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/300?text=Flash-Buy+DZ'"></div>
+                    <div class="info">
+                        <span class="tag">${p.cat}</span>
+                        <div class="name">${p.name}</div>
+                        <div class="price">${p.price}</div>
+                    </div>
                 </div>
             `;
         });
+    }
+
+    function filter() {
+        let val = document.getElementById('srch').value.toLowerCase();
+        let filtered = allProducts.filter(p => p.name.toLowerCase().includes(val) || p.cat.toLowerCase().includes(val));
+        render(filtered);
     }
 
     function openModal(name) {
@@ -100,17 +117,9 @@
         document.getElementById('orderModal').style.display = 'flex';
     }
 
-    function closeModal() {
-        document.getElementById('orderModal').style.display = 'none';
-    }
+    function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
 
-    function filter() {
-        let val = document.getElementById('srch').value.toLowerCase();
-        let f = data.filter(p => p.name.toLowerCase().includes(val));
-        show(f);
-    }
-
-    window.onload = () => show(data);
+    window.onload = () => render(allProducts);
 </script>
 
 </body>
