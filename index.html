@@ -3,87 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إمبراطورية نصرو الملكية 👑</title>
+    <title>Flash-Buy DZ | النسخة الاحترافية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #FFD700; --dark-bg: #050505; --card-bg: #121212; --accent: #00d2ff; }
-        body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--dark-bg); color: white; overflow-x: hidden; }
+        :root { --gold: #C5A023; --dark: #0f0f0f; --card: #1a1a1a; --text: #e0e0e0; }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: var(--text); overflow-x: hidden; }
 
-        /* شاشة المفاجأة الأولى */
-        #loading-screen {
-            position: fixed; inset: 0; background: black; z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: 1.5s cubic-bezier(0.7, 0, 0.3, 1);
-        }
-        .mystery-box { width: 100px; height: 100px; border: 5px solid var(--gold); border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; }
+        /* شاشة التحميل */
+        #loader { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: 1s; }
+        .loader-circle { width: 60px; height: 60px; border: 4px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* الهيدر المتطور */
-        header { 
-            padding: 25px 5%; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000;
+        header { padding: 15px 5%; background: rgba(0,0,0,0.9); border-bottom: 2px solid var(--gold); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 28px; font-weight: bold; color: var(--gold); text-decoration: none; text-shadow: 0 0 10px rgba(197, 160, 35, 0.5); }
+
+        /* بنر إعلاني لملء الصفحة الرئيسية */
+        .promo-banner { 
+            background: linear-gradient(45deg, #1a1a1a, #2c2c2c); margin: 20px 5%; padding: 40px; 
+            border-radius: 20px; text-align: center; border: 1px dashed var(--gold);
+            animation: fadeIn 1s;
         }
-        .logo { font-size: 32px; font-weight: 900; color: var(--gold); text-shadow: 0 0 15px var(--gold); text-decoration: none; letter-spacing: 2px; }
+        .promo-banner h2 { color: var(--gold); margin: 0; font-size: 2rem; }
 
-        /* قسم السحر */
-        .hero { padding: 80px 5%; text-align: center; background: linear-gradient(to bottom, #050505, #1a1a2e); }
-        .search-wrapper { position: relative; max-width: 700px; margin: 0 auto; }
-        .search-input { 
-            width: 100%; padding: 20px 40px; border-radius: 50px; border: 1px solid var(--gold);
-            background: rgba(255,255,255,0.05); color: white; font-size: 20px; outline: none;
-            transition: 0.5s; text-align: center;
+        .search-area { padding: 30px 5%; text-align: center; }
+        .search-input { width: 80%; max-width: 500px; padding: 15px 25px; border-radius: 50px; border: 1px solid var(--gold); background: #000; color: white; outline: none; font-size: 18px; }
+
+        .container { padding: 20px 5%; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+
+        .card { 
+            background: var(--card); border-radius: 15px; overflow: hidden; 
+            transition: 0.4s; cursor: pointer; border: 1px solid #333;
         }
-        .search-input:focus { background: rgba(255,255,255,0.1); box-shadow: 0 0 40px rgba(255, 215, 0, 0.4); }
-
-        /* شبكة السلع الحقيقية */
-        .container { padding: 50px 5%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 35px; }
-
-        .item-card {
-            background: var(--card-bg); border-radius: 25px; padding: 15px;
-            border: 1px solid rgba(255,215,0,0.1); transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative; overflow: hidden; cursor: pointer;
-        }
-        .item-card:hover { transform: scale(1.08) translateY(-10px); border-color: var(--gold); box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
-        .item-card img { width: 100%; height: 260px; object-fit: cover; border-radius: 20px; transition: 0.8s; }
-        .item-card:hover img { transform: scale(1.1); filter: brightness(1.2); }
-
-        .price-badge { background: var(--gold); color: black; padding: 5px 15px; border-radius: 50px; font-weight: 900; font-size: 1.2rem; }
+        .card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card img { width: 100%; height: 220px; object-fit: cover; }
         
-        /* النافذة المنبثقة (المفاجأة التفاعلية) */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-        .modal-content { 
-            background: white; color: black; padding: 40px; border-radius: 35px; 
-            max-width: 450px; width: 90%; text-align: center; 
-            border: 10px solid var(--gold); transform: translateY(100px); opacity: 0; transition: 0.5s;
-        }
-        .modal.active { display: flex; }
-        .modal.active .modal-content { transform: translateY(0); opacity: 1; }
-        
-        .rip-card { background: #000; color: var(--gold); padding: 25px; border-radius: 20px; font-size: 24px; font-weight: bold; margin: 25px 0; border: 2px solid var(--gold); }
-        .close-btn { background: #ff4757; color: white; border: none; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-weight: bold; }
+        .card-body { padding: 15px; text-align: center; }
+        .card-title { font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; height: 50px; overflow: hidden; }
+        .card-price { color: #4CAF50; font-size: 1.4rem; font-weight: 800; }
+
+        /* نافذة الدفع */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: white; color: black; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; }
+        .rip-box { background: #eee; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; margin: 15px 0; border: 2px solid var(--gold); }
+        .btn-close { background: #f44336; color: white; border: none; padding: 10px 30px; border-radius: 8px; cursor: pointer; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div id="loading-screen">
-    <div class="mystery-box"></div>
-    <h1 style="color: var(--gold); margin-top: 20px; letter-spacing: 5px;">FLASH-BUY DZ</h1>
-    <p>بصمة نصرو الإمبراطور...</p>
-</div>
+<div id="loader"><div class="loader-circle"></div></div>
 
 <header>
-    <a href="#" class="logo">FLASH-BUY⚡</a>
-    <div style="color: var(--gold); font-weight: bold;"><i class="fas fa-bolt"></i> نسخة 2026 الخاصة</div>
+    <a href="#" class="logo">FLASH-BUY ⚡</a>
+    <div style="font-size: 14px;"><i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> الجزائر العاصمة</div>
 </header>
 
-<div class="hero">
-    <h1 style="font-size: 3rem; margin-bottom: 30px;">متجر نصرو الكبير 💎</h1>
-    <div class="search-wrapper">
-        <input type="text" id="srch" class="search-input" placeholder="ابحث في الكتالوج الضخم..." onkeyup="filter()">
-    </div>
+<div class="promo-banner">
+    <h2>تخفيضات الشتاء الكبرى ❄️</h2>
+    <p>أكثر من 9000 منتج بانتظارك في إمبراطورية نصرو</p>
+</div>
+
+<div class="search-area">
+    <input type="text" id="srch" class="search-input" placeholder="ابحث عن منتجك المفضل..." onkeyup="filter()">
 </div>
 
 <div class="container">
@@ -92,53 +75,52 @@
 
 <div class="modal" id="modal">
     <div class="modal-content">
-        <i class="fas fa-shopping-basket" style="font-size: 4rem; color: var(--gold);"></i>
-        <h2 id="m-title" style="font-size: 2rem;"></h2>
-        <p style="color: #555;">أنت على وشك اقتناء الأفضل! تفاصيل الدفع:</p>
-        <div class="rip-card" id="m-rip">00799999000012345678</div>
-        <button class="close-btn" onclick="closeM()">العودة للمتجر</button>
+        <h3 id="m-title"></h3>
+        <p>الدفع عبر بريدي موب لإتمام الطلب:</p>
+        <div class="rip-box">00799999000012345678</div>
+        <button class="btn-close" onclick="closeM()">إغلاق</button>
     </div>
 </div>
 
 <script>
-    const catalog = [
-        { n: "ساعة ذكية Ultra Series", p: "8,500 DA", i: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600" },
-        { n: "طقم رياضي شتوي قطن", p: "5,900 DA", i: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600" },
-        { n: "خلاط كهربائي سلفر كريست", p: "4,600 DA", i: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=600" },
-        { n: "حذاء رياضي Air فخم", p: "11,000 DA", i: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600" },
-        { n: "ماكينة قهوة اسبريسو", p: "19,500 DA", i: "https://images.unsplash.com/photo-1585336261022-69c66d11fe6d?w=600" },
-        { n: "طقم أواني غرانيت تركي", p: "22,000 DA", i: "https://images.unsplash.com/photo-1584990344119-a7660d629931?w=600" }
+    // مكتبة صور منوعة وحقيقية لضمان عدم التكرار المزعج
+    const imgLib = [
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f",
+        "https://images.unsplash.com/photo-1491553895911-0055eca6402d",
+        "https://images.unsplash.com/photo-1560343090-f0409e92791a"
     ];
+    const names = ["حذاء سبورت فخم", "ساعة ذكية Ultra", "سماعات محيطية", "نظارات شمسية", "حقيبة جلدية", "ساعة كلاسيك"];
 
     let db = [];
-    for(let i=1; i<=9000; i++){
-        let item = catalog[i % catalog.length];
-        db.push({ name: item.n + " - " + i, price: item.price, img: item.i });
+    for(let i=1; i<=9000; i++) {
+        db.push({
+            name: names[i % names.length] + " - إصدار #" + (5000 + i),
+            price: (Math.floor(Math.random() * 15000) + 2000) + " DA",
+            img: imgLib[i % imgLib.length] + "?w=400"
+        });
     }
 
     function render(list) {
         const grid = document.getElementById('mainGrid');
         grid.innerHTML = "";
-        list.slice(0, 100).forEach(p => {
+        list.slice(0, 80).forEach(p => {
             grid.innerHTML += `
-                <div class="item-card" onclick="openM('${p.name}')">
-                    <img src="${p.img}" loading="lazy">
-                    <div style="padding:15px">
-                        <div style="font-weight:900; font-size:1.2rem; margin-bottom:10px;">${p.name}</div>
-                        <span class="price-badge">${p.price}</span>
+                <div class="card" onclick="openM('${p.name}')">
+                    <img src="${p.img}" onerror="this.src='https://via.placeholder.com/400x300/111/gold?text=Flash-Buy+Item'">
+                    <div class="card-body">
+                        <div class="card-title">${p.name}</div>
+                        <div class="card-price">${p.price}</div>
                     </div>
                 </div>
             `;
         });
     }
 
-    function openM(name) {
-        document.getElementById('m-title').innerText = name;
-        document.getElementById('modal').classList.add('active');
-    }
-
-    function closeM() { document.getElementById('modal').classList.remove('active'); }
-
+    function openM(n) { document.getElementById('m-title').innerText = n; document.getElementById('modal').style.display = 'flex'; }
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
     function filter() {
         let v = document.getElementById('srch').value.toLowerCase();
         let f = db.filter(x => x.name.toLowerCase().includes(v));
@@ -147,10 +129,10 @@
 
     window.onload = () => {
         setTimeout(() => {
-            document.getElementById('loading-screen').style.opacity = '0';
-            setTimeout(() => document.getElementById('loading-screen').style.removeProperty, 1500);
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
             render(db);
-        }, 2000);
+        }, 1500);
     }
 </script>
 
