@@ -3,119 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy DZ | متجر نصرو المطور</title>
+    <title>Flash-Buy DZ | إمبراطورية التجارة الذكية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #ff4747; --amazon-blue: #232f3e; --temu-orange: #fb6433; --success: #27ae60; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background: #f0f2f5; overflow-x: hidden; }
+        :root { --primary: #ff4747; --dark: #131921; --amazon-gold: #febd69; --baridi: #006b35; --fb-blue: #1877f2; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background: #f3f3f3; overflow-x: hidden; color: #111; }
 
-        /* انيميشن الظهور التدريجي للموقع */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .container { animation: fadeIn 1s ease-out; }
+        /* 1. تأثيرات الدخول والأنيميشن */
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        /* انيميشن النبض للخصم */
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        .discount-tag { position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold; animation: pulse 1.5s infinite; z-index: 10; }
+        /* 2. شاشة الدخول الإلزامية (مثل تيمو) */
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+        .login-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 400px; width: 100%; }
 
-        /* انيميشن اهتزاز زر الشراء */
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
-        .buy-btn:hover { animation: shake 0.3s infinite; background: #f7ca00; }
+        /* 3. الهيدر وشريط العملات */
+        header { background: var(--dark); color: white; padding: 10px 15px; position: sticky; top: 0; z-index: 1000; }
+        .currency-bar { background: #232f3e; padding: 5px; display: flex; justify-content: center; gap: 10px; font-size: 0.8rem; }
+        .curr-btn { background: #37475a; border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+        .curr-btn.active { background: var(--primary); }
 
-        header { background: var(--amazon-blue); color: white; padding: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .logo { font-size: 1.8rem; font-weight: bold; color: var(--temu-orange); letter-spacing: 2px; }
+        /* 4. قسم المنتجات والبحث */
+        .search-container { padding: 15px; display: flex; gap: 10px; }
+        .search-container input { flex: 1; padding: 12px; border: none; border-radius: 8px; font-family: 'Cairo'; }
 
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; padding: 15px; }
-        .product-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s; position: relative; border: 1px solid #eee; }
-        .product-card:hover { transform: scale(1.03); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; padding: 15px; animation: fadeIn 0.8s ease; }
+        .product-card { background: white; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: 0.3s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .discount-badge { position: absolute; top: 8px; right: 8px; background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; animation: pulse 1.5s infinite; }
+        .product-card img { width: 100%; height: 180px; object-fit: cover; }
+        .p-info { padding: 10px; text-align: right; }
+        .p-price { font-size: 1.2rem; color: var(--primary); font-weight: bold; }
+        .shipping-label { color: var(--baridi); font-size: 0.75rem; font-weight: bold; margin-top: 5px; }
+
+        /* 5. نظام التتبع */
+        .tracking-section { background: white; margin: 15px; padding: 20px; border-radius: 12px; display: none; }
+        .track-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
         
-        .product-card img { width: 100%; height: 180px; object-fit: cover; transition: 0.5s; }
-        .product-card:hover img { transform: scale(1.1); }
+        /* 6. نافذة الدفع الجزائري */
+        #order-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; justify-content: center; align-items: flex-end; }
+        .modal-content { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 25px 25px 0 0; animation: slideUp 0.4s ease; max-height: 90vh; overflow-y: auto; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .info { padding: 12px; text-align: right; }
-        .price { color: var(--primary); font-size: 1.3rem; font-weight: bold; }
-        .buy-btn { background: #ffd814; border: 1px solid #fcd200; width: 100%; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-top: 10px; font-size: 1rem; }
+        .payment-method { border: 2px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .payment-method.active { border-color: var(--baridi); background: #eafff0; }
+        .rip-box { background: #f9f9f9; border: 1px dashed #ccc; padding: 10px; font-size: 0.9rem; margin-top: 10px; display: none; }
 
-        /* نافذة الطلب مع انيميشن الانزلاق */
-        #checkout-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: flex-end; }
-        .modal-content { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 25px 25px 0 0; transform: translateY(100%); transition: 0.5s; }
-        .modal-active .modal-content { transform: translateY(0); }
-
-        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; font-family: 'Cairo'; }
-        .confirm-btn { background: var(--success); color: white; border: none; width: 100%; padding: 16px; border-radius: 10px; font-size: 1.2rem; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .confirm-btn:active { transform: scale(0.95); }
+        .btn-main { background: var(--amazon-gold); border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 10px; }
+        .btn-baridi { background: var(--baridi); color: white; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">FLASH-BUY DZ</div>
-    </header>
-
-    <div class="container">
-        <div class="product-grid">
-            <div class="product-card">
-                <span class="discount-tag">تخفيض 90%</span>
-                <img src="https://m.media-amazon.com/images/I/712CB7Sc8uL._AC_SL1500_.jpg">
-                <div class="info">
-                    <h3>iPhone 15 Pro Max</h3>
-                    <p class="price">12,500 د.ج</p>
-                    <button class="buy-btn" onclick="openCheckout('آيفون 15 بروماكس', '12500')">اطلب الآن</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <span class="discount-tag">عرض تيمو</span>
-                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30">
-                <div class="info">
-                    <h3>Smart Watch Ultra</h3>
-                    <p class="price">3,500 د.ج</p>
-                    <button class="buy-btn" onclick="openCheckout('ساعة Ultra', '3500')">اطلب الآن</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="checkout-modal">
-        <div class="modal-content">
-            <h2 style="text-align: center;"><i class="fas fa-truck-loading"></i> إكمال الطلب</h2>
-            <p id="p-name" style="text-align: center; font-weight: bold; color: var(--primary);"></p>
-            <input type="text" id="u-name" placeholder="اسمك الكامل">
-            <input type="tel" id="u-phone" placeholder="رقم الهاتف">
-            <select id="u-city">
-                <option value="">اختر الولاية</option>
-                <option value="الجزائر العاصمة">الجزائر العاصمة</option>
-                <option value="الشلف">الشلف</option>
-                <option value="وهران">وهران</option>
-            </select>
-            <button class="confirm-btn" onclick="submitOrder()">تأكيد الطلب (دفع عند الاستلام)</button>
-            <button style="background:none; border:none; color: #888; width:100%; margin-top:15px;" onclick="closeModal()">الرجوع للمتجر</button>
-        </div>
-    </div>
-
-    <script>
-        function openCheckout(name, price) {
-            document.getElementById('p-name').innerText = name + " - " + price + " د.ج";
-            const modal = document.getElementById('checkout-modal');
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('modal-active'), 10);
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('checkout-modal');
-            modal.classList.remove('modal-active');
-            setTimeout(() => modal.style.display = 'none', 500);
-        }
-
-        function submitOrder() {
-            const name = document.getElementById('u-name').value;
-            const phone = document.getElementById('u-phone').value;
-            if(!name || !phone) { alert("يرجى إكمال البيانات"); return; }
-            
-            // استبدل الأصفار برقمك الخاص لتلقي الطلبات
-            const msg = `طلب جديد: ${document.getElementById('p-name').innerText}\nالزبون: ${name}\nالهاتف: ${phone}`;
-            window.open(`https://wa.me/213600000000?text=${encodeURIComponent(msg)}`);
-        }
-    </script>
-</body>
-</html>
+    <div id="login-overlay">
+        <div class="login-card">
+            <h1 style="
