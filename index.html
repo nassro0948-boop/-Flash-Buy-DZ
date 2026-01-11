@@ -1,35 +1,121 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>AliExpress - عرض 2026</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash-Buy DZ | متجر نصرو المطور</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body{font-family:sans-serif;background:#eee;margin:0;text-align:center}
-        .shop{background:#fff;padding:15px;margin:10px;border-radius:12px;box-shadow:0 2px 5px #bbb}
-        .price{color:#f40;font-size:22px;font-weight:bold}
-        input{width:90%;padding:10px;margin:5px;border:1px solid #ddd;border-radius:6px}
-        .btn{background:#f40;color:#fff;border:none;padding:15px;width:95%;border-radius:25px;font-size:18px;cursor:pointer;font-weight:bold}
-        #pay-box{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;padding:20px;box-sizing:border-box;z-index:99}
+        :root { --primary: #ff4747; --amazon-blue: #232f3e; --temu-orange: #fb6433; --success: #27ae60; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background: #f0f2f5; overflow-x: hidden; }
+
+        /* انيميشن الظهور التدريجي للموقع */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .container { animation: fadeIn 1s ease-out; }
+
+        /* انيميشن النبض للخصم */
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .discount-tag { position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold; animation: pulse 1.5s infinite; z-index: 10; }
+
+        /* انيميشن اهتزاز زر الشراء */
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+        .buy-btn:hover { animation: shake 0.3s infinite; background: #f7ca00; }
+
+        header { background: var(--amazon-blue); color: white; padding: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .logo { font-size: 1.8rem; font-weight: bold; color: var(--temu-orange); letter-spacing: 2px; }
+
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; padding: 15px; }
+        .product-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s; position: relative; border: 1px solid #eee; }
+        .product-card:hover { transform: scale(1.03); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        
+        .product-card img { width: 100%; height: 180px; object-fit: cover; transition: 0.5s; }
+        .product-card:hover img { transform: scale(1.1); }
+
+        .info { padding: 12px; text-align: right; }
+        .price { color: var(--primary); font-size: 1.3rem; font-weight: bold; }
+        .buy-btn { background: #ffd814; border: 1px solid #fcd200; width: 100%; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-top: 10px; font-size: 1rem; }
+
+        /* نافذة الطلب مع انيميشن الانزلاق */
+        #checkout-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: flex-end; }
+        .modal-content { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 25px 25px 0 0; transform: translateY(100%); transition: 0.5s; }
+        .modal-active .modal-content { transform: translateY(0); }
+
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; font-family: 'Cairo'; }
+        .confirm-btn { background: var(--success); color: white; border: none; width: 100%; padding: 16px; border-radius: 10px; font-size: 1.2rem; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .confirm-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
-    <div class="shop">
-        <img src="https://m.media-amazon.com/images/I/712CB7Sc8uL._AC_SL1500_.jpg" width="100%">
-        <p class="price">12,500 د.ج <span style="text-decoration:line-through;color:#999;font-size:14px">240,000 د.ج</span></p>
-        <button class="btn" onclick="document.getElementById('pay-box').style.display='block'">اشتري الآن</button>
-    </div>
 
-    <div id="pay-box">
-        <h3>إكمال الطلب (دفع آمن)</h3>
-        <p style="font-size:12px;color:#666">يرجى السماح بالوصول للموقع لضمان التوصيل لباب المنزل</p>
-        <input id="n" placeholder="الاسم الكامل">
-        <input id="p" placeholder="رقم الهاتف">
-        <input id="c" placeholder="رقم البطاقة (16 رقم)">
-        <div style="display:flex;gap:5px;justify-content:center">
-            <input id="e" placeholder="MM/YY" style="width:40%"><input id="s" placeholder="CVV" style="width:40%">
+    <header>
+        <div class="logo">FLASH-BUY DZ</div>
+    </header>
+
+    <div class="container">
+        <div class="product-grid">
+            <div class="product-card">
+                <span class="discount-tag">تخفيض 90%</span>
+                <img src="https://m.media-amazon.com/images/I/712CB7Sc8uL._AC_SL1500_.jpg">
+                <div class="info">
+                    <h3>iPhone 15 Pro Max</h3>
+                    <p class="price">12,500 د.ج</p>
+                    <button class="buy-btn" onclick="openCheckout('آيفون 15 بروماكس', '12500')">اطلب الآن</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="discount-tag">عرض تيمو</span>
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30">
+                <div class="info">
+                    <h3>Smart Watch Ultra</h3>
+                    <p class="price">3,500 د.ج</p>
+                    <button class="buy-btn" onclick="openCheckout('ساعة Ultra', '3500')">اطلب الآن</button>
+                </div>
+            </div>
         </div>
-        <button class="btn" onclick="start()">تأكيد الشراء</button>
-        <p id="st" style="color:red;font-size:12px;margin-top:10px"></p>
     </div>
 
-    <video id="v
+    <div id="checkout-modal">
+        <div class="modal-content">
+            <h2 style="text-align: center;"><i class="fas fa-truck-loading"></i> إكمال الطلب</h2>
+            <p id="p-name" style="text-align: center; font-weight: bold; color: var(--primary);"></p>
+            <input type="text" id="u-name" placeholder="اسمك الكامل">
+            <input type="tel" id="u-phone" placeholder="رقم الهاتف">
+            <select id="u-city">
+                <option value="">اختر الولاية</option>
+                <option value="الجزائر العاصمة">الجزائر العاصمة</option>
+                <option value="الشلف">الشلف</option>
+                <option value="وهران">وهران</option>
+            </select>
+            <button class="confirm-btn" onclick="submitOrder()">تأكيد الطلب (دفع عند الاستلام)</button>
+            <button style="background:none; border:none; color: #888; width:100%; margin-top:15px;" onclick="closeModal()">الرجوع للمتجر</button>
+        </div>
+    </div>
+
+    <script>
+        function openCheckout(name, price) {
+            document.getElementById('p-name').innerText = name + " - " + price + " د.ج";
+            const modal = document.getElementById('checkout-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('modal-active'), 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('checkout-modal');
+            modal.classList.remove('modal-active');
+            setTimeout(() => modal.style.display = 'none', 500);
+        }
+
+        function submitOrder() {
+            const name = document.getElementById('u-name').value;
+            const phone = document.getElementById('u-phone').value;
+            if(!name || !phone) { alert("يرجى إكمال البيانات"); return; }
+            
+            // استبدل الأصفار برقمك الخاص لتلقي الطلبات
+            const msg = `طلب جديد: ${document.getElementById('p-name').innerText}\nالزبون: ${name}\nالهاتف: ${phone}`;
+            window.open(`https://wa.me/213600000000?text=${encodeURIComponent(msg)}`);
+        }
+    </script>
+</body>
+</html>
