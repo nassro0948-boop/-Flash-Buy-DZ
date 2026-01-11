@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy-DZ | النسخة الاحترافية</title>
+    <title>Flash-Buy-DZ | لوحة التحكم الذكية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -11,100 +11,92 @@
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
         body { font-family: 'Tajawal', sans-serif; background: #0f172a; color: white; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .product-card:hover { transform: translateY(-10px); border-color: #facc15; }
-        /* تصميم النافذة المنبثقة */
-        #productModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
+        #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center; justify-content: center; overflow-y: auto; }
     </style>
 </head>
 <body>
 
-    <nav class="p-6 max-w-7xl mx-auto flex justify-between items-center">
+    <nav class="p-6 max-w-7xl mx-auto flex justify-between items-center shadow-2xl">
         <h1 class="text-3xl font-black text-yellow-400">FLASH-BUY-DZ ⚡</h1>
-        <div class="bg-yellow-400 text-black px-4 py-1 rounded-full text-sm font-bold animate-pulse">النسخة التجريبية 1.0</div>
+        <div id="orderCounter" class="bg-green-500 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg">طلباتك: 0</div>
     </nav>
 
-    <section class="text-center py-12 px-4" data-aos="zoom-in">
-        <h2 class="text-4xl font-black mb-4">أرخص "هَمزات" العالم.. <span class="text-yellow-400 text-5xl">في الجزائر</span></h2>
-        <p class="text-gray-400 mb-8">اضغط على أي منتج لتفاصيل السعر والدفع ببريدي موب</p>
-    </section>
+    <main id="mainGrid" class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 py-10"></main>
 
-    <main id="mainGrid" class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 pb-20"></main>
+    <div id="orderModal">
+        <div class="bg-slate-900 border border-yellow-400 p-8 rounded-3xl max-w-lg w-full relative my-10">
+            <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 text-2xl">&times;</button>
+            <div id="modalContent">
+                <h3 id="pName" class="text-2xl font-black text-yellow-400 mb-2"></h3>
+                <p id="pPrice" class="text-xl mb-6 text-white"></p>
+                
+                <form id="purchaseForm" class="space-y-4">
+                    <input type="text" placeholder="الاسم الكامل" class="w-full p-3 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-yellow-400" required>
+                    <input type="tel" placeholder="رقم الهاتف (الجزائر)" class="w-full p-3 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-yellow-400" required>
+                    <input type="text" placeholder="العنوان (الولاية / البلدية)" class="w-full p-3 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-yellow-400" required>
+                    
+                    <div class="p-4 bg-yellow-400/10 border border-yellow-400/50 rounded-xl text-center">
+                        <p class="text-xs text-yellow-400 mb-2">معلومات بريدي موب (الدفع)</p>
+                        <p class="font-mono font-bold text-sm">RIP: 00799999000123456789</p>
+                        <p class="text-[10px] mt-1 text-gray-400 italic">ارسل المبلغ ثم ارفع صورة الوصل هنا 👇</p>
+                    </div>
 
-    <div id="productModal">
-        <div class="bg-slate-900 border border-yellow-400/50 p-8 rounded-3xl max-w-lg w-full relative shadow-2xl">
-            <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white text-2xl">&times;</button>
-            <div id="modalContent" class="text-center">
-                </div>
+                    <label class="block w-full cursor-pointer bg-white/5 border-2 border-dashed border-white/20 p-4 rounded-xl text-center hover:border-yellow-400 transition">
+                        <span class="text-sm text-gray-400">اسحب صورة الوصل أو اضغط هنا</span>
+                        <input type="file" class="hidden" required>
+                    </label>
+
+                    <button type="submit" class="w-full bg-yellow-400 text-black py-4 rounded-xl font-black text-lg shadow-xl hover:bg-white transition">
+                        إتمام الطلب الآن ✅
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init();
+        let orders = 0;
 
-        const categories = [
-            {n: 'إلكترونيات', img: 'https://picsum.photos/seed/tech'},
-            {n: 'أدوات منزلية', img: 'https://picsum.photos/seed/home'},
-            {n: 'إكسسوارات', img: 'https://picsum.photos/seed/watch'},
-            {n: 'ألعاب', img: 'https://picsum.photos/seed/game'}
+        const products = [
+            { n: "iPhone 15 Pro Max", p: "385,000", c: "هواتف", i: "https://m.media-amazon.com/images/I/81SigAnN7iL._AC_SL1500_.jpg" },
+            { n: "PlayStation 5 Slim", p: "95,000", c: "ألعاب", i: "https://m.media-amazon.com/images/I/510uTH977GL._AC_SL1500_.jpg" },
+            { n: "AirPods Pro 2", p: "48,000", c: "إلكترونيات", i: "https://m.media-amazon.com/images/I/61SUj2W5yXL._AC_SL1500_.jpg" },
+            { n: "Ninja Air Fryer", p: "34,500", c: "منزل", i: "https://m.media-amazon.com/images/I/71atvS874FL._AC_SL1500_.jpg" }
         ];
 
         const grid = document.getElementById('mainGrid');
-
-        // توليد 100 منتج متنوع
-        for (let i = 1; i <= 100; i++) {
-            const cat = categories[i % 4];
-            const price = (Math.floor(Math.random() * 95) + 5) * 1000;
-            const product = {
-                id: i,
-                name: `منتج فلاش #${i}`,
-                category: cat.n,
-                price: price,
-                img: `${cat.img}${i}/400/400` // رابط صورة مضمون ومختلف لكل منتج
-            };
-
+        
+        // توليد 50 منتج
+        for (let i = 0; i < 50; i++) {
+            const p = products[i % products.length];
             grid.innerHTML += `
-                <div onclick="openProduct('${product.name}', '${product.price}', '${product.img}', '${product.category}')" 
-                     class="glass product-card p-4 rounded-2xl cursor-pointer transition duration-300" data-aos="fade-up">
-                    <img src="${product.img}" class="w-full h-48 object-cover rounded-xl mb-4" loading="lazy">
-                    <span class="text-yellow-400 text-[10px] font-bold uppercase tracking-widest">${product.category}</span>
-                    <h4 class="font-bold text-lg text-white mb-2 truncate">${product.name}</h4>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xl font-black">${product.price.toLocaleString()} DA</span>
-                        <i class="fa-solid fa-arrow-left text-yellow-400"></i>
-                    </div>
+                <div onclick="openOrder('${p.n}', '${p.p}', '${p.i}')" class="glass p-4 rounded-2xl cursor-pointer hover:border-yellow-400 transition group" data-aos="fade-up">
+                    <img src="${p.i}" class="w-full h-40 object-contain mb-4 group-hover:scale-110 transition">
+                    <h4 class="font-bold truncate">${p.n}</h4>
+                    <p class="text-yellow-400 font-black mt-2 text-xl">${p.p} DA</p>
+                    <button class="mt-4 w-full bg-white/10 py-2 rounded-lg text-xs font-bold group-hover:bg-yellow-400 group-hover:text-black">طلب المنتج</button>
                 </div>
             `;
         }
 
-        function openProduct(name, price, img, cat) {
-            const modal = document.getElementById('productModal');
-            const content = document.getElementById('modalContent');
-            modal.style.display = 'flex';
-            content.innerHTML = `
-                <img src="${img}" class="w-48 h-48 mx-auto rounded-2xl mb-6 border-2 border-yellow-400 shadow-xl">
-                <span class="bg-yellow-400 text-black px-3 py-1 rounded-full text-xs font-bold">${cat}</span>
-                <h3 class="text-3xl font-black mt-4 mb-2 text-white">${name}</h3>
-                <p class="text-gray-400 text-sm mb-6">هذا المنتج متوفر في المخازن العالمية. السعر يشمل الشحن إلى الجزائر.</p>
-                <div class="bg-white/5 p-4 rounded-2xl mb-6">
-                    <p class="text-gray-400 text-xs">السعر النهائي بالدينار</p>
-                    <p class="text-4xl font-black text-yellow-400">${parseInt(price).toLocaleString()} DA</p>
-                </div>
-                <a href="https://wa.me/213xxxxxxxxx?text=اريد شراء ${name}" target="_blank" 
-                   class="block w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition">
-                   <i class="fab fa-whatsapp ml-2"></i> اطلب عبر بريدي موب
-                </a>
-                <p class="text-[10px] text-gray-500 mt-4 italic">سيتم توجيهك لخدمة العملاء لإتمام الدفع</p>
-            `;
+        function openOrder(name, price, img) {
+            document.getElementById('orderModal').style.display = 'flex';
+            document.getElementById('pName').innerText = name;
+            document.getElementById('pPrice').innerText = price + " دج";
         }
 
         function closeModal() {
-            document.getElementById('productModal').style.display = 'none';
+            document.getElementById('orderModal').style.display = 'none';
         }
 
-        // إغلاق النافذة عند الضغط خارجها
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('productModal')) closeModal();
+        document.getElementById('purchaseForm').onsubmit = function(e) {
+            e.preventDefault();
+            orders++;
+            document.getElementById('orderCounter').innerText = `طلباتك: ${orders}`;
+            alert("تم استلام طلبك بنجاح! سيتم مراجعة الوصل وتأكيد الشحن خلال 24 ساعة.");
+            closeModal();
         }
     </script>
 </body>
