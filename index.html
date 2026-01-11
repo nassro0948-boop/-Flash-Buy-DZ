@@ -3,95 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy DZ | الإمبراطورية الشاملة</title>
+    <title>Flash-Buy DZ | الإمبراطورية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --black: #050505; --dark-gray: #1a1a1a; --red-discount: #e74c3c; --green-price: #2ecc71; }
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--black); color: white; scroll-behavior: smooth; }
+        :root { --gold: #D4AF37; --black: #111; --gray: #f4f4f4; --orange: #ff5500; }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--gray); }
         
-        /* شريط عروض أمازون العلوي */
-        .promo-bar { background: var(--gold); color: black; text-align: center; padding: 10px; font-weight: bold; font-size: 14px; }
-
-        header { padding: 20px 5%; background: rgba(0,0,0,0.9); border-bottom: 2px solid var(--gold); display: flex; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 26px; font-weight: 900; color: var(--gold); text-decoration: none; }
-
-        /* قسم AliExpress الرئيسي */
-        .hero { height: 60vh; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200'); background-size: cover; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-bottom: 4px solid var(--gold); }
-        .hero h1 { font-size: 4rem; margin: 0; color: var(--gold); text-shadow: 2px 2px 10px #000; }
-
-        /* شريط تصنيفات Temu */
-        .categories { display: flex; gap: 15px; padding: 20px 5%; background: #111; overflow-x: auto; border-bottom: 1px solid #333; }
-        .cat-item { padding: 10px 25px; border: 1px solid var(--gold); border-radius: 50px; white-space: nowrap; color: var(--gold); text-decoration: none; font-weight: bold; }
-        .cat-item:hover { background: var(--gold); color: black; }
-
-        /* شبكة المنتجات الضخمة */
-        .container { padding: 40px 5%; }
-        .section-title { font-size: 28px; color: var(--gold); border-right: 5px solid var(--gold); padding-right: 15px; margin-bottom: 30px; }
+        /* Navbar */
+        nav { background: var(--black); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 24px; font-weight: bold; color: var(--gold); text-decoration: none; }
         
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
-        .card { background: var(--dark-gray); border-radius: 15px; padding: 15px; border: 1px solid #333; transition: 0.3s; position: relative; }
-        .card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(212,175,55,0.2); }
-        .card img { width: 100%; height: 220px; object-fit: cover; border-radius: 10px; }
+        /* Hero Section */
+        .hero { background: linear-gradient(45deg, #111, #333); color: white; padding: 60px 5%; text-align: center; border-bottom: 5px solid var(--gold); }
+        .hero h1 { font-size: 3rem; margin: 0; }
         
-        .discount-badge { position: absolute; top: 20px; left: 20px; background: var(--red-discount); color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 12px; }
+        /* Grid System */
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--black); padding-bottom: 10px; }
         
-        .price { font-size: 24px; color: var(--green-price); font-weight: bold; margin: 10px 0; display: block; }
-        .old-price { text-decoration: line-through; color: #777; font-size: 14px; margin-right: 8px; }
-
-        .buy-btn { width: 100%; padding: 15px; background: var(--gold); color: black; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
-
-        /* فوتر الإمبراطورية */
-        footer { padding: 60px 5%; background: #000; border-top: 1px solid #222; text-align: center; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .p-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; position: relative; }
+        .p-card:hover { transform: scale(1.03); }
+        .p-card img { width: 100%; height: 250px; object-fit: cover; }
+        .p-info { padding: 15px; text-align: right; }
+        .p-price { color: #B12704; font-size: 22px; font-weight: bold; }
+        .p-discount { background: var(--orange); color: white; padding: 5px; position: absolute; top: 10px; left: 10px; border-radius: 4px; font-size: 12px; }
+        
+        /* Order Button */
+        .order-btn { background: var(--gold); color: black; border: none; width: 100%; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 0 0 8px 8px; }
+        
+        /* Modal for Payment */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .m-content { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; color: #333; }
     </style>
 </head>
 <body>
 
-<div class="promo-bar">🔥 تخفيضات كبرى لشهر جانفي - شحن مجاني لـ 58 ولاية 🇩🇿</div>
-
-<header>
-    <a href="#" class="logo">⚡ FLASH-BUY DZ</a>
-    <div style="color: var(--gold);"><i class="fas fa-search"></i></div>
-</header>
+<nav>
+    <a href="#" class="logo">FLASH-BUY DZ ⚡</a>
+    <div><i class="fas fa-bars"></i></div>
+</nav>
 
 <div class="hero">
-    <h1>إمبراطورية نصرو</h1>
-    <p>أفضل صفقات AliExpress و Amazon بين يديك في الجزائر</p>
-</div>
-
-<div class="categories">
-    <a href="#" class="cat-item">إلكترونيات</a>
-    <a href="#" class="cat-item">ملابس</a>
-    <a href="#" class="cat-item">سيارات</a>
-    <a href="#" class="cat-item">منزل</a>
-    <a href="#" class="cat-item">ألعاب</a>
-    <a href="#" class="cat-item">عطور</a>
+    <h1>إمبراطورية نصرو للخدمات</h1>
+    <p>تجميع صفقات AliExpress, Temu & Amazon في شحن واحد لبيتك</p>
 </div>
 
 <div class="container">
-    <h2 class="section-title">🔥 عروض الـ Mega Sale (نظام تيمو)</h2>
-    <div class="grid">
-        <div class="card">
-            <span class="discount-badge">خصم 60%</span>
-            <img src="https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=400">
-            <h3>iPhone 15 Pro Max</h3>
-            <span class="price">235,000 DA <span class="old-price">310,000 DA</span></span>
-            <button class="buy-btn" onclick="alert('سعر خاص للإمبراطور نصرو!')">شراء الآن</button>
+    <div class="section-header">
+        <h2>🔥 صفقات اليوم الكبرى</h2>
+        <span style="color: var(--orange);">تخفيضات تصل لـ 70%</span>
+    </div>
+    
+    <div class="product-grid">
+        <div class="p-card">
+            <div class="p-discount">AliExpress Deal</div>
+            <img src="https://images.unsplash.com/photo-1591337676887-a217a6970c8a?w=400" alt="">
+            <div class="p-info">
+                <h3>iPhone 15 Pro Max</h3>
+                <div class="p-price">235,000 DA</div>
+                <p style="color: #777; font-size: 14px;">شحن مضمون + تأمين</p>
+            </div>
+            <button class="order-btn" onclick="showPay()">شحن من الخارج</button>
         </div>
-        <div class="card">
-            <span class="discount-badge">أكثر مبيعاً</span>
-            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400">
-            <h3>Nike Air Jordan 1</h3>
-            <span class="price">24,500 DA <span class="old-price">35,000 DA</span></span>
-            <button class="buy-btn">شراء الآن</button>
+
+        <div class="p-card">
+            <div class="p-discount">Temu Offer</div>
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" alt="">
+            <div class="p-info">
+                <h3>Nike Air Max 2026</h3>
+                <div class="p-price">18,500 DA</div>
+                <p style="color: #777; font-size: 14px;">خصم خاص بمناسبة الافتتاح</p>
+            </div>
+            <button class="order-btn" onclick="showPay()">اطلب الآن</button>
         </div>
-        </div>
+    </div>
 </div>
 
-<footer>
-    <h2 style="color:var(--gold)">FLASH-BUY DZ</h2>
-    <p>الإمبراطورية التي تجمع العالم في مكان واحد</p>
-    <p>&copy; 2026 - مبرمج بواسطة نصرو</p>
-</footer>
+<div class="modal" id="payBox">
+    <div class="m-content">
+        <h2 style="color: var(--orange);">طريقة الطلب الآمن</h2>
+        <p>نحن نوفر لك الشراء من المواقع العالمية مقابل عمولة رمزية.</p>
+        <div style="background: #f9f9f9; padding: 15px; border: 1px dashed #ccc; margin: 20px 0;">
+            <p>لإتمام الطلب، يرجى تحويل العربون عبر:</p>
+            <strong style="font-size: 1.2rem;">Baridimob: 00799999000012345678</strong>
+        </div>
+        <button onclick="hidePay()" style="background: #333; color: white; padding: 10px 20px; border: none; cursor: pointer;">إغلاق</button>
+    </div>
+</div>
+
+<script>
+    function showPay() { document.getElementById('payBox').style.display = 'flex'; }
+    function hidePay() { document.getElementById('payBox').style.display = 'none'; }
+</script>
 
 </body>
 </html>
