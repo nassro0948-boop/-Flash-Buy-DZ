@@ -1,174 +1,185 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy DZ | إمبراطورية التجارة الذكية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <title>Flash-Buy DZ | Global Shopping</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
-        :root { --primary: #ff4747; --dark: #131921; --baridi: #006b35; --fb: #1877f2; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background: #f4f4f4; }
-
-        /* شاشة الدخول الإلزامية */
-        #login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; z-index: 9999; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; text-align: center;
-        }
-        .login-btn {
-            width: 80%; max-width: 300px; padding: 15px; margin: 10px;
-            border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer;
+        :root {
+            --gold: #D4AF37;
+            --black: #0a0a0a;
+            --dark-grey: #1a1a1a;
+            --white: #ffffff;
+            --green: #27ae60;
         }
 
-        /* التصميم العام */
-        header { background: var(--dark); color: white; padding: 15px; text-align: center; }
-        .currency-nav { background: #232f3e; color: white; padding: 10px; display: flex; justify-content: center; gap: 15px; }
-        .curr-link { cursor: pointer; padding: 5px 10px; border-radius: 5px; background: #37475a; font-size: 0.8rem; }
-        .curr-link.active { background: var(--primary); }
-
-        .container { padding: 15px; max-width: 1200px; margin: auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }
-        
-        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; }
-        .card img { width: 100%; height: 180px; object-fit: cover; }
-        .badge { position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; padding: 5px; border-radius: 5px; font-size: 0.7rem; }
-        
-        .info { padding: 10px; }
-        .price { font-size: 1.2rem; color: var(--primary); font-weight: bold; }
-        .shipping { color: var(--baridi); font-size: 0.7rem; font-weight: bold; }
-
-        /* نافذة الطلب */
-        #order-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 5000; justify-content: center; align-items: center;
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--black);
+            color: var(--white);
+            transition: all 0.3s ease;
         }
-        .modal-box { background: white; width: 90%; max-width: 400px; padding: 20px; border-radius: 20px; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Cairo'; }
 
-        /* التتبع */
-        #tracking-area { background: #fff; margin: 15px 0; padding: 15px; border-radius: 10px; display: none; border: 2px solid var(--primary); }
+        /* Header & Logo */
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i { margin-right: 10px; }
+
+        /* Product Card */
+        .container {
+            display: flex;
+            justify-content: center;
+            padding: 50px 20px;
+        }
+
+        .product-card {
+            background: var(--dark-grey);
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+
+        .price-tag {
+            font-size: 28px;
+            color: var(--green);
+            margin: 10px 0;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #888;
+            font-size: 18px;
+        }
+
+        /* Shipping Options */
+        .option-group {
+            margin: 20px 0;
+        }
+
+        .option-title {
+            font-size: 14px;
+            color: var(--gold);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: #222;
+            color: white;
+            border: 1px solid #444;
+            margin-bottom: 15px;
+        }
+
+        /* Customs Insurance Checkbox */
+        .insurance-box {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed var(--gold);
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .insurance-box input {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .btn-buy {
+            background: var(--gold);
+            color: black;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-buy:hover {
+            transform: scale(1.05);
+            background: #f1c40f;
+        }
+
+        /* Multi-Language Support */
+        [data-lang="ar"] { display: none; text-align: right; direction: rtl; }
+        [data-lang="fr"] { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <h1 style="color: var(--primary);">FLASH-BUY DZ</h1>
-        <p>سجل دخولك لتصفح سلع AliExpress و Amazon بالدينار</p>
-        <button class="login-btn" style="background: var(--fb);" onclick="enter()">الدخول بفيسبوك</button>
-        <button class="login-btn" style="background: #db4437;" onclick="enter()">الدخول بجوجل</button>
+<header>
+    <div class="logo"><i class="fas fa-bolt"></i> <span id="brand-name">FLASH-BUY DZ</span></div>
+    <div class="settings">
+        <i class="fas fa-globe"></i>
+        <select id="lang-switcher" style="width: auto; margin: 0; padding: 5px;">
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+            <option value="fr">Français</option>
+        </select>
     </div>
+</header>
 
-    <header>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 1.2rem; font-weight: bold;">FLASH-BUY DZ</span>
-            <button onclick="toggleTrack()" style="background:none; border:1px solid white; color:white; padding:5px; border-radius:5px;">تتبع طلبك</button>
-        </div>
-    </header>
+<div class="container">
+    <div class="product-card">
+        <img src="https://via.placeholder.com/350x250/111/D4AF37?text=iPhone+15+Pro+Max" alt="Product" style="width:100%; border-radius:10px;">
+        
+        <h2 id="prod-title">iPhone 15 Pro Max - 256GB</h2>
+        <div class="old-price" id="old-price">$1,300.00</div>
+        <div class="price-tag" id="new-price">$1,150.00</div>
 
-    <div class="currency-nav">
-        <span onclick="setRate('DZD', 1)" class="curr-link active">DZD</span>
-        <span onclick="setRate('USD', 0.0042)" class="curr-link">USD</span>
-        <span onclick="setRate('EUR', 0.0039)" class="curr-link">EUR</span>
-    </div>
-
-    <div class="container">
-        <div id="tracking-area">
-            <h4>📦 تتبع طردك الجوي</h4>
-            <input type="text" id="tid" placeholder="أدخل رقم الطلب">
-            <button onclick="doTrack()" style="width:100%; background:var(--dark); color:white; padding:10px; border:none; border-radius:5px;">تحديث الحالة</button>
-            <p id="t-status" style="margin-top:10px; font-size:0.9rem; color:var(--baridi);"></p>
-        </div>
-
-        <div class="grid" id="products-grid">
-            </div>
-    </div>
-
-    <div id="order-modal">
-        <div class="modal-box">
-            <h3 id="p-title">إتمام الطلب</h3>
-            <div style="background: #f0fdf4; padding: 10px; border-radius: 10px; margin-bottom: 10px; font-size: 0.8rem;">
-                🏛️ <b>بريدي موب / CCP:</b><br>
-                RIP: 00799999000123456789 <br>
-                أرسل الوصل عبر واتساب لتأكيد الشحن الدولي.
-            </div>
-            <input type="text" id="u-name" placeholder="الاسم الكامل">
-            <input type="tel" id="u-phone" placeholder="رقم الهاتف">
-            <select id="u-wilaya">
-                <option value="">اختر الولاية (58 ولاية)</option>
-                <option value="الجزائر العاصمة">الجزائر العاصمة</option>
-                <option value="وهران">وهران</option>
+        <div class="option-group">
+            <div class="option-title" id="ship-title">Select Shipping Source:</div>
+            <select>
+                <option>China Warehouse (25-30 Days) - FREE</option>
+                <option>USA Warehouse (10-15 Days) - +$30</option>
+                <option>Europe Warehouse (5-7 Days) - +$45</option>
             </select>
-            <button onclick="sendOrder()" style="width:100%; background:var(--baridi); color:white; padding:15px; border:none; border-radius:10px; font-weight:bold;">تأكيد الطلب وفتح واتساب</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#888; margin-top:10px;">إلغاء</button>
         </div>
+
+        <div class="insurance-box">
+            <input type="checkbox" id="insurance">
+            <label for="insurance" id="ins-label">Add Customs Insurance (+$10.00)</label>
+        </div>
+
+        <button class="btn-buy" id="btn-buy">PURCHASE NOW</button>
     </div>
+</div>
 
-    <script>
-        const products = [
-            { id: 1, name: "iPhone 15 Pro Max", price: 145000, img: "https://m.media-amazon.com/images/I/712CB7Sc8uL._AC_SL1500_.jpg", badge: "تخفيض 90%" },
-            { id: 2, name: "Watch Ultra 2", price: 5500, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30", badge: "شحن سريع" },
-            { id: 3, name: "AirPods Pro", price: 3800, img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e", badge: "الأكثر مبيعاً" }
-        ];
-
-        let rate = 1;
-        let sym = "د.ج";
-        let selectedItem = "";
-
-        function enter() { document.getElementById('login-screen').style.display = 'none'; }
-
-        function render() {
-            const container = document.getElementById('products-grid');
-            container.innerHTML = products.map(p => `
-                <div class="card">
-                    <div class="badge">${p.badge}</div>
-                    <img src="${p.img}">
-                    <div class="info">
-                        <h3 style="font-size:0.9rem; margin:0;">${p.name}</h3>
-                        <div class="price">${(p.price * rate).toLocaleString()} ${sym}</div>
-                        <div class="shipping">✈️ توصيل لباب المنزل: 7 أيام</div>
-                        <button onclick="openModal('${p.name}', ${p.price})" style="width:100%; margin-top:10px; background:#ffd814; border:1px solid #fcd200; padding:8px; border-radius:5px; font-weight:bold;">اطلب الآن</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function setRate(s, r) {
-            rate = r; sym = (s === 'DZD' ? 'د.ج' : (s === 'USD' ? '$' : '€'));
-            render();
-        }
-
-        function openModal(n, p) {
-            selectedItem = n;
-            document.getElementById('p-title').innerText = n;
-            document.getElementById('order-modal').style.display = 'flex';
-        }
-
-        function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
-
-        function sendOrder() {
-            const name = document.getElementById('u-name').value;
-            const phone = document.getElementById('u-phone').value;
-            const wilaya = document.getElementById('u-wilaya').value;
-            if(!name || !phone) { alert("أدخل بياناتك"); return; }
-            
-            const msg = `🚀 طلب جديد من فلاش باي:\n📦 المنتج: ${selectedItem}\n👤 الزبون: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya}`;
-            window.open(`https://wa.me/213600000000?text=${encodeURIComponent(msg)}`);
-        }
-
-        function toggleTrack() {
-            const area = document.getElementById('tracking-area');
-            area.style.display = area.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function doTrack() {
-            const status = document.getElementById('t-status');
-            status.innerText = "⏳ جاري التحقق من مسار الطرد الجوي...";
-            setTimeout(() => { status.innerText = "📦 طردك الآن في مركز الفرز الدولي (فرنسا) متجهاً للجزائر!"; }, 1500);
-        }
-
-        render();
-    </script>
-</body>
-</html>
+<script>
+    const translations = {
+        en: {
+            title: "iPhone 15 Pro Max - 256GB",
+            ship: "Select Shipping Source:",
+            ins: "Add Customs Insurance (+$10.00)",
+            buy: "PURCHASE NOW",
+            brand: "FLASH-BUY DZ"
+        },
+        ar: {
+            title: "آيفون 15 برو ماكس - 256 جيجا",
+            ship: "اختر مصدر الشحن:",
+            ins:
