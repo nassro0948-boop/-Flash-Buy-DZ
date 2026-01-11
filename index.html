@@ -6,56 +6,169 @@
     <title>Flash-Buy DZ | إمبراطورية التجارة الذكية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --primary: #ff4747; --dark: #131921; --amazon-gold: #febd69; --baridi: #006b35; --fb-blue: #1877f2; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background: #f3f3f3; overflow-x: hidden; color: #111; }
+        :root { --primary: #ff4747; --dark: #131921; --baridi: #006b35; --fb: #1877f2; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background: #f4f4f4; }
 
-        /* 1. تأثيرات الدخول والأنيميشن */
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        /* شاشة الدخول الإلزامية */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 9999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+        }
+        .login-btn {
+            width: 80%; max-width: 300px; padding: 15px; margin: 10px;
+            border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer;
+        }
 
-        /* 2. شاشة الدخول الإلزامية (مثل تيمو) */
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-        .login-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 400px; width: 100%; }
+        /* التصميم العام */
+        header { background: var(--dark); color: white; padding: 15px; text-align: center; }
+        .currency-nav { background: #232f3e; color: white; padding: 10px; display: flex; justify-content: center; gap: 15px; }
+        .curr-link { cursor: pointer; padding: 5px 10px; border-radius: 5px; background: #37475a; font-size: 0.8rem; }
+        .curr-link.active { background: var(--primary); }
 
-        /* 3. الهيدر وشريط العملات */
-        header { background: var(--dark); color: white; padding: 10px 15px; position: sticky; top: 0; z-index: 1000; }
-        .currency-bar { background: #232f3e; padding: 5px; display: flex; justify-content: center; gap: 10px; font-size: 0.8rem; }
-        .curr-btn { background: #37475a; border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
-        .curr-btn.active { background: var(--primary); }
-
-        /* 4. قسم المنتجات والبحث */
-        .search-container { padding: 15px; display: flex; gap: 10px; }
-        .search-container input { flex: 1; padding: 12px; border: none; border-radius: 8px; font-family: 'Cairo'; }
-
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; padding: 15px; animation: fadeIn 0.8s ease; }
-        .product-card { background: white; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: 0.3s; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .discount-badge { position: absolute; top: 8px; right: 8px; background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; animation: pulse 1.5s infinite; }
-        .product-card img { width: 100%; height: 180px; object-fit: cover; }
-        .p-info { padding: 10px; text-align: right; }
-        .p-price { font-size: 1.2rem; color: var(--primary); font-weight: bold; }
-        .shipping-label { color: var(--baridi); font-size: 0.75rem; font-weight: bold; margin-top: 5px; }
-
-        /* 5. نظام التتبع */
-        .tracking-section { background: white; margin: 15px; padding: 20px; border-radius: 12px; display: none; }
-        .track-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .container { padding: 15px; max-width: 1200px; margin: auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }
         
-        /* 6. نافذة الدفع الجزائري */
-        #order-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; justify-content: center; align-items: flex-end; }
-        .modal-content { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 25px 25px 0 0; animation: slideUp 0.4s ease; max-height: 90vh; overflow-y: auto; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        .badge { position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; padding: 5px; border-radius: 5px; font-size: 0.7rem; }
+        
+        .info { padding: 10px; }
+        .price { font-size: 1.2rem; color: var(--primary); font-weight: bold; }
+        .shipping { color: var(--baridi); font-size: 0.7rem; font-weight: bold; }
 
-        .payment-method { border: 2px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
-        .payment-method.active { border-color: var(--baridi); background: #eafff0; }
-        .rip-box { background: #f9f9f9; border: 1px dashed #ccc; padding: 10px; font-size: 0.9rem; margin-top: 10px; display: none; }
+        /* نافذة الطلب */
+        #order-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 5000; justify-content: center; align-items: center;
+        }
+        .modal-box { background: white; width: 90%; max-width: 400px; padding: 20px; border-radius: 20px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Cairo'; }
 
-        .btn-main { background: var(--amazon-gold); border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 10px; }
-        .btn-baridi { background: var(--baridi); color: white; }
+        /* التتبع */
+        #tracking-area { background: #fff; margin: 15px 0; padding: 15px; border-radius: 10px; display: none; border: 2px solid var(--primary); }
     </style>
 </head>
 <body>
 
-    <div id="login-overlay">
-        <div class="login-card">
-            <h1 style="
+    <div id="login-screen">
+        <h1 style="color: var(--primary);">FLASH-BUY DZ</h1>
+        <p>سجل دخولك لتصفح سلع AliExpress و Amazon بالدينار</p>
+        <button class="login-btn" style="background: var(--fb);" onclick="enter()">الدخول بفيسبوك</button>
+        <button class="login-btn" style="background: #db4437;" onclick="enter()">الدخول بجوجل</button>
+    </div>
+
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 1.2rem; font-weight: bold;">FLASH-BUY DZ</span>
+            <button onclick="toggleTrack()" style="background:none; border:1px solid white; color:white; padding:5px; border-radius:5px;">تتبع طلبك</button>
+        </div>
+    </header>
+
+    <div class="currency-nav">
+        <span onclick="setRate('DZD', 1)" class="curr-link active">DZD</span>
+        <span onclick="setRate('USD', 0.0042)" class="curr-link">USD</span>
+        <span onclick="setRate('EUR', 0.0039)" class="curr-link">EUR</span>
+    </div>
+
+    <div class="container">
+        <div id="tracking-area">
+            <h4>📦 تتبع طردك الجوي</h4>
+            <input type="text" id="tid" placeholder="أدخل رقم الطلب">
+            <button onclick="doTrack()" style="width:100%; background:var(--dark); color:white; padding:10px; border:none; border-radius:5px;">تحديث الحالة</button>
+            <p id="t-status" style="margin-top:10px; font-size:0.9rem; color:var(--baridi);"></p>
+        </div>
+
+        <div class="grid" id="products-grid">
+            </div>
+    </div>
+
+    <div id="order-modal">
+        <div class="modal-box">
+            <h3 id="p-title">إتمام الطلب</h3>
+            <div style="background: #f0fdf4; padding: 10px; border-radius: 10px; margin-bottom: 10px; font-size: 0.8rem;">
+                🏛️ <b>بريدي موب / CCP:</b><br>
+                RIP: 00799999000123456789 <br>
+                أرسل الوصل عبر واتساب لتأكيد الشحن الدولي.
+            </div>
+            <input type="text" id="u-name" placeholder="الاسم الكامل">
+            <input type="tel" id="u-phone" placeholder="رقم الهاتف">
+            <select id="u-wilaya">
+                <option value="">اختر الولاية (58 ولاية)</option>
+                <option value="الجزائر العاصمة">الجزائر العاصمة</option>
+                <option value="وهران">وهران</option>
+            </select>
+            <button onclick="sendOrder()" style="width:100%; background:var(--baridi); color:white; padding:15px; border:none; border-radius:10px; font-weight:bold;">تأكيد الطلب وفتح واتساب</button>
+            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#888; margin-top:10px;">إلغاء</button>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: "iPhone 15 Pro Max", price: 145000, img: "https://m.media-amazon.com/images/I/712CB7Sc8uL._AC_SL1500_.jpg", badge: "تخفيض 90%" },
+            { id: 2, name: "Watch Ultra 2", price: 5500, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30", badge: "شحن سريع" },
+            { id: 3, name: "AirPods Pro", price: 3800, img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e", badge: "الأكثر مبيعاً" }
+        ];
+
+        let rate = 1;
+        let sym = "د.ج";
+        let selectedItem = "";
+
+        function enter() { document.getElementById('login-screen').style.display = 'none'; }
+
+        function render() {
+            const container = document.getElementById('products-grid');
+            container.innerHTML = products.map(p => `
+                <div class="card">
+                    <div class="badge">${p.badge}</div>
+                    <img src="${p.img}">
+                    <div class="info">
+                        <h3 style="font-size:0.9rem; margin:0;">${p.name}</h3>
+                        <div class="price">${(p.price * rate).toLocaleString()} ${sym}</div>
+                        <div class="shipping">✈️ توصيل لباب المنزل: 7 أيام</div>
+                        <button onclick="openModal('${p.name}', ${p.price})" style="width:100%; margin-top:10px; background:#ffd814; border:1px solid #fcd200; padding:8px; border-radius:5px; font-weight:bold;">اطلب الآن</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setRate(s, r) {
+            rate = r; sym = (s === 'DZD' ? 'د.ج' : (s === 'USD' ? '$' : '€'));
+            render();
+        }
+
+        function openModal(n, p) {
+            selectedItem = n;
+            document.getElementById('p-title').innerText = n;
+            document.getElementById('order-modal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
+
+        function sendOrder() {
+            const name = document.getElementById('u-name').value;
+            const phone = document.getElementById('u-phone').value;
+            const wilaya = document.getElementById('u-wilaya').value;
+            if(!name || !phone) { alert("أدخل بياناتك"); return; }
+            
+            const msg = `🚀 طلب جديد من فلاش باي:\n📦 المنتج: ${selectedItem}\n👤 الزبون: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya}`;
+            window.open(`https://wa.me/213600000000?text=${encodeURIComponent(msg)}`);
+        }
+
+        function toggleTrack() {
+            const area = document.getElementById('tracking-area');
+            area.style.display = area.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function doTrack() {
+            const status = document.getElementById('t-status');
+            status.innerText = "⏳ جاري التحقق من مسار الطرد الجوي...";
+            setTimeout(() => { status.innerText = "📦 طردك الآن في مركز الفرز الدولي (فرنسا) متجهاً للجزائر!"; }, 1500);
+        }
+
+        render();
+    </script>
+</body>
+</html>
