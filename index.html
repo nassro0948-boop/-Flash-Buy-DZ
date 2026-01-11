@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,148 +16,102 @@
 
         body {
             margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--black);
             color: var(--white);
-            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Header */
+        /* الهيدر */
         header {
             padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--dark-grey);
+            background: rgba(10, 10, 10, 0.95);
             border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .logo { color: var(--gold); font-size: 24px; font-weight: bold; }
+        .logo { font-size: 28px; font-weight: 800; color: var(--gold); text-transform: uppercase; }
 
-        /* Categories */
-        .categories-bar {
+        /* الأقسام */
+        .nav-cats {
+            background: var(--dark-grey);
+            padding: 15px;
             display: flex;
             justify-content: center;
-            gap: 20px;
-            padding: 15px;
-            background: #111;
-            flex-wrap: wrap;
-        }
-
-        .cat-card {
-            padding: 10px 20px;
-            border: 1px solid #333;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .cat-card:hover { border-color: var(--gold); color: var(--gold); }
-
-        /* Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
-            padding: 40px 5%;
+            border-bottom: 1px solid #333;
         }
 
-        .item-card {
-            background: var(--dark-grey);
-            border-radius: 12px;
-            padding: 15px;
+        .cat-link { color: #bbb; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .cat-link:hover { color: var(--gold); }
+
+        /* البطاقة التعريفية للموقع */
+        .hero {
+            padding: 80px 5%;
             text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1557821552-17105176677c?w=1200');
+            background-size: cover;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .hero h1 { font-size: 3.5rem; color: var(--gold); margin-bottom: 10px; }
+
+        /* شبكة المنتجات */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 50px 5%;
+        }
+
+        .product-card {
+            background: var(--dark-grey);
+            border-radius: 20px;
+            padding: 20px;
             border: 1px solid #222;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
 
-        .item-card img {
+        .product-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-15px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
+        }
+
+        .product-card img {
             width: 100%;
-            height: 180px;
+            height: 220px;
             object-fit: cover;
-            border-radius: 8px;
-            background: #000;
+            border-radius: 15px;
+            margin-bottom: 20px;
         }
 
-        .price-box { margin: 15px 0; font-size: 20px; color: var(--green); font-weight: bold; }
-        .old-p { font-size: 14px; color: #777; text-decoration: line-through; margin-right: 10px; }
-
-        .btn-order {
-            width: 100%;
-            padding: 12px;
+        .tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
             background: var(--gold);
-            border: none;
-            border-radius: 6px;
+            color: black;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: bold;
-            cursor: pointer;
         }
 
-        /* Language Select */
-        #lang-btn { background: #333; color: white; border: 1px solid var(--gold); padding: 5px 10px; }
-
-    </style>
-</head>
-<body>
-
-<header>
-    <div class="logo">FLASH-BUY DZ</div>
-    <select id="lang-btn">
-        <option value="en">English</option>
-        <option value="ar">العربية</option>
-    </select>
-</header>
-
-<div class="categories-bar">
-    <div class="cat-card">Tech</div>
-    <div class="cat-card">Fashion</div>
-    <div class="cat-card">Home</div>
-    <div class="cat-card">Auto</div>
-</div>
-
-<div class="main-grid">
-    <div class="item-card">
-        <img src="https://images.unsplash.com/photo-1592890288564-76628a30a657?w=400" alt="Phone">
-        <h3 class="name">Smart Phone Pro</h3>
-        <div class="price-box"><span class="old-p">120,000 DA</span> 98,000 DA</div>
-        <button class="btn-order">Order Now</button>
-    </div>
-    <div class="item-card">
-        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" alt="Shoes">
-        <h3 class="name">Sport Shoes Global</h3>
-        <div class="price-box"><span class="old-p">18,000 DA</span> 12,500 DA</div>
-        <button class="btn-order">Order Now</button>
-    </div>
-    <div class="item-card">
-        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" alt="Watch">
-        <h3 class="name">Luxury Watch</h3>
-        <div class="price-box"><span class="old-p">8,000 DA</span> 4,900 DA</div>
-        <button class="btn-order">Order Now</button>
-    </div>
-</div>
-
-<script>
-    const langBtn = document.getElementById('lang-btn');
-    
-    function applyLang(l) {
-        if(l === 'ar') {
-            document.body.style.direction = 'rtl';
-            document.querySelector('.logo').innerText = 'فلاش-باي الجزائر';
-            document.querySelectorAll('.btn-order').forEach(b => b.innerText = 'اطلب الآن');
-        } else {
-            document.body.style.direction = 'ltr';
-            document.querySelector('.logo').innerText = 'FLASH-BUY DZ';
-            document.querySelectorAll('.btn-order').forEach(b => b.innerText = 'Order Now');
+        .price-tag {
+            font-size: 26px;
+            color: var(--green);
+            font-weight: bold;
+            margin: 15px 0;
+            display: block;
         }
-    }
 
-    langBtn.addEventListener('change', (e) => applyLang(e.target.value));
-
-    // Auto detect
-    if(navigator.language.includes('ar')) {
-        langBtn.value = 'ar';
-        applyLang('ar');
-    }
-</script>
-
-</body>
-</html>
+        .old-price {
+            text-decoration: line-through;
+            color
