@@ -16,102 +16,141 @@
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             background-color: var(--black);
             color: var(--white);
-            overflow-x: hidden;
         }
 
-        /* الهيدر */
+        /* رأس الموقع */
         header {
             padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(10, 10, 10, 0.95);
+            background: var(--dark-grey);
             border-bottom: 2px solid var(--gold);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .logo { font-size: 28px; font-weight: 800; color: var(--gold); text-transform: uppercase; }
+        .logo { font-size: 26px; font-weight: bold; color: var(--gold); }
 
-        /* الأقسام */
-        .nav-cats {
-            background: var(--dark-grey);
-            padding: 15px;
+        /* أقسام المنتجات */
+        .categories {
             display: flex;
             justify-content: center;
-            gap: 25px;
-            border-bottom: 1px solid #333;
+            gap: 20px;
+            padding: 15px;
+            background: #111;
+            flex-wrap: wrap;
         }
 
-        .cat-link { color: #bbb; text-decoration: none; font-size: 14px; transition: 0.3s; }
-        .cat-link:hover { color: var(--gold); }
+        .cat-item {
+            color: #bbb;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
 
-        /* البطاقة التعريفية للموقع */
+        .cat-item:hover { border-color: var(--gold); color: var(--gold); }
+
+        /* عرض المنتجات */
         .hero {
-            padding: 80px 5%;
             text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1557821552-17105176677c?w=1200');
+            padding: 60px 20px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200');
             background-size: cover;
-            border-bottom: 1px solid var(--gold);
         }
 
-        .hero h1 { font-size: 3.5rem; color: var(--gold); margin-bottom: 10px; }
-
-        /* شبكة المنتجات */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 50px 5%;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 40px 5%;
         }
 
-        .product-card {
+        .card {
             background: var(--dark-grey);
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid #222;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-
-        .product-card:hover {
-            border-color: var(--gold);
-            transform: translateY(-15px);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
             border-radius: 15px;
-            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #222;
+            transition: 0.3s;
         }
 
-        .tag {
-            position: absolute;
-            top: 15px;
-            left: 15px;
+        .card:hover { transform: translateY(-10px); border-color: var(--gold); }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .price { font-size: 22px; color: var(--green); font-weight: bold; display: block; margin: 10px 0; }
+        .old-price { text-decoration: line-through; color: #777; font-size: 14px; margin-right: 10px; }
+
+        .order-btn {
+            width: 100%;
+            padding: 12px;
             background: var(--gold);
             color: black;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            border: none;
+            border-radius: 8px;
             font-weight: bold;
+            cursor: pointer;
         }
 
-        .price-tag {
-            font-size: 26px;
-            color: var(--green);
-            font-weight: bold;
-            margin: 15px 0;
-            display: block;
-        }
+        footer { padding: 30px; text-align: center; border-top: 1px solid #222; color: #555; }
+    </style>
+</head>
+<body>
 
-        .old-price {
-            text-decoration: line-through;
-            color
+<header>
+    <div class="logo">⚡ FLASH-BUY DZ</div>
+    <div class="search"><i class="fas fa-search"></i></div>
+</header>
+
+<div class="categories">
+    <a href="#" class="cat-item">إلكترونيات</a>
+    <a href="#" class="cat-item">ملابس</a>
+    <a href="#" class="cat-item">منزل</a>
+    <a href="#" class="cat-item">سيارات</a>
+</div>
+
+<div class="hero">
+    <h1 style="color: var(--gold);">تسوق عالمياً من قلب الجزائر</h1>
+    <p>أفضل الصفقات المختارة بعناية مع ضمان وصول آمن</p>
+</div>
+
+<div class="products-grid">
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1592890288564-76628a30a657?w=400" alt="Phone">
+        <h3>هاتف ذكي Global Edition</h3>
+        <span class="price">98,000 DA <span class="old-price">120,000 DA</span></span>
+        <button class="order-btn">اطلب الآن</button>
+    </div>
+
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" alt="Shoes">
+        <h3>أحذية رياضية أصلية</h3>
+        <span class="price">12,500 DA <span class="old-price">18,000 DA</span></span>
+        <button class="order-btn">اطلب الآن</button>
+    </div>
+
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" alt="Watch">
+        <h3>ساعة فاخرة كلاسيكية</h3>
+        <span class="price">4,900 DA <span class="old-price">8,000 DA</span></span>
+        <button class="order-btn">اطلب الآن</button>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 جميع الحقوق محفوظة لـ نصرو</p>
+</footer>
+
+</body>
+</html>
