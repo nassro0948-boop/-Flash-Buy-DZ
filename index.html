@@ -3,112 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy DZ | النسخة الاحترافية</title>
+    <title>Flash-Buy DZ | إمبراطورية نصرو الفخمة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --black: #0a0a0a; --dark: #1a1a1a; --green: #2ecc71; --gray: #f8f9fa; }
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--gray); color: #333; }
+        :root { --gold: #D4AF37; --black: #0a0a0a; --dark: #1a1a1a; --green: #2ecc71; --white: #ffffff; }
         
-        /* Navbar */
-        nav { background: var(--black); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--gold); }
-        .logo { font-size: 24px; font-weight: 900; color: var(--gold); text-decoration: none; }
-        
-        /* Search Section */
-        .search-container { background: var(--dark); padding: 30px 5%; text-align: center; }
-        .search-bar { width: 90%; max-width: 700px; padding: 15px 25px; border-radius: 50px; border: 2px solid var(--gold); font-size: 18px; outline: none; }
+        body { margin: 0; font-family: 'Cairo', sans-serif; background: #f0f0f0; color: #333; overflow-x: hidden; }
 
-        /* Grid */
+        /* أنميشن الدخول */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* الهيدر الملكي */
+        header { background: var(--black); padding: 20px 5%; border-bottom: 3px solid var(--gold); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .logo { font-size: 28px; font-weight: 900; color: var(--gold); text-decoration: none; transition: 0.3s; }
+        .logo:hover { text-shadow: 0 0 15px var(--gold); transform: scale(1.1); }
+
+        /* شريط البحث مع أنميشن */
+        .search-area { background: var(--dark); padding: 40px 5%; text-align: center; }
+        .search-input { width: 80%; max-width: 600px; padding: 15px 30px; border-radius: 50px; border: 2px solid var(--gold); background: #000; color: white; font-size: 18px; outline: none; transition: 0.4s; }
+        .search-input:focus { box-shadow: 0 0 20px var(--gold); width: 85%; }
+
+        /* حاوية المنتجات */
         .container { padding: 40px 5%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
+
+        /* بطاقة المنتج - قمة الأنميشن */
+        .card { 
+            background: white; border-radius: 20px; padding: 15px; border: 1px solid #eee; text-align: center; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; position: relative; overflow: hidden;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); border-color: var(--gold); }
+        .card img { width: 100%; height: 220px; object-fit: cover; border-radius: 15px; transition: 0.5s; }
+        .card:hover img { transform: scale(1.1); }
+
+        .price { font-size: 24px; color: var(--green); font-weight: 900; display: block; margin: 10px 0; }
+        .btn-buy { background: var(--gold); color: black; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
+        .btn-buy:hover { background: black; color: var(--gold); }
+
+        /* نافذة الشراء (Modal) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: white; padding: 40px; border-radius: 25px; border-top: 8px solid var(--gold); width: 90%; max-width: 450px; text-align: center; position: relative; animation: zoomIn 0.3s ease; }
+        @keyframes zoomIn { from { transform: scale(0.5); } to { transform: scale(1); } }
         
-        /* Card Style */
-        .product-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #eee; cursor: pointer; position: relative; }
-        .product-card:hover { transform: translateY(-10px); border-color: var(--gold); }
-        .image-box { width: 100%; height: 230px; background: #eee; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .product-card img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .info { padding: 15px; text-align: right; }
-        .tag { color: var(--gold); font-size: 12px; font-weight: bold; }
-        .name { font-size: 18px; font-weight: bold; margin: 8px 0; color: #222; height: 45px; overflow: hidden; }
-        .price { color: var(--green); font-size: 22px; font-weight: 800; }
-        
-        /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: white; padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 450px; border-top: 6px solid var(--gold); }
+        .rip-box { background: #f9f9f9; padding: 20px; border: 2px dashed var(--gold); font-size: 1.4rem; font-weight: bold; margin: 20px 0; color: #222; }
+
     </style>
 </head>
 <body>
 
-<nav>
+<header>
     <a href="#" class="logo">FLASH-BUY DZ ⚡</a>
-    <div style="color:white"><i class="fas fa-shopping-cart"></i> السلة</div>
-</nav>
+    <div style="color: var(--gold); font-weight: bold;"><i class="fas fa-crown"></i> إمبراطورية نصرو</div>
+</header>
 
-<div class="search-container">
-    <input type="text" id="srch" class="search-bar" placeholder="ابحث في 9000 منتج (أدوات منزلية، ملابس، زينة...)" onkeyup="filter()">
+<div class="search-area">
+    <h1 style="color: var(--gold); margin-bottom: 20px;">ماذا تريد أن تشتري اليوم يا بطل؟</h1>
+    <input type="text" id="srch" class="search-input" placeholder="ابحث في 9000 منتج..." onkeyup="search()">
 </div>
 
 <div class="container">
-    <div class="grid" id="main-grid">
+    <div class="grid" id="productGrid">
         </div>
 </div>
 
 <div class="modal" id="orderModal">
     <div class="modal-content">
-        <h2 id="modalTitle">اسم المنتج</h2>
-        <p>لحجز الطلب، يرجى تحويل العربون عبر بريدي موب:</p>
-        <div style="background:#000; color:var(--gold); padding:20px; font-size:1.4rem; font-weight:bold; border-radius:10px; margin:20px 0;">00799999000012345678</div>
-        <button onclick="closeModal()" style="background:#e74c3c; color:white; border:none; padding:12px 30px; border-radius:8px; cursor:pointer;">إغلاق</button>
+        <h2 id="modalTitle" style="color: #222;"></h2>
+        <p>تحويل الدفع عبر <b>Baridimob</b> لتأكيد الطلب:</p>
+        <div class="rip-box">00799999000012345678</div>
+        <button onclick="closeModal()" style="background: #e74c3c; color: white; border: none; padding: 12px 30px; border-radius: 10px; cursor: pointer;">رجوع للمتجر</button>
     </div>
 </div>
 
 <script>
-    // بيانات حقيقية ومنوعة لضمان عدم التكرار المزعج
-    const rawData = [
-        { n: "خلاط كهربائي عالي القوة", p: "4,500 DA", c: "أدوات منزلية", i: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=400" },
-        { n: "طقم سكاكين احترافي", p: "3,200 DA", c: "أدوات منزلية", i: "https://images.unsplash.com/photo-1593611664162-dd0df562cc49?w=400" },
-        { n: "ساعة ذكية Ultra النسخة الجديدة", p: "6,800 DA", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" },
-        { n: "حذاء رياضي Air فخم", p: "9,500 DA", c: "ملابس", i: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" },
-        { n: "حقيبة سفر جلدية كبيرة", p: "12,000 DA", c: "ملابس", i: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400" },
-        { n: "طقم إضاءة ليد ديكور", p: "1,800 DA", c: "زينة", i: "https://images.unsplash.com/photo-1550537687-c91072c4792d?w=400" },
-        { n: "ماكينة قهوة اسبريسو", p: "18,500 DA", c: "أدوات منزلية", i: "https://images.unsplash.com/photo-1585336261022-69c66d11fe6d?w=400" },
-        { n: "عطر رجالي ملكي 100مل", p: "4,200 DA", c: "زينة", i: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400" },
-        { n: "سماعات بلوتوث عازلة للصوت", p: "5,500 DA", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" },
-        { n: "طقم أواني طبخ غرانيت", p: "22,000 DA", c: "أدوات منزلية", i: "https://images.unsplash.com/photo-1584990344119-a7660d629931?w=400" }
+    // البضاعة الحقيقية والمنوعة
+    const baseItems = [
+        { n: "سيرفيتومو رجالي أديداس", p: "5,800 DA", c: "ملابس", i: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400" },
+        { n: "طقم أواني مطبخ فخم", p: "14,500 DA", c: "منزل", i: "https://images.unsplash.com/photo-1584990344119-a7660d629931?w=400" },
+        { n: "ساعة ذكية Ultra 2", p: "7,200 DA", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" },
+        { n: "خلاط كهربائي عالي الجودة", p: "4,900 DA", c: "منزل", i: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=400" },
+        { n: "طقم إضاءة ليد ديكور", p: "1,500 DA", c: "زينة", i: "https://images.unsplash.com/photo-1550537687-c91072c4792d?w=400" },
+        { n: "حذاء Air Jordan فخم", p: "11,000 DA", c: "ملابس", i: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" }
     ];
 
-    // توليد 9000 منتج بأسماء مختلفة لتجنب التكرار البحت
-    let allProducts = [];
+    // تحدي الـ 9000: توليد قاعدة بيانات ضخمة ومنوعة
+    let database = [];
     for(let i=1; i<=9000; i++) {
-        let template = rawData[i % rawData.length];
-        allProducts.push({
-            name: template.n + " موديل " + i,
-            price: template.p,
-            cat: template.c,
-            img: template.i
+        let item = baseItems[i % baseItems.length];
+        database.push({
+            name: item.n + " - نسخة #" + i,
+            price: item.p,
+            cat: item.c,
+            img: item.i
         });
     }
 
     function render(list) {
-        const grid = document.getElementById('main-grid');
+        const grid = document.getElementById('productGrid');
         grid.innerHTML = "";
-        list.slice(0, 80).forEach(p => {
+        list.slice(0, 100).forEach(p => {
             grid.innerHTML += `
-                <div class="product-card" onclick="openModal('${p.name}')">
-                    <div class="image-box"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/300?text=Flash-Buy+DZ'"></div>
-                    <div class="info">
-                        <span class="tag">${p.cat}</span>
-                        <div class="name">${p.name}</div>
-                        <div class="price">${p.price}</div>
+                <div class="card" onclick="openModal('${p.name}')">
+                    <img src="${p.img}" onerror="this.src='https://via.placeholder.com/300?text=Flash-Buy+DZ'">
+                    <div style="padding:15px">
+                        <span style="color:var(--gold); font-size:12px; font-weight:bold">${p.cat}</span>
+                        <div style="font-size:18px; font-weight:bold; margin:10px 0; height:50px; overflow:hidden">${p.name}</div>
+                        <span class="price">${p.price}</span>
+                        <button class="btn-buy">شراء الآن</button>
                     </div>
                 </div>
             `;
         });
     }
 
-    function filter() {
+    function search() {
         let val = document.getElementById('srch').value.toLowerCase();
-        let filtered = allProducts.filter(p => p.name.toLowerCase().includes(val) || p.cat.toLowerCase().includes(val));
+        let filtered = database.filter(x => x.name.toLowerCase().includes(val) || x.cat.toLowerCase().includes(val));
         render(filtered);
     }
 
@@ -119,7 +131,8 @@
 
     function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
 
-    window.onload = () => render(allProducts);
+    // تشغيل الإمبراطورية
+    window.onload = () => render(database);
 </script>
 
 </body>
