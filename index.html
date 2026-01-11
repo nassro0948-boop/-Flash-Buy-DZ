@@ -16,63 +16,148 @@
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 0;
+            font-family: Arial, sans-serif;
             background-color: var(--black);
             color: var(--white);
-            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* --- Header & Navigation --- */
+        /* Header */
         header {
-            padding: 15px 5%;
+            padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: var(--dark-grey);
             border-bottom: 2px solid var(--gold);
-            background: rgba(10, 10, 10, 0.95);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
 
-        .logo { font-size: 26px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
-        .logo i { margin-right: 10px; }
+        .logo { color: var(--gold); font-size: 24px; font-weight: bold; }
 
-        .nav-controls { display: flex; gap: 20px; align-items: center; }
-        select { background: #222; color: white; border: 1px solid var(--gold); padding: 5px; border-radius: 5px; cursor: pointer; }
-
-        /* --- Categories Bar --- */
-        .categories {
-            background: var(--dark-grey);
-            padding: 15px;
+        /* Categories */
+        .categories-bar {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            overflow-x: auto;
-            border-bottom: 1px solid #333;
+            gap: 20px;
+            padding: 15px;
+            background: #111;
+            flex-wrap: wrap;
         }
 
-        .cat-item { cursor: pointer; text-align: center; transition: 0.3s; color: #bbb; }
-        .cat-item:hover { color: var(--gold); transform: translateY(-3px); }
-        .cat-item i { font-size: 20px; display: block; margin-bottom: 5px; }
-
-        /* --- Hero Section --- */
-        .hero {
-            padding: 60px 5%;
-            text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1200x400/111/D4AF37?text=Global+Shopping+Deals');
-            background-size: cover;
+        .cat-card {
+            padding: 10px 20px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        /* --- Product Grid --- */
-        .products-container {
-            padding: 40px 5%;
+        .cat-card:hover { border-color: var(--gold); color: var(--gold); }
+
+        /* Grid */
+        .main-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            padding: 40px 5%;
         }
 
-        .product-card {
+        .item-card {
             background: var(--dark-grey);
-            border-radius: 15px;
-            padding:
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #222;
+        }
+
+        .item-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #000;
+        }
+
+        .price-box { margin: 15px 0; font-size: 20px; color: var(--green); font-weight: bold; }
+        .old-p { font-size: 14px; color: #777; text-decoration: line-through; margin-right: 10px; }
+
+        .btn-order {
+            width: 100%;
+            padding: 12px;
+            background: var(--gold);
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Language Select */
+        #lang-btn { background: #333; color: white; border: 1px solid var(--gold); padding: 5px 10px; }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">FLASH-BUY DZ</div>
+    <select id="lang-btn">
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+    </select>
+</header>
+
+<div class="categories-bar">
+    <div class="cat-card">Tech</div>
+    <div class="cat-card">Fashion</div>
+    <div class="cat-card">Home</div>
+    <div class="cat-card">Auto</div>
+</div>
+
+<div class="main-grid">
+    <div class="item-card">
+        <img src="https://images.unsplash.com/photo-1592890288564-76628a30a657?w=400" alt="Phone">
+        <h3 class="name">Smart Phone Pro</h3>
+        <div class="price-box"><span class="old-p">120,000 DA</span> 98,000 DA</div>
+        <button class="btn-order">Order Now</button>
+    </div>
+    <div class="item-card">
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" alt="Shoes">
+        <h3 class="name">Sport Shoes Global</h3>
+        <div class="price-box"><span class="old-p">18,000 DA</span> 12,500 DA</div>
+        <button class="btn-order">Order Now</button>
+    </div>
+    <div class="item-card">
+        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" alt="Watch">
+        <h3 class="name">Luxury Watch</h3>
+        <div class="price-box"><span class="old-p">8,000 DA</span> 4,900 DA</div>
+        <button class="btn-order">Order Now</button>
+    </div>
+</div>
+
+<script>
+    const langBtn = document.getElementById('lang-btn');
+    
+    function applyLang(l) {
+        if(l === 'ar') {
+            document.body.style.direction = 'rtl';
+            document.querySelector('.logo').innerText = 'فلاش-باي الجزائر';
+            document.querySelectorAll('.btn-order').forEach(b => b.innerText = 'اطلب الآن');
+        } else {
+            document.body.style.direction = 'ltr';
+            document.querySelector('.logo').innerText = 'FLASH-BUY DZ';
+            document.querySelectorAll('.btn-order').forEach(b => b.innerText = 'Order Now');
+        }
+    }
+
+    langBtn.addEventListener('change', (e) => applyLang(e.target.value));
+
+    // Auto detect
+    if(navigator.language.includes('ar')) {
+        langBtn.value = 'ar';
+        applyLang('ar');
+    }
+</script>
+
+</body>
+</html>
