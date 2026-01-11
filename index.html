@@ -3,136 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy DZ | إمبراطورية نصرو الفخمة</title>
+    <title>إمبراطورية نصرو الملكية 👑</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --black: #0a0a0a; --dark: #1a1a1a; --green: #2ecc71; --white: #ffffff; }
-        
-        body { margin: 0; font-family: 'Cairo', sans-serif; background: #f0f0f0; color: #333; overflow-x: hidden; }
+        :root { --gold: #FFD700; --dark-bg: #050505; --card-bg: #121212; --accent: #00d2ff; }
+        body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--dark-bg); color: white; overflow-x: hidden; }
 
-        /* أنميشن الدخول */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* الهيدر الملكي */
-        header { background: var(--black); padding: 20px 5%; border-bottom: 3px solid var(--gold); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .logo { font-size: 28px; font-weight: 900; color: var(--gold); text-decoration: none; transition: 0.3s; }
-        .logo:hover { text-shadow: 0 0 15px var(--gold); transform: scale(1.1); }
-
-        /* شريط البحث مع أنميشن */
-        .search-area { background: var(--dark); padding: 40px 5%; text-align: center; }
-        .search-input { width: 80%; max-width: 600px; padding: 15px 30px; border-radius: 50px; border: 2px solid var(--gold); background: #000; color: white; font-size: 18px; outline: none; transition: 0.4s; }
-        .search-input:focus { box-shadow: 0 0 20px var(--gold); width: 85%; }
-
-        /* حاوية المنتجات */
-        .container { padding: 40px 5%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
-
-        /* بطاقة المنتج - قمة الأنميشن */
-        .card { 
-            background: white; border-radius: 20px; padding: 15px; border: 1px solid #eee; text-align: center; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; position: relative; overflow: hidden;
-            animation: fadeIn 0.8s ease forwards;
+        /* شاشة المفاجأة الأولى */
+        #loading-screen {
+            position: fixed; inset: 0; background: black; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: 1.5s cubic-bezier(0.7, 0, 0.3, 1);
         }
-        .card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); border-color: var(--gold); }
-        .card img { width: 100%; height: 220px; object-fit: cover; border-radius: 15px; transition: 0.5s; }
-        .card:hover img { transform: scale(1.1); }
+        .mystery-box { width: 100px; height: 100px; border: 5px solid var(--gold); border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .price { font-size: 24px; color: var(--green); font-weight: 900; display: block; margin: 10px 0; }
-        .btn-buy { background: var(--gold); color: black; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
-        .btn-buy:hover { background: black; color: var(--gold); }
+        /* الهيدر المتطور */
+        header { 
+            padding: 25px 5%; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000;
+        }
+        .logo { font-size: 32px; font-weight: 900; color: var(--gold); text-shadow: 0 0 15px var(--gold); text-decoration: none; letter-spacing: 2px; }
 
-        /* نافذة الشراء (Modal) */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: white; padding: 40px; border-radius: 25px; border-top: 8px solid var(--gold); width: 90%; max-width: 450px; text-align: center; position: relative; animation: zoomIn 0.3s ease; }
-        @keyframes zoomIn { from { transform: scale(0.5); } to { transform: scale(1); } }
+        /* قسم السحر */
+        .hero { padding: 80px 5%; text-align: center; background: linear-gradient(to bottom, #050505, #1a1a2e); }
+        .search-wrapper { position: relative; max-width: 700px; margin: 0 auto; }
+        .search-input { 
+            width: 100%; padding: 20px 40px; border-radius: 50px; border: 1px solid var(--gold);
+            background: rgba(255,255,255,0.05); color: white; font-size: 20px; outline: none;
+            transition: 0.5s; text-align: center;
+        }
+        .search-input:focus { background: rgba(255,255,255,0.1); box-shadow: 0 0 40px rgba(255, 215, 0, 0.4); }
+
+        /* شبكة السلع الحقيقية */
+        .container { padding: 50px 5%; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 35px; }
+
+        .item-card {
+            background: var(--card-bg); border-radius: 25px; padding: 15px;
+            border: 1px solid rgba(255,215,0,0.1); transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative; overflow: hidden; cursor: pointer;
+        }
+        .item-card:hover { transform: scale(1.08) translateY(-10px); border-color: var(--gold); box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
+        .item-card img { width: 100%; height: 260px; object-fit: cover; border-radius: 20px; transition: 0.8s; }
+        .item-card:hover img { transform: scale(1.1); filter: brightness(1.2); }
+
+        .price-badge { background: var(--gold); color: black; padding: 5px 15px; border-radius: 50px; font-weight: 900; font-size: 1.2rem; }
         
-        .rip-box { background: #f9f9f9; padding: 20px; border: 2px dashed var(--gold); font-size: 1.4rem; font-weight: bold; margin: 20px 0; color: #222; }
-
+        /* النافذة المنبثقة (المفاجأة التفاعلية) */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal-content { 
+            background: white; color: black; padding: 40px; border-radius: 35px; 
+            max-width: 450px; width: 90%; text-align: center; 
+            border: 10px solid var(--gold); transform: translateY(100px); opacity: 0; transition: 0.5s;
+        }
+        .modal.active { display: flex; }
+        .modal.active .modal-content { transform: translateY(0); opacity: 1; }
+        
+        .rip-card { background: #000; color: var(--gold); padding: 25px; border-radius: 20px; font-size: 24px; font-weight: bold; margin: 25px 0; border: 2px solid var(--gold); }
+        .close-btn { background: #ff4757; color: white; border: none; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
+<div id="loading-screen">
+    <div class="mystery-box"></div>
+    <h1 style="color: var(--gold); margin-top: 20px; letter-spacing: 5px;">FLASH-BUY DZ</h1>
+    <p>بصمة نصرو الإمبراطور...</p>
+</div>
+
 <header>
-    <a href="#" class="logo">FLASH-BUY DZ ⚡</a>
-    <div style="color: var(--gold); font-weight: bold;"><i class="fas fa-crown"></i> إمبراطورية نصرو</div>
+    <a href="#" class="logo">FLASH-BUY⚡</a>
+    <div style="color: var(--gold); font-weight: bold;"><i class="fas fa-bolt"></i> نسخة 2026 الخاصة</div>
 </header>
 
-<div class="search-area">
-    <h1 style="color: var(--gold); margin-bottom: 20px;">ماذا تريد أن تشتري اليوم يا بطل؟</h1>
-    <input type="text" id="srch" class="search-input" placeholder="ابحث في 9000 منتج..." onkeyup="search()">
+<div class="hero">
+    <h1 style="font-size: 3rem; margin-bottom: 30px;">متجر نصرو الكبير 💎</h1>
+    <div class="search-wrapper">
+        <input type="text" id="srch" class="search-input" placeholder="ابحث في الكتالوج الضخم..." onkeyup="filter()">
+    </div>
 </div>
 
 <div class="container">
-    <div class="grid" id="productGrid">
-        </div>
+    <div class="grid" id="mainGrid"></div>
 </div>
 
-<div class="modal" id="orderModal">
+<div class="modal" id="modal">
     <div class="modal-content">
-        <h2 id="modalTitle" style="color: #222;"></h2>
-        <p>تحويل الدفع عبر <b>Baridimob</b> لتأكيد الطلب:</p>
-        <div class="rip-box">00799999000012345678</div>
-        <button onclick="closeModal()" style="background: #e74c3c; color: white; border: none; padding: 12px 30px; border-radius: 10px; cursor: pointer;">رجوع للمتجر</button>
+        <i class="fas fa-shopping-basket" style="font-size: 4rem; color: var(--gold);"></i>
+        <h2 id="m-title" style="font-size: 2rem;"></h2>
+        <p style="color: #555;">أنت على وشك اقتناء الأفضل! تفاصيل الدفع:</p>
+        <div class="rip-card" id="m-rip">00799999000012345678</div>
+        <button class="close-btn" onclick="closeM()">العودة للمتجر</button>
     </div>
 </div>
 
 <script>
-    // البضاعة الحقيقية والمنوعة
-    const baseItems = [
-        { n: "سيرفيتومو رجالي أديداس", p: "5,800 DA", c: "ملابس", i: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400" },
-        { n: "طقم أواني مطبخ فخم", p: "14,500 DA", c: "منزل", i: "https://images.unsplash.com/photo-1584990344119-a7660d629931?w=400" },
-        { n: "ساعة ذكية Ultra 2", p: "7,200 DA", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" },
-        { n: "خلاط كهربائي عالي الجودة", p: "4,900 DA", c: "منزل", i: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=400" },
-        { n: "طقم إضاءة ليد ديكور", p: "1,500 DA", c: "زينة", i: "https://images.unsplash.com/photo-1550537687-c91072c4792d?w=400" },
-        { n: "حذاء Air Jordan فخم", p: "11,000 DA", c: "ملابس", i: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" }
+    const catalog = [
+        { n: "ساعة ذكية Ultra Series", p: "8,500 DA", i: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600" },
+        { n: "طقم رياضي شتوي قطن", p: "5,900 DA", i: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600" },
+        { n: "خلاط كهربائي سلفر كريست", p: "4,600 DA", i: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=600" },
+        { n: "حذاء رياضي Air فخم", p: "11,000 DA", i: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600" },
+        { n: "ماكينة قهوة اسبريسو", p: "19,500 DA", i: "https://images.unsplash.com/photo-1585336261022-69c66d11fe6d?w=600" },
+        { n: "طقم أواني غرانيت تركي", p: "22,000 DA", i: "https://images.unsplash.com/photo-1584990344119-a7660d629931?w=600" }
     ];
 
-    // تحدي الـ 9000: توليد قاعدة بيانات ضخمة ومنوعة
-    let database = [];
-    for(let i=1; i<=9000; i++) {
-        let item = baseItems[i % baseItems.length];
-        database.push({
-            name: item.n + " - نسخة #" + i,
-            price: item.p,
-            cat: item.c,
-            img: item.i
-        });
+    let db = [];
+    for(let i=1; i<=9000; i++){
+        let item = catalog[i % catalog.length];
+        db.push({ name: item.n + " - " + i, price: item.price, img: item.i });
     }
 
     function render(list) {
-        const grid = document.getElementById('productGrid');
+        const grid = document.getElementById('mainGrid');
         grid.innerHTML = "";
         list.slice(0, 100).forEach(p => {
             grid.innerHTML += `
-                <div class="card" onclick="openModal('${p.name}')">
-                    <img src="${p.img}" onerror="this.src='https://via.placeholder.com/300?text=Flash-Buy+DZ'">
+                <div class="item-card" onclick="openM('${p.name}')">
+                    <img src="${p.img}" loading="lazy">
                     <div style="padding:15px">
-                        <span style="color:var(--gold); font-size:12px; font-weight:bold">${p.cat}</span>
-                        <div style="font-size:18px; font-weight:bold; margin:10px 0; height:50px; overflow:hidden">${p.name}</div>
-                        <span class="price">${p.price}</span>
-                        <button class="btn-buy">شراء الآن</button>
+                        <div style="font-weight:900; font-size:1.2rem; margin-bottom:10px;">${p.name}</div>
+                        <span class="price-badge">${p.price}</span>
                     </div>
                 </div>
             `;
         });
     }
 
-    function search() {
-        let val = document.getElementById('srch').value.toLowerCase();
-        let filtered = database.filter(x => x.name.toLowerCase().includes(val) || x.cat.toLowerCase().includes(val));
-        render(filtered);
+    function openM(name) {
+        document.getElementById('m-title').innerText = name;
+        document.getElementById('modal').classList.add('active');
     }
 
-    function openModal(name) {
-        document.getElementById('modalTitle').innerText = name;
-        document.getElementById('orderModal').style.display = 'flex';
+    function closeM() { document.getElementById('modal').classList.remove('active'); }
+
+    function filter() {
+        let v = document.getElementById('srch').value.toLowerCase();
+        let f = db.filter(x => x.name.toLowerCase().includes(v));
+        render(f);
     }
 
-    function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
-
-    // تشغيل الإمبراطورية
-    window.onload = () => render(database);
+    window.onload = () => {
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.opacity = '0';
+            setTimeout(() => document.getElementById('loading-screen').style.removeProperty, 1500);
+            render(db);
+        }, 2000);
+    }
 </script>
 
 </body>
