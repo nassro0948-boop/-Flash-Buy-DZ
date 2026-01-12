@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy-DZ | المنصة الشاملة</title>
+    <title>Flash-Buy-DZ | النسخة الاحترافية 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
         body { font-family: 'Tajawal', sans-serif; background: #0f172a; color: white; scroll-behavior: smooth; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
         .active-filter { background: #facc15 !important; color: #000 !important; }
-        #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center; justify-content: center; overflow-y: auto; padding: 20px; }
+        #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
+        .faq-card:hover { border-color: #facc15; }
     </style>
 </head>
 <body>
 
-    <header class="p-6 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-        <h1 class="text-4xl font-black text-yellow-400 tracking-tighter shadow-yellow-500/20 shadow-2xl">FLASH-BUY-DZ ⚡</h1>
-        <div class="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto">
+    <header class="p-6 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6" data-aos="fade-down">
+        <h1 class="text-4xl font-black text-yellow-400">FLASH-BUY-DZ ⚡</h1>
+        <div class="flex gap-2 overflow-x-auto pb-2">
             <button onclick="filterProducts('الكل')" class="filter-btn active-filter px-6 py-2 rounded-full glass text-sm font-bold transition">الكل</button>
             <button onclick="filterProducts('إلكترونيات')" class="filter-btn px-6 py-2 rounded-full glass text-sm font-bold transition">إلكترونيات</button>
             <button onclick="filterProducts('أدوات منزلية')" class="filter-btn px-6 py-2 rounded-full glass text-sm font-bold transition">منزل</button>
@@ -28,22 +29,129 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
-        <div id="mainGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            </div>
+    <div class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-1 md:grid-cols-3 gap-4" data-aos="zoom-in">
+        <div class="glass p-4 rounded-xl flex items-center gap-4 border-l-4 border-yellow-400">
+            <i class="fa-solid fa-truck-fast text-yellow-400 text-2xl"></i>
+            <p class="text-xs font-bold">توصيل آمن لـ 58 ولاية</p>
+        </div>
+        <div class="glass p-4 rounded-xl flex items-center gap-4 border-l-4 border-green-500">
+            <i class="fa-solid fa-shield-halved text-green-500 text-2xl"></i>
+            <p class="text-xs font-bold">دفع آمن عبر بريدي موب</p>
+        </div>
+        <div class="glass p-4 rounded-xl flex items-center gap-4 border-l-4 border-blue-500">
+            <i class="fa-solid fa-headset text-blue-500 text-2xl"></i>
+            <p class="text-xs font-bold">دعم فني متوفر 24/7</p>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 py-12">
+        <div id="mainGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </main>
 
+    <section class="max-w-7xl mx-auto px-4 py-12 border-t border-white/10">
+        <h2 class="text-3xl font-black text-center mb-10 text-yellow-400">الأسئلة الشائعة 🤔</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass p-6 rounded-2xl faq-card transition duration-300">
+                <h4 class="font-bold mb-2">كيف يتم الدفع؟</h4>
+                <p class="text-gray-400 text-sm italic">الدفع يكون عبر تطبيق بريدي موب أو CCP، بمجرد تحويل المبلغ ترفع صورة الوصل في الموقع لنقوم بمعالجة طلبك.</p>
+            </div>
+            <div class="glass p-6 rounded-2xl faq-card transition duration-300">
+                <h4 class="font-bold mb-2">كم تستغرق مدة الشحن؟</h4>
+                <p class="text-gray-400 text-sm italic">بما أننا نشتري من مواقع عالمية، تستغرق المدة عادة من 15 إلى 25 يوماً لتصل السلعة لعنوانك في الجزائر.</p>
+            </div>
+        </div>
+    </section>
+
     <div id="orderModal">
-        <div class="bg-slate-900 border border-yellow-400 p-8 rounded-3xl max-w-lg w-full relative">
-            <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 text-3xl">&times;</button>
+        <div class="bg-slate-900 border border-yellow-400 p-8 rounded-3xl max-w-lg w-full relative shadow-2xl overflow-y-auto max-h-[90vh]">
+            <button onclick="closeModal()" class="absolute top-4 left-4 text-white text-3xl">&times;</button>
             <div id="modalContent">
-                <div class="flex items-center gap-4 mb-6">
-                    <img id="modalImg" src="" class="w-24 h-24 object-contain bg-white/5 rounded-xl">
-                    <div>
-                        <h3 id="pName" class="text-xl font-black text-yellow-400"></h3>
-                        <p id="pPrice" class="text-2xl font-bold"></p>
-                    </div>
+                <div class="text-center mb-6">
+                    <img id="modalImg" src="" class="w-32 h-32 mx-auto mb-4 object-contain bg-white rounded-2xl p-2 shadow-inner">
+                    <h3 id="pName" class="text-2xl font-black text-yellow-400"></h3>
+                    <p id="pPrice" class="text-xl font-bold"></p>
                 </div>
                 
-                <form id="purchaseForm" class="space-y-4">
-                    <input type="text" placeholder="الاسم الكامل" class="w-full p-4 bg
+                <form id="finalOrderForm" onsubmit="handleOrderSubmission(event)" class="space-y-4 text-right">
+                    <div class="space-y-1">
+                        <label class="text-xs text-gray-400 pr-2">الاسم الكامل</label>
+                        <input type="text" placeholder="مثلاً: نصرو محمد" class="w-full p-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-yellow-400" required>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs text-gray-400 pr-2">رقم الهاتف</label>
+                        <input type="tel" placeholder="05/06/07XXXXXXXX" class="w-full p-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-yellow-400" required>
+                    </div>
+                    <div class="p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-xl text-center">
+                        <p class="text-[10px] text-yellow-400 font-bold mb-1">بيانات الدفع (بريدي موب)</p>
+                        <p class="font-mono text-sm font-bold tracking-wider">RIP: 00799999000123456789</p>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs text-gray-400 pr-2">وصل الدفع</label>
+                        <label class="block w-full cursor-pointer bg-white/5 border-2 border-dashed border-white/20 p-4 rounded-xl text-center hover:border-yellow-400 transition">
+                            <span class="text-xs text-gray-400">اضغط لرفع صورة الوصل</span>
+                            <input type="file" class="hidden" required>
+                        </label>
+                    </div>
+                    <button type="submit" class="w-full bg-yellow-400 text-black py-4 rounded-2xl font-black text-lg hover:scale-105 transition active:scale-95 shadow-xl shadow-yellow-400/20">
+                        إرسال الطلب للمراجعة ✅
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        const storeData = [
+            { n: "iPhone 15 Pro Max", p: "385,000", c: "إلكترونيات", i: "https://m.media-amazon.com/images/I/81SigAnN7iL._AC_SL1500_.jpg" },
+            { n: "Sony WH-1000XM5", p: "65,000", c: "إلكترونيات", i: "https://m.media-amazon.com/images/I/61S9aVn9dNL._AC_SL1500_.jpg" },
+            { n: "Ninja Air Fryer", p: "34,000", c: "أدوات منزلية", i: "https://m.media-amazon.com/images/I/71atvS874FL._AC_SL1500_.jpg" },
+            { n: "Nike Air Max 270", p: "26,000", c: "أحذية", i: "https://m.media-amazon.com/images/I/6125yAfsJKL._AC_UX575_.jpg" },
+            { n: "MacBook Air M2", p: "245,000", c: "إلكترونيات", i: "https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_SL1500_.jpg" },
+            { n: "Hoodie Oversize", p: "5,800", c: "ملابس", i: "https://m.media-amazon.com/images/I/71p66N-8unL._AC_SX679_.jpg" }
+        ];
+
+        function renderProducts(filter = 'الكل') {
+            const grid = document.getElementById('mainGrid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 48; i++) {
+                const p = storeData[i % storeData.length];
+                if (filter !== 'الكل' && p.c !== filter) continue;
+                grid.innerHTML += `
+                    <div onclick="openOrder('${p.n}', '${p.p}', '${p.i}')" class="glass p-5 rounded-3xl cursor-pointer hover:border-yellow-400 transition-all group" data-aos="fade-up">
+                        <div class="h-40 flex items-center justify-center bg-white/5 rounded-2xl mb-4 p-2 overflow-hidden">
+                            <img src="${p.i}" class="max-h-full group-hover:scale-110 transition duration-500">
+                        </div>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase">${p.c}</p>
+                        <h4 class="font-bold truncate text-sm mt-1">${p.n}</h4>
+                        <p class="text-yellow-400 font-black text-lg mt-2">${p.p} DA</p>
+                    </div>
+                `;
+            }
+        }
+
+        function filterProducts(cat) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active-filter'));
+            event.target.classList.add('active-filter');
+            renderProducts(cat);
+        }
+
+        function openOrder(name, price, img) {
+            document.getElementById('orderModal').style.display = 'flex';
+            document.getElementById('pName').innerText = name;
+            document.getElementById('pPrice').innerText = price + " DA";
+            document.getElementById('modalImg').src = img;
+        }
+
+        function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+
+        function handleOrderSubmission(e) {
+            e.preventDefault();
+            alert("تم إرسال طلبك بنجاح يا نصرو! سنقوم بمراجعة وصل الدفع وتأكيد طلبك قريباً.");
+            closeModal();
+        }
+
+        window.onload = () => { AOS.init(); renderProducts(); };
+    </script>
+</body>
+</html>
