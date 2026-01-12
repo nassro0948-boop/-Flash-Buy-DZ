@@ -8,86 +8,75 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background: #0f172a; color: white; margin: 0; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); transition: 0.4s ease; border-radius: 32px; }
-        .glass:hover { border-color: #facc15; transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .active-filter { background: #facc15 !important; color: #000 !important; }
-        #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
+        body { font-family: 'Tajawal', sans-serif; background: #070b14; color: white; margin: 0; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); transition: 0.4s; border-radius: 35px; }
+        .glass:hover { border-color: #facc15; transform: translateY(-10px); box-shadow: 0 25px 50px rgba(0,0,0,0.7); }
+        .active-filter { background: #facc15 !important; color: #000 !important; font-weight: 900; }
+        #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
 
-    <header class="p-8 max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6">
-        <h1 class="text-4xl font-black text-yellow-400 italic">FLASH-BUY-DZ ⚡</h1>
-        <div class="flex gap-2 overflow-x-auto pb-2 w-full lg:w-auto">
-            <button onclick="filterProducts('الكل', this)" class="filter-btn active-filter px-8 py-2 rounded-2xl glass text-sm font-bold transition">الكل</button>
-            <button onclick="filterProducts('إلكترونيات', this)" class="filter-btn px-8 py-2 rounded-2xl glass text-sm font-bold transition">إلكترونيات</button>
-            <button onclick="filterProducts('أحذية', this)" class="filter-btn px-8 py-2 rounded-2xl glass text-sm font-bold transition">أحذية</button>
+    <header class="p-8 max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6 text-center">
+        <h1 class="text-5xl font-black text-yellow-400 italic tracking-tighter">FLASH-BUY-DZ ⚡</h1>
+        <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar w-full lg:w-auto">
+            <button onclick="filterProducts('الكل', this)" class="filter-btn active-filter px-8 py-3 rounded-2xl glass text-sm transition whitespace-nowrap">الكل</button>
+            <button onclick="filterProducts('إلكترونيات', this)" class="filter-btn px-8 py-3 rounded-2xl glass text-sm transition whitespace-nowrap">إلكترونيات</button>
+            <button onclick="filterProducts('أحذية', this)" class="filter-btn px-8 py-3 rounded-2xl glass text-sm transition whitespace-nowrap">أحذية</button>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-6">
-        <div id="mainGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div id="mainGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"></div>
     </main>
 
     <div id="orderModal">
-        <div class="bg-slate-900 border-2 border-yellow-400 p-10 rounded-[40px] max-w-md w-full relative text-center shadow-2xl">
-            <button onclick="closeModal()" class="absolute top-6 left-6 text-gray-500 hover:text-white text-3xl">&times;</button>
-            
-            <div class="w-32 h-32 mx-auto mb-6 p-2 bg-white rounded-3xl rotate-3 shadow-lg">
-                <img id="modalImg" src="" class="w-full h-full object-contain">
+        <div class="bg-slate-900 border-2 border-yellow-400 p-10 rounded-[50px] max-w-md w-full relative text-center shadow-[0_0_60px_rgba(250,204,21,0.2)]">
+            <button onclick="closeModal()" class="absolute top-8 left-8 text-gray-400 hover:text-white text-4xl">&times;</button>
+            <div class="w-36 h-36 mx-auto mb-6 p-4 bg-white rounded-[40px] shadow-2xl overflow-hidden flex items-center justify-center">
+                <img id="modalImg" src="" class="max-h-full object-contain">
             </div>
-            
-            <h3 id="pName" class="text-3xl font-black text-white mb-1"></h3>
+            <h3 id="pName" class="text-3xl font-black text-white mb-2"></h3>
             <p id="pPrice" class="text-yellow-400 text-2xl font-black mb-8"></p>
-            
-            <form onsubmit="handleSecureOrder(event)" class="space-y-4 text-right">
-                <input type="text" id="custName" placeholder="اسمك الكريم" class="w-full p-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-yellow-400" required>
-                <input type="tel" id="custPhone" placeholder="رقم هاتفك" class="w-full p-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-yellow-400" required>
-                
-                <div class="bg-yellow-400/10 p-4 rounded-2xl border border-yellow-400/20 text-center">
-                    <p class="text-[10px] text-yellow-400 font-bold uppercase tracking-widest mb-1">بيانات الدفع (بريدي موب)</p>
-                    <p class="font-mono text-sm font-bold text-white italic">RIP: 00799999000123456789</p>
+            <form onsubmit="handleOrder(event)" class="space-y-4 text-right">
+                <input type="text" id="custName" placeholder="اسمك الكريم" class="w-full p-5 bg-white/5 border border-white/10 rounded-3xl text-white outline-none focus:border-yellow-400" required>
+                <input type="tel" id="custPhone" placeholder="رقم هاتفك" class="w-full p-5 bg-white/5 border border-white/10 rounded-3xl text-white outline-none focus:border-yellow-400" required>
+                <div class="bg-yellow-400/10 p-5 rounded-3xl border border-yellow-400/20 text-center">
+                    <p class="text-[10px] text-yellow-400 font-black uppercase mb-1">بيانات الدفع (بريدي موب)</p>
+                    <p class="font-mono text-white text-sm font-bold">RIP: 00799999000123456789</p>
                 </div>
-
-                <button type="submit" class="w-full bg-yellow-400 text-black py-5 rounded-2xl font-black text-xl shadow-xl hover:bg-white transition-all transform active:scale-95">
-                    تأكيد الطلب الآن ✨
-                </button>
+                <button type="submit" class="w-full bg-yellow-400 text-black py-5 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition hover:bg-white">تأكيد الشراء ✅</button>
             </form>
         </div>
     </div>
 
     <script>
-        // كود الحماية الخاص بك يا نصرو
-        function protect(input) { return input.replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+        function protect(s) { return s.replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
-        // روابط صور رسمية ثابتة جداً لتجنب المشاكل السابقة
+        // صور "ويكيبيديا" - لا تُحظر أبداً وتظهر فوراً
         const storeData = [
-            { n: "iPhone 15 Pro", p: "285,000", c: "إلكترونيات", i: "https://www.apple.com/v/iphone/home/bu/images/overview/select/iphone_15_pro__erf98u2e47mq_large.jpg" },
-            { n: "Sony WH-1000XM5", p: "65,000", c: "إلكترونيات", i: "https://m.media-amazon.com/images/I/61S9aVn9dNL._AC_SL1500_.jpg" },
-            { n: "MacBook Air M3", p: "220,000", c: "إلكترونيات", i: "https://www.apple.com/v/macbook-air/q/images/overview/select/product_tile_mba_13_15__er786s68v96u_large.png" },
-            { n: "PlayStation 5", p: "98,000", c: "إلكترونيات", i: "https://m.media-amazon.com/images/I/619BkvKW35L._AC_SL1500_.jpg" },
-            { n: "Nike Air Max", p: "26,000", c: "أحذية", i: "https://m.media-amazon.com/images/I/6125yAfsJKL._AC_UX575_.jpg" },
-            { n: "Adidas Sneakers", p: "22,000", c: "أحذية", i: "https://m.media-amazon.com/images/I/71-0819K3XL._AC_UX575_.jpg" }
+            { n: "iPhone 15 Pro Max", p: "285,000", c: "إلكترونيات", i: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/IPhone_15_Pro_Max_Titanium_Natural.jpg/320px-IPhone_15_Pro_Max_Titanium_Natural.jpg" },
+            { n: "Sony PlayStation 5", p: "98,000", c: "إلكترونيات", i: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/PlayStation_5_and_DualSense_with_transparent_background.png/320px-PlayStation_5_and_DualSense_with_transparent_background.png" },
+            { n: "MacBook Air M3", p: "220,000", c: "إلكترونيات", i: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Macbook_Air_M2.png/320px-Macbook_Air_M2.png" },
+            { n: "Nike Air Max 270", p: "24,000", c: "أحذية", i: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Nike_Air_Max_270.png/320px-Nike_Air_Max_270.png" },
+            { n: "Sony WH-1000XM5", p: "65,000", c: "إلكترونيات", i: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Sony_WH-1000XM5.png/320px-Sony_WH-1000XM5.png" }
         ];
 
         function renderProducts(filter = 'الكل') {
             const grid = document.getElementById('mainGrid');
             grid.innerHTML = '';
-            for (let i = 0; i < 24; i++) {
+            for (let i = 0; i < 20; i++) {
                 const p = storeData[i % storeData.length];
                 if (filter !== 'الكل' && p.c !== filter) continue;
-                
                 grid.innerHTML += `
                     <div onclick="openOrder('${p.n}', '${p.p}', '${p.i}')" class="glass p-6 cursor-pointer group">
-                        <div class="h-48 flex items-center justify-center bg-white rounded-3xl mb-5 overflow-hidden p-4">
-                            <img src="${p.i}" class="max-h-full group-hover:scale-110 transition duration-500" onerror="this.src='https://via.placeholder.com/300?text=Product'">
+                        <div class="h-48 flex items-center justify-center bg-white rounded-[30px] mb-6 p-4">
+                            <img src="${p.i}" class="max-h-full object-contain group-hover:scale-110 transition duration-500">
                         </div>
                         <span class="text-[10px] text-yellow-400 font-black uppercase tracking-widest">${p.c}</span>
-                        <h4 class="font-bold text-lg mt-2 truncate text-white">${p.n}</h4>
-                        <p class="text-yellow-400 font-black text-xl mt-2">${p.p} DA</p>
-                    </div>
-                `;
+                        <h4 class="font-bold text-lg mt-2 text-white">${p.n}</h4>
+                        <p class="text-yellow-400 font-black text-xl mt-1">${p.p} DA</p>
+                    </div>`;
             }
         }
 
@@ -106,10 +95,10 @@
 
         function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
 
-        function handleSecureOrder(e) {
+        function handleOrder(e) {
             e.preventDefault();
             const name = protect(document.getElementById('custName').value);
-            alert(`🎉 مبروك يا ${name}!\nتم استلام طلبك بنجاح. سنتصل بك قريباً.\n\nشكراً لثقتك في FLASH-BUY-DZ!`);
+            alert(`🎉 مبروك يا ${name}! تم استلام طلبك بنجاح.`);
             closeModal();
         }
 
