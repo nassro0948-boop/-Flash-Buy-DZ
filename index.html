@@ -3,344 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASSRO LUXURY | الإمبراطورية الملكية 2026</title>
-    
+    <title>NASSRO ELITE | الإمبراطورية الملكية 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+        :root { --p: #facc15; --bg: #020617; --c: #0f172a; }
+        body { background: var(--bg); color: #fff; font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
         
-        :root {
-            --gold: #facc15; --dark: #020617; --card: #0f172a;
-            --accent: #3b82f6; --success: #10b981;
-        }
+        /* تصميم الكارت - الفخامة السوداء */
+        .n-card { background: var(--c); border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; cursor: pointer; position: relative; }
+        .n-card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        
+        /* معالج الصور - يمنع الكسر */
+        .img-h { background: #fff; height: 180px; border-radius: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .img-h img { max-width: 80%; max-height: 80%; object-fit: contain; z-index: 2; }
+        /* خلفية بديلة في حال كسر الصورة */
+        .img-h::after { content: "\f290"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; color: #eee; font-size: 3rem; z-index: 1; }
 
-        * { font-family: 'Tajawal', sans-serif; box-sizing: border-box; }
-        body { background: var(--dark); color: #f8fafc; overflow-x: hidden; scroll-behavior: smooth; }
+        .btn-p { background: var(--p); color: black; font-weight: 900; padding: 15px; border-radius: 15px; width: 100%; transition: 0.3s; }
+        .btn-p:hover { filter: brightness(1.1); transform: scale(1.02); }
 
-        /* تأثير الزجاج المتطور */
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        /* الكروت الملكية */
-        .product-card {
-            background: var(--card); border-radius: 30px; border: 1px solid rgba(255,255,255,0.03);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
-        }
-        .product-card:hover { transform: translateY(-15px); border-color: var(--gold); box-shadow: 0 40px 80px -20px rgba(0,0,0,0.8); }
-
-        /* حاوية الصور الذكية */
-        .image-container {
-            background: white; border-radius: 24px; height: 200px; 
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-        }
-        .image-container img { max-width: 80%; transition: 0.6s ease; object-fit: contain; }
-        .product-card:hover img { transform: scale(1.1) rotate(3deg); }
-
-        /* الأزرار الاحترافية */
-        .btn-nassro {
-            background: linear-gradient(135deg, var(--gold), #eab308); color: black;
-            font-weight: 900; padding: 18px; border-radius: 20px; transition: 0.3s;
-            text-align: center; cursor: pointer; display: block; width: 100%; border: none;
-        }
-        .btn-nassro:hover { filter: brightness(1.2); box-shadow: 0 10px 30px rgba(250, 204, 21, 0.3); transform: scale(1.02); }
-
-        /* لوحات العرض المنبثقة */
-        .screen-overlay {
-            display: none; position: fixed; inset: 0; background: var(--dark);
-            z-index: 9000; overflow-y: auto; padding: 40px 20px; animation: slideInUp 0.4s;
-        }
-        @keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        /* شارات التخفيض */
-        .sale-badge {
-            position: absolute; top: 15px; right: 15px; background: #ef4444; color: white;
-            padding: 6px 15px; border-radius: 12px; font-size: 12px; font-weight: 900; z-index: 10;
-        }
-
-        /* تنسيق الولايات */
-        select option { background: var(--card); color: white; }
+        .overlay { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 9999; overflow-y: auto; padding: 40px 20px; }
+        .nav-glass { background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
 
-    <header class="sticky top-0 z-[5000] glass p-5">
+    <header class="sticky top-0 z-[1000] nav-glass p-5">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="bg-gold p-3 rounded-2xl text-black font-black text-xl animate__animated animate__pulse animate__infinite">N</div>
-                <h1 class="text-3xl font-black text-gold tracking-tighter italic">NASSRO LUXURY</h1>
-            </div>
+            <h1 class="text-3xl font-black text-p italic">NASSRO LUXURY</h1>
             <div class="flex gap-4">
-                <button onclick="showAdmin()" class="hidden md:block p-4 bg-white/5 rounded-2xl hover:text-gold transition"><i class="fas fa-user-crown"></i> الإدارة</button>
-                <button onclick="toggleCart()" class="relative p-4 bg-white/5 rounded-2xl border border-white/10">
-                    <i class="fas fa-shopping-bag text-xl text-gold"></i>
-                    <span id="cartBadge" class="absolute -top-2 -right-2 bg-red-600 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black">0</span>
+                <button onclick="openAdmin()" class="text-gray-500 hover:text-p"><i class="fas fa-crown"></i></button>
+                <button onclick="openCart()" class="relative bg-white/5 p-4 rounded-xl border border-white/10">
+                    <i class="fas fa-shopping-basket text-p"></i>
+                    <span id="badge" class="absolute -top-2 -right-2 bg-red-600 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black">0</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <section class="max-w-7xl mx-auto px-6 py-12">
-        <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-[50px] p-12 border border-white/5 flex flex-col md:flex-row items-center justify-between">
-            <div class="space-y-6">
-                <span class="text-gold font-bold tracking-[5px] uppercase">مجموعة صيف 2026</span>
-                <h2 class="text-7xl font-black leading-none">الفخامة لها <br>عنوان واحد.</h2>
-                <p class="text-gray-400 text-xl max-w-md italic">"يا نصرو، هنا تبدأ رحلة التميز. اختر منتجاتك بعناية من بين أفضل الماركات العالمية."</p>
-                <div class="flex gap-4">
-                    <button class="btn-nassro !w-auto px-10">اكتشف الآن</button>
-                    <button class="bg-white/5 border border-white/10 px-10 py-4 rounded-2xl font-bold">المزيد</button>
-                </div>
+    <section class="max-w-7xl mx-auto p-6 py-10">
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-300 rounded-[40px] p-10 text-black flex flex-col md:flex-row items-center justify-between">
+            <div class="space-y-4">
+                <h2 class="text-5xl font-black italic">أهلاً بك يا إمبراطور 🔥</h2>
+                <p class="text-xl font-bold opacity-80 uppercase tracking-widest">المتجر الحقيقي لخدمة 58 ولاية</p>
+                <button class="bg-black text-white px-8 py-3 rounded-xl font-black">تسوق الآن</button>
             </div>
-            <img src="https://www.apple.com/v/iphone/home/bu/images/overview/select/iphone_15_pro__9bewm7bdt1gu_large.png" class="h-80 object-contain drop-shadow-2xl">
+            <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-1inch-naturaltitanium?wid=512&fmt=p-jpg" class="h-64 drop-shadow-2xl">
         </div>
     </section>
 
-    <div class="max-w-7xl mx-auto px-6 mb-12 flex flex-col md:flex-row gap-6">
-        <div class="relative flex-1">
-            <i class="fas fa-search absolute right-6 top-1/2 -translate-y-1/2 text-gray-500"></i>
-            <input type="text" id="mainSearch" onkeyup="searchEngine()" placeholder="ابحث عن الماركة، المنتج، أو الصنف..." class="w-full p-6 bg-white/5 border border-white/10 rounded-3xl pr-16 focus:border-gold outline-none text-xl transition">
-        </div>
+    <div class="max-w-7xl mx-auto px-6 mb-10">
+        <input type="text" id="search" onkeyup="search()" placeholder="ابحث عن المنتج..." class="w-full p-5 bg-white/5 border border-white/10 rounded-2xl focus:border-p outline-none text-xl">
     </div>
 
     <main class="max-w-7xl mx-auto px-6 pb-20">
-        <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-            </div>
+        <div id="grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
     </main>
 
-    <div id="detailView" class="screen-overlay">
-        <div class="max-w-6xl mx-auto">
-            <button onclick="closeAll()" class="text-gray-500 text-2xl mb-12 hover:text-white"><i class="fas fa-arrow-right"></i> العودة للمتجر</button>
-            <div id="detailContent"></div>
-        </div>
+    <div id="detail-overlay" class="overlay">
+        <div class="max-w-5xl mx-auto" id="detail-content"></div>
     </div>
 
-    <div id="cartView" class="screen-overlay">
-        <div class="max-w-2xl mx-auto">
-            <div class="flex justify-between items-center mb-10 border-b border-white/5 pb-6">
-                <h2 class="text-4xl font-black text-gold">حقيبة التسوق</h2>
-                <button onclick="closeAll()" class="text-5xl">&times;</button>
+    <div id="cart-overlay" class="overlay">
+        <div class="max-w-xl mx-auto">
+            <h2 class="text-4xl font-black text-p mb-10">حقيبة التسوق</h2>
+            <div id="cart-items" class="space-y-4 mb-10"></div>
+            <div class="bg-white/5 p-8 rounded-3xl border border-white/5">
+                <div class="flex justify-between text-2xl font-black mb-8"><span>الإجمالي:</span><span id="total" class="text-p">0 DA</span></div>
+                <input type="text" id="name" placeholder="الاسم واللقب" class="w-full p-4 bg-slate-800 rounded-xl mb-4 outline-none">
+                <input type="tel" id="phone" placeholder="رقم الهاتف" class="w-full p-4 bg-slate-800 rounded-xl mb-4 outline-none">
+                <select id="wilaya" class="w-full p-4 bg-slate-800 rounded-xl mb-6"></select>
+                <button onclick="confirmOrder()" class="btn-p text-xl">تأكيد الطلب المباشر ✅</button>
+                <button onclick="closeAll()" class="w-full mt-4 text-gray-500">رجوع</button>
             </div>
-            <div id="cartItemsList" class="space-y-6 mb-12"></div>
-            <div id="cartSummary" class="bg-white/5 p-10 rounded-[40px] border border-white/10">
-                </div>
-        </div>
-    </div>
-
-    <div id="adminPanel" class="screen-overlay">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-4xl font-black text-gold mb-12">لوحة التحكم الإمبراطورية</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div class="bg-slate-800 p-8 rounded-3xl border-r-4 border-gold">
-                    <p class="text-gray-400">إجمالي الطلبيات</p>
-                    <h4 id="statOrders" class="text-4xl font-black mt-2">0</h4>
-                </div>
-                <div id="statIncome" class="bg-slate-800 p-8 rounded-3xl border-r-4 border-success">
-                    <p class="text-gray-400">صافي المبيعات</p>
-                    <h4 class="text-4xl font-black mt-2 text-success">0 DA</h4>
-                </div>
-            </div>
-            <div id="ordersList" class="space-y-4">
-                <p class="text-gray-500 text-center">لا توجد طلبيات جديدة حالياً.</p>
-            </div>
-            <button onclick="closeAll()" class="mt-12 text-gray-500 underline">خروج من الإدارة</button>
         </div>
     </div>
 
     <script>
-        /* ---------------------------------------------------------
-           CORE SYSTEM LOGIC - NASSRO V6
-        --------------------------------------------------------- */
+        const products = []; let cart = []; let orders = [];
+        const wilayas = ["01 أدرار", "14 تيارت", "16 الجزائر", "31 وهران", "58 المنيعة"];
         
-        const products = [];
-        let cart = [];
-        let orders = [];
-
-        const gallery = [
-            "https://www.apple.com/v/iphone/home/bu/images/overview/select/iphone_15_pro__9bewm7bdt1gu_large.png",
-            "https://m.media-amazon.com/images/I/71YfR27k3vL._AC_SL1500_.jpg",
-            "https://fimgs.net/mdimg/perfume/m.21331.jpg",
-            "https://images.clothes.com/products/nike/jordan4.png"
+        // صور حقيقية 100% من خادم أبل مباشرة
+        const realImgs = [
+            "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-1inch-naturaltitanium?wid=512&fmt=p-jpg",
+            "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/mbp14-spacegray-select-202310?wid=904&hei=840&fmt=p-jpg",
+            "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg"
         ];
+        const names = ["آيفون 15 برو", "ماك بوك M3", "سماعات إيربودز"];
 
-        const titles = ["آيفون 15 برو", "جالاكسي S24 ألترا", "عطر ديور سافاج", "نايك جوردن 4", "ماك بوك M3 PRO"];
-        const wilayas = ["14 - تيارت", "16 - الجزائر", "31 - وهران", "19 - سطيف", "25 - قسنطينة"];
-
-        // 1. توليد المحتوى الإمبراطوري (1000 منتج)
-        function initStore() {
+        function init() {
             for(let i=0; i<1000; i++) {
-                let basePrice = 55000 + (i * 25);
                 products.push({
                     id: i,
-                    name: titles[i % titles.length] + " Edition #" + (i+1),
-                    price: basePrice,
-                    old: basePrice + 12000,
-                    img: gallery[i % gallery.length],
-                    desc: "أعلى معايير الجودة العالمية متوفرة حصرياً في متجر نصرو الملكي. ضمان شامل لمدة 24 شهراً مع توصيل فوري للباب."
+                    name: names[i % 3] + " Pro Max #" + (i+1),
+                    price: 45000 + (i * 200),
+                    img: realImgs[i % 3],
+                    desc: "نسخة أصلية حصرية لمتجر نصرو مع ضمان سنة كاملة."
                 });
             }
-            renderGrid(products);
+            render(products);
+            document.getElementById('wilaya').innerHTML = wilayas.map(w => `<option>${w}</option>`).join('');
         }
 
-        // 2. محرك العرض الذكي
-        function renderGrid(data) {
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = data.slice(0, 50).map(p => `
-                <div class="product-card p-5 animate__animated animate__fadeIn" onclick="openProduct(${p.id})">
-                    <span class="sale-badge">SALE</span>
-                    <div class="image-container mb-6">
-                        <img src="${p.img}" onerror="this.src='https://via.placeholder.com/400?text=Product+Image'">
-                    </div>
-                    <h3 class="font-bold text-sm truncate opacity-80 uppercase tracking-widest">${p.name}</h3>
-                    <div class="mt-4 flex justify-between items-end">
-                        <div>
-                            <p class="text-gold font-black text-2xl">${p.price.toLocaleString()} DA</p>
-                            <p class="text-gray-500 line-through text-[10px]">${p.old.toLocaleString()} DA</p>
-                        </div>
-                        <div class="bg-white/5 p-3 rounded-2xl border border-white/10 text-gold"><i class="fas fa-plus"></i></div>
-                    </div>
-                </div>
-            `).join('');
+        function render(data) {
+            document.getElementById('grid').innerHTML = data.slice(0, 40).map(p => `
+                <div class="n-card p-4 animate__animated animate__fadeInUp" onclick="openDetail(${p.id})">
+                    <div class="img-h mb-4"><img src="${p.img}" loading="lazy"></div>
+                    <h3 class="text-xs font-bold truncate">${p.name}</h3>
+                    <p class="text-p font-black mt-2 text-lg">${p.price.toLocaleString()} DA</p>
+                </div>`).join('');
         }
 
-        // 3. فتح تفاصيل المنتج (Detail View)
-        function openProduct(id) {
+        function openDetail(id) {
             const p = products.find(x => x.id == id);
-            const content = document.getElementById('detailContent');
-            content.innerHTML = `
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
-                    <div class="bg-white rounded-[50px] p-16 flex items-center justify-center animate__animated animate__zoomIn">
-                        <img src="${p.img}" class="max-h-[450px] drop-shadow-2xl">
+            document.getElementById('detail-content').innerHTML = `
+                <button onclick="closeAll()" class="text-gray-500 text-xl mb-10"><i class="fas fa-arrow-right"></i> رجوع</button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="bg-white p-10 rounded-[40px] flex items-center justify-center"><img src="${p.img}" class="max-h-96"></div>
+                    <div class="space-y-6">
+                        <h2 class="text-5xl font-black">${p.name}</h2>
+                        <p class="text-4xl text-p font-black">${p.price.toLocaleString()} DA</p>
+                        <p class="text-gray-400 text-xl leading-relaxed">${p.desc}</p>
+                        <button onclick="addCart(${p.id})" class="btn-p text-2xl py-6">أضف للسلة - شراء الآن 🛒</button>
                     </div>
-                    <div class="flex flex-col justify-center space-y-10 animate__animated animate__fadeInLeft">
-                        <div>
-                            <span class="text-gold font-bold tracking-[4px]">الإصدار المميز</span>
-                            <h2 class="text-7xl font-black mt-4">${p.name}</h2>
-                        </div>
-                        <div class="flex items-center gap-8">
-                            <span class="text-6xl font-black text-gold">${p.price.toLocaleString()} DA</span>
-                            <span class="text-2xl text-gray-600 line-through">${p.old.toLocaleString()} DA</span>
-                        </div>
-                        <p class="text-gray-400 text-2xl leading-relaxed italic">"${p.desc}"</p>
-                        <button onclick="addToCart(${p.id})" class="btn-nassro text-3xl py-8">أضف إلى حقيبة التسوق 🛒</button>
-                        <div class="flex gap-10 text-gray-500">
-                            <span><i class="fas fa-truck-fast text-gold"></i> توصيل 58 ولاية</span>
-                            <span><i class="fas fa-shield-check text-gold"></i> ضمان حقيقي</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('detailView').style.display = 'block';
-            document.body.style.overflow = 'hidden';
+                </div>`;
+            document.getElementById('detail-overlay').style.display = 'block';
         }
 
-        // 4. نظام السلة والمعالجة
-        function addToCart(id) {
+        function addCart(id) {
             cart.push(products.find(x => x.id == id));
-            document.getElementById('cartBadge').innerText = cart.length;
-            closeAll();
-            alert("تمت إضافة المنتج بنجاح يا نصرو!");
+            document.getElementById('badge').innerText = cart.length;
+            closeAll(); alert("تمت الإضافة بنجاح!");
         }
 
-        function toggleCart() {
-            const view = document.getElementById('cartView');
-            const list = document.getElementById('cartItemsList');
-            const summary = document.getElementById('cartSummary');
-            
-            view.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-
-            if(cart.length === 0) {
-                list.innerHTML = `<p class="text-center text-gray-500 py-20 text-xl">حقيبتك فارغة، ابدأ بالتسوق الآن!</p>`;
-                summary.style.display = 'none';
-                return;
-            }
-
-            summary.style.display = 'block';
-            list.innerHTML = cart.map((p, i) => `
-                <div class="flex items-center gap-6 bg-white/5 p-6 rounded-3xl border border-white/5">
-                    <img src="${p.img}" class="w-20 h-20 bg-white rounded-2xl p-2">
-                    <div class="flex-1">
-                        <h4 class="font-black">${p.name}</h4>
-                        <p class="text-gold font-black">${p.price.toLocaleString()} DA</p>
-                    </div>
-                    <button onclick="removeFromCart(${i})" class="text-red-500 text-3xl">&times;</button>
-                </div>
-            `).join('');
-
-            const total = cart.reduce((a, b) => a + b.price, 0);
-            summary.innerHTML = `
-                <div class="flex justify-between text-3xl font-black mb-10"><span>الإجمالي:</span><span class="text-gold">${total.toLocaleString()} DA</span></div>
-                <div class="space-y-4">
-                    <input type="text" id="custName" placeholder="الاسم الكامل" class="w-full p-5 bg-black/50 border border-white/10 rounded-2xl outline-none focus:border-gold">
-                    <input type="tel" id="custPhone" placeholder="رقم الهاتف" class="w-full p-5 bg-black/50 border border-white/10 rounded-2xl outline-none focus:border-gold">
-                    <select id="custWilaya" class="w-full p-5 bg-black/50 border border-white/10 rounded-2xl outline-none focus:border-gold">
-                        ${wilayas.map(w => `<option value="${w}">${w}</option>`).join('')}
-                    </select>
-                    <button onclick="finalOrder()" class="btn-nassro text-2xl py-6 mt-6">تأكيد الطلب المباشر ✅</button>
-                </div>
-            `;
+        function openCart() {
+            const list = document.getElementById('cart-items');
+            list.innerHTML = cart.map((p,i) => `
+                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl">
+                    <img src="${p.img}" class="w-12 h-12 bg-white rounded-lg">
+                    <div class="flex-1 font-bold text-sm">${p.name}</div>
+                    <button onclick="cart.splice(${i},1);openCart();document.getElementById('badge').innerText=cart.length" class="text-red-500 text-xl">&times;</button>
+                </div>`).join('');
+            document.getElementById('total').innerText = cart.reduce((a,b)=>a+b.price,0).toLocaleString() + " DA";
+            document.getElementById('cart-overlay').style.display = 'block';
         }
 
-        function finalOrder() {
-            const n = document.getElementById('custName').value;
-            const p = document.getElementById('custPhone').value;
-            const w = document.getElementById('custWilaya').value;
-            if(!n || !p) return alert("يرجى إدخال البيانات كاملة");
-
-            const newOrder = {
-                id: Math.floor(1000 + Math.random() * 9000),
-                customer: n, phone: p, wilaya: w,
-                total: cart.reduce((a,b) => a+b.price, 0),
-                items: cart.length
-            };
-
-            orders.push(newOrder);
-            alert(`مبروك يا نصرو! تم تسجيل طلب الزبون ${n} بنجاح. رقم الطلب: #NAS-${newOrder.id}`);
-            cart = [];
-            document.getElementById('cartBadge').innerText = 0;
-            closeAll();
+        function confirmOrder() {
+            const n = document.getElementById('name').value;
+            const p = document.getElementById('phone').value;
+            if(!n || !p) return alert("امسح البيانات يا بطل!");
+            orders.push({id: Date.now(), name: n, phone: p, total: document.getElementById('total').innerText});
+            alert(`مبروك ! تم استلام طلب ${n} بنجاح. رقم الطلب #NS-${Math.floor(Math.random()*1000)}`);
+            cart = []; document.getElementById('badge').innerText = 0; closeAll();
         }
 
-        // 5. لوحة الإدارة (Admin)
-        function showAdmin() {
-            let pass = prompt("كلمة سر الإمبراطور:");
-            if(pass !== "nassro2026") return alert("لست نصرو الحقيقي!");
-
-            document.getElementById('adminPanel').style.display = 'block';
-            document.getElementById('statOrders').innerText = orders.length;
-            const income = orders.reduce((a,b) => a+b.total, 0);
-            document.getElementById('statIncome').innerHTML = `<p class="text-gray-400">صافي المبيعات</p><h4 class="text-4xl font-black mt-2 text-success">${income.toLocaleString()} DA</h4>`;
-
-            const list = document.getElementById('ordersList');
-            if(orders.length === 0) return;
-            
-            list.innerHTML = orders.map(o => `
-                <div class="bg-white/5 p-6 rounded-3xl border border-white/5 flex justify-between items-center">
-                    <div>
-                        <p class="font-black text-gold text-lg">${o.customer} (${o.wilaya})</p>
-                        <p class="text-sm text-gray-500">رقم الهاتف: ${o.phone} | عدد السلع: ${o.items}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="font-black text-xl">${o.total.toLocaleString()} DA</p>
-                        <span class="text-[10px] bg-success/20 text-success px-3 py-1 rounded-full">طلب مؤكد #NAS-${o.id}</span>
-                    </div>
-                </div>
-            `).join('');
+        function openAdmin() {
+            let pass = prompt("كلمة السر:");
+            if(pass !== "nassro") return;
+            alert("إجمالي الطلبات المستلمة: " + orders.length);
         }
 
-        // 6. وظائف مساعدة
-        function removeFromCart(i) { cart.splice(i, 1); toggleCart(); document.getElementById('cartBadge').innerText = cart.length; }
-        function closeAll() { 
-            document.querySelectorAll('.screen-overlay').forEach(el => el.style.display = 'none'); 
-            document.body.style.overflow = 'auto'; 
-        }
-        function searchEngine() {
-            const val = document.getElementById('mainSearch').value.toLowerCase();
-            renderGrid(products.filter(p => p.name.toLowerCase().includes(val)));
+        function closeAll() { document.querySelectorAll('.overlay').forEach(e => e.style.display = 'none'); }
+        function search() {
+            const v = document.getElementById('search').value.toLowerCase();
+            render(products.filter(p => p.name.toLowerCase().includes(v)));
         }
 
-        window.onload = initStore;
+        window.onload = init;
     </script>
 </body>
 </html>
