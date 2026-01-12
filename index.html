@@ -3,81 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy-DZ | الإمبراطورية الملكية ⚡</title>
+    <title>Flash-Buy-DZ |</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background: #070b14; color: white; margin: 0; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); transition: 0.4s; border-radius: 35px; }
-        .glass:hover { border-color: #facc15; transform: translateY(-10px); box-shadow: 0 25px 50px rgba(0,0,0,0.7); }
+        body { font-family: 'Tajawal', sans-serif; background: #070b14; color: white; margin: 0; scroll-behavior: smooth; }
+        .product-card { background: #111827; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; overflow: hidden; }
+        .product-card:hover { border-color: #facc15; transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .active-filter { background: #facc15 !important; color: #000 !important; font-weight: 900; }
-        #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
+        #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
-    <header class="p-8 max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6 text-center">
-        <h1 class="text-5xl font-black text-yellow-400 italic tracking-tighter">FLASH-BUY-DZ ⚡</h1>
-        <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar w-full lg:w-auto">
-            <button onclick="filterProducts('الكل', this)" class="filter-btn active-filter px-8 py-3 rounded-2xl glass text-sm transition whitespace-nowrap">الكل</button>
-            <button onclick="filterProducts('إلكترونيات', this)" class="filter-btn px-8 py-3 rounded-2xl glass text-sm transition whitespace-nowrap">إلكترونيات</button>
-            <button onclick="filterProducts('أحذية', this)" class="filter-btn px-8 py-3 rounded-2xl glass text-sm transition whitespace-nowrap">أحذية</button>
+    <header class="p-6 max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6 sticky top-0 bg-[#070b14]/90 backdrop-blur-md z-50">
+        <h1 class="text-4xl font-black text-yellow-400 italic">FLASH-BUY-DZ ⚡</h1>
+        <div class="flex gap-2 overflow-x-auto pb-2 w-full lg:w-auto no-scrollbar">
+            <button onclick="filterProducts('الكل', this)" class="filter-btn active-filter px-6 py-2 rounded-xl border border-gray-800 text-sm whitespace-nowrap">الكل</button>
+            <button onclick="filterProducts('إلكترونيات', this)" class="filter-btn px-6 py-2 rounded-xl border border-gray-800 text-sm whitespace-nowrap">إلكترونيات</button>
+            <button onclick="filterProducts('منزل', this)" class="filter-btn px-6 py-2 rounded-xl border border-gray-800 text-sm whitespace-nowrap">المنزل</button>
+            <button onclick="filterProducts('موضة', this)" class="filter-btn px-6 py-2 rounded-xl border border-gray-800 text-sm whitespace-nowrap">موضة</button>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
-        <div id="mainGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"></div>
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <div id="mainGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            </div>
     </main>
 
     <div id="orderModal">
-        <div class="bg-slate-900 border-2 border-yellow-400 p-10 rounded-[50px] max-w-md w-full relative text-center shadow-[0_0_60px_rgba(250,204,21,0.2)]">
-            <button onclick="closeModal()" class="absolute top-8 left-8 text-gray-400 hover:text-white text-4xl">&times;</button>
-            <div class="w-36 h-36 mx-auto mb-6 p-4 bg-white rounded-[40px] shadow-2xl overflow-hidden flex items-center justify-center">
+        <div class="bg-slate-900 border-2 border-yellow-400 p-8 rounded-[40px] max-w-md w-full relative text-center">
+            <button onclick="closeModal()" class="absolute top-6 left-6 text-gray-500 hover:text-white text-3xl">&times;</button>
+            <div class="w-32 h-32 mx-auto mb-4 p-3 bg-white rounded-3xl flex items-center justify-center overflow-hidden">
                 <img id="modalImg" src="" class="max-h-full object-contain">
             </div>
-            <h3 id="pName" class="text-3xl font-black text-white mb-2"></h3>
-            <p id="pPrice" class="text-yellow-400 text-2xl font-black mb-8"></p>
-            <form onsubmit="handleOrder(event)" class="space-y-4 text-right">
-                <input type="text" id="custName" placeholder="اسمك الكريم" class="w-full p-5 bg-white/5 border border-white/10 rounded-3xl text-white outline-none focus:border-yellow-400" required>
-                <input type="tel" id="custPhone" placeholder="رقم هاتفك" class="w-full p-5 bg-white/5 border border-white/10 rounded-3xl text-white outline-none focus:border-yellow-400" required>
-                <div class="bg-yellow-400/10 p-5 rounded-3xl border border-yellow-400/20 text-center">
-                    <p class="text-[10px] text-yellow-400 font-black uppercase mb-1">بيانات الدفع (بريدي موب)</p>
-                    <p class="font-mono text-white text-sm font-bold">RIP: 00799999000123456789</p>
+            <h3 id="pName" class="text-2xl font-bold text-white mb-1"></h3>
+            <p id="pPrice" class="text-yellow-400 text-xl font-black mb-6"></p>
+            
+            <form onsubmit="handleSecureOrder(event)" class="space-y-4 text-right">
+                <input type="text" id="custName" placeholder="اسمك الكريم" class="w-full p-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-yellow-400" required>
+                <input type="tel" id="custPhone" placeholder="رقم هاتفك" class="w-full p-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-yellow-400" required>
+                
+                <div class="bg-yellow-400/10 p-4 rounded-2xl border border-yellow-400/20 text-center">
+                    <p class="text-[10px] text-yellow-400 font-bold mb-1 uppercase tracking-widest">بيانات الدفع (الجزائر)</p>
+                    <p class="font-mono text-sm text-white italic">RIP: 00799999000123456789</p>
                 </div>
-                <button type="submit" class="w-full bg-yellow-400 text-black py-5 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition hover:bg-white">تأكيد الشراء ✅</button>
+
+                <button type="submit" class="w-full bg-yellow-400 text-black py-4 rounded-2xl font-black text-lg hover:bg-white transition-all transform active:scale-95">
+                    تأكيد الطلب الآن ✅
+                </button>
             </form>
         </div>
     </div>
 
     <script>
-        function protect(s) { return s.replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+        // توليد 100 منتج فريد برمجياً لضمان عدم التكرار
+        const categories = ['إلكترونيات', 'منزل', 'موضة'];
+        const items = {
+            'إلكترونيات': ['هاتف الذكي', 'سماعة رأس', 'كاميرا احترافية', 'ساعة ذكية', 'لوح رقمي', 'شاشة 4K', 'ماوس قيمنق', 'لوحة مفاتيح ميكانيكية', 'ميكروفون ستوديو', 'جهاز ألعاب'],
+            'منزل': ['ماكينة قهوة', 'خلاط فواكه', 'مصباح ذكي', 'طقم أواني', 'مكنسة كهربائية', 'فرن كهربائي', 'جهاز تنقية الهواء', 'مكواة بخار', 'ساعة حائط فخمة', 'طقم سكاكين'],
+            'موضة': ['ساعة يد ذهبية', 'نظارات شمسية', 'عطر فاخر', 'حذاء رياضي', 'محفظة جلدية', 'حقيبة ظهر', 'خاتم فضة', 'جاكيت عصري', 'رداء ملكي', 'وشاح من الحرير']
+        };
 
-        // صور "ويكيبيديا" - لا تُحظر أبداً وتظهر فوراً
-        const storeData = [
-            { n: "iPhone 15 Pro Max", p: "285,000", c: "إلكترونيات", i: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/IPhone_15_Pro_Max_Titanium_Natural.jpg/320px-IPhone_15_Pro_Max_Titanium_Natural.jpg" },
-            { n: "Sony PlayStation 5", p: "98,000", c: "إلكترونيات", i: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/PlayStation_5_and_DualSense_with_transparent_background.png/320px-PlayStation_5_and_DualSense_with_transparent_background.png" },
-            { n: "MacBook Air M3", p: "220,000", c: "إلكترونيات", i: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Macbook_Air_M2.png/320px-Macbook_Air_M2.png" },
-            { n: "Nike Air Max 270", p: "24,000", c: "أحذية", i: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Nike_Air_Max_270.png/320px-Nike_Air_Max_270.png" },
-            { n: "Sony WH-1000XM5", p: "65,000", c: "إلكترونيات", i: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Sony_WH-1000XM5.png/320px-Sony_WH-1000XM5.png" }
-        ];
+        const storeData = [];
+        for (let i = 1; i <= 100; i++) {
+            const cat = categories[i % categories.length];
+            const nameList = items[cat];
+            const name = nameList[i % nameList.length] + " النسخة " + i;
+            storeData.push({
+                id: i,
+                n: name,
+                p: (Math.floor(Math.random() * 500) + 10) * 1000,
+                c: cat,
+                i: `https://picsum.photos/400/400?random=${i}` // صور مضمونة لا تتكرر ولا تنكسر
+            });
+        }
 
         function renderProducts(filter = 'الكل') {
             const grid = document.getElementById('mainGrid');
             grid.innerHTML = '';
-            for (let i = 0; i < 20; i++) {
-                const p = storeData[i % storeData.length];
-                if (filter !== 'الكل' && p.c !== filter) continue;
+            storeData.forEach(p => {
+                if (filter !== 'الكل' && p.c !== filter) return;
                 grid.innerHTML += `
-                    <div onclick="openOrder('${p.n}', '${p.p}', '${p.i}')" class="glass p-6 cursor-pointer group">
-                        <div class="h-48 flex items-center justify-center bg-white rounded-[30px] mb-6 p-4">
-                            <img src="${p.i}" class="max-h-full object-contain group-hover:scale-110 transition duration-500">
+                    <div onclick="openOrder('${p.n}', '${p.p.toLocaleString()}', '${p.i}')" class="product-card p-4 cursor-pointer group">
+                        <div class="h-44 flex items-center justify-center bg-white rounded-2xl mb-4 overflow-hidden">
+                            <img src="${p.i}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                         </div>
-                        <span class="text-[10px] text-yellow-400 font-black uppercase tracking-widest">${p.c}</span>
-                        <h4 class="font-bold text-lg mt-2 text-white">${p.n}</h4>
-                        <p class="text-yellow-400 font-black text-xl mt-1">${p.p} DA</p>
+                        <span class="text-[10px] text-yellow-500 font-bold uppercase tracking-widest">${p.c}</span>
+                        <h4 class="font-bold text-white mt-1 truncate">${p.n}</h4>
+                        <p class="text-yellow-400 font-black text-lg mt-2">${p.p.toLocaleString()} DA</p>
                     </div>`;
-            }
+            });
         }
 
         function filterProducts(cat, btn) {
@@ -95,10 +112,10 @@
 
         function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
 
-        function handleOrder(e) {
+        function handleSecureOrder(e) {
             e.preventDefault();
-            const name = protect(document.getElementById('custName').value);
-            alert(`🎉 مبروك يا ${name}! تم استلام طلبك بنجاح.`);
+            const n = document.getElementById('custName').value;
+            alert(`مبروك يا ${n}! تم استلام طلبك لـ 100 منتج بنجاح.`);
             closeModal();
         }
 
