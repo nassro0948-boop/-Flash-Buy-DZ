@@ -3,122 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash-Buy-DZ | الإمبراطورية ⚡</title>
+    <title>Flash-Buy-DZ | الإمبراطورية الاحترافية ⚡</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
         body { font-family: 'Tajawal', sans-serif; background: #0f172a; color: white; margin: 0; scroll-behavior: smooth; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .glass:hover { border-color: #facc15; transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
-        .active-filter { background: #facc15 !important; color: #000 !important; box-shadow: 0 0 15px rgba(250, 204, 21, 0.4); }
-        #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .whatsapp-btn { position: fixed; bottom: 30px; left: 30px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3); z-index: 1000; transition: 0.3s; }
-        .whatsapp-btn:hover { transform: rotate(360deg) scale(1.1); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); transition: 0.4s ease; }
+        .glass:hover { border-color: #facc15; transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .active-filter { background: #facc15 !important; color: #000 !important; }
+        #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
 
-    <a href="https://wa.me/213555555555" target="_blank" class="whatsapp-btn shadow-green-500/50 shadow-2xl">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
-
-    <header class="p-8 max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-8">
-        <div>
-            <h1 class="text-5xl font-black text-yellow-400 tracking-tighter italic drop-shadow-lg">FLASH-BUY-DZ <span class="text-white font-normal">⚡</span></h1>
-            <p class="text-gray-400 text-sm mt-2 font-bold tracking-widest uppercase">The Future of Shopping by NASRO</p>
-        </div>
-        <div class="flex gap-3 overflow-x-auto pb-4 w-full lg:w-auto no-scrollbar">
-            <button onclick="filterProducts('الكل', this)" class="filter-btn active-filter px-8 py-3 rounded-2xl glass text-sm font-black transition whitespace-nowrap">الكل</button>
-            <button onclick="filterProducts('إلكترونيات', this)" class="filter-btn px-8 py-3 rounded-2xl glass text-sm font-black transition whitespace-nowrap">إلكترونيات</button>
-            <button onclick="filterProducts('أدوات منزلية', this)" class="filter-btn px-8 py-3 rounded-2xl glass text-sm font-black transition whitespace-nowrap">المنزل</button>
-            <button onclick="filterProducts('ملابس', this)" class="filter-btn px-8 py-3 rounded-2xl glass text-sm font-black transition whitespace-nowrap">الملابس</button>
-            <button onclick="filterProducts('أحذية', this)" class="filter-btn px-8 py-3 rounded-2xl glass text-sm font-black transition whitespace-nowrap">الأحذية</button>
+    <header class="p-8 max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6">
+        <h1 class="text-4xl font-black text-yellow-400">FLASH-BUY-DZ ⚡</h1>
+        <div class="flex gap-2 overflow-x-auto pb-2 w-full lg:w-auto">
+            <button onclick="filterProducts('الكل', this)" class="filter-btn active-filter px-6 py-2 rounded-xl glass text-sm font-bold transition">الكل</button>
+            <button onclick="filterProducts('إلكترونيات', this)" class="filter-btn px-6 py-2 rounded-xl glass text-sm font-bold transition">إلكترونيات</button>
+            <button onclick="filterProducts('منزل', this)" class="filter-btn px-6 py-2 rounded-xl glass text-sm font-bold transition">المنزل</button>
+            <button onclick="filterProducts('ملابس', this)" class="filter-btn px-6 py-2 rounded-xl glass text-sm font-bold transition">الملابس</button>
+            <button onclick="filterProducts('أحذية', this)" class="filter-btn px-6 py-2 rounded-xl glass text-sm font-bold transition">الأحذية</button>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-10">
-        <div id="mainGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            </div>
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <div id="mainGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </main>
 
     <div id="orderModal">
-        <div class="bg-slate-900 border-2 border-yellow-400 p-10 rounded-[40px] max-w-md w-full relative shadow-[0_0_50px_rgba(250,204,21,0.3)]">
-            <button onclick="closeModal()" class="absolute top-6 left-6 text-gray-500 hover:text-white text-3xl transition">&times;</button>
-            <div class="text-center">
-                <div class="w-32 h-32 mx-auto mb-6 p-2 bg-white rounded-3xl rotate-3 shadow-xl">
-                    <img id="modalImg" src="" class="w-full h-full object-contain">
-                </div>
-                <h3 id="pName" class="text-3xl font-black text-white mb-1"></h3>
-                <p id="pPrice" class="text-yellow-400 text-2xl font-black mb-8"></p>
-                
-                <form id="secureForm" onsubmit="handleSecureOrder(event)" class="space-y-4 text-right">
-                    <div class="relative">
-                        <input type="text" id="custName" placeholder="اسمك الكريم" class="w-full p-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-yellow-400 transition" required>
-                    </div>
-                    <div class="relative">
-                        <input type="tel" id="custPhone" placeholder="رقم هاتفك" class="w-full p-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-yellow-400 transition" required>
-                    </div>
-                    <div class="bg-yellow-400/10 p-4 rounded-2xl border border-yellow-400/20 text-center">
-                        <p class="text-[10px] text-yellow-400 font-bold uppercase tracking-widest mb-1">بيانات الدفع (بريدي موب)</p>
-                        <p class="font-mono text-sm font-bold tracking-tighter">RIP: 00799999000123456789</p>
-                    </div>
-                    <button type="submit" class="w-full bg-yellow-400 text-black py-5 rounded-2xl font-black text-xl shadow-xl hover:bg-white transition-all transform active:scale-95 shadow-yellow-400/20">
-                        تأكيد الطلب الآن ✨
-                    </button>
+        <div class="bg-slate-900 border border-yellow-400 p-8 rounded-[30px] max-w-md w-full relative">
+            <button onclick="closeModal()" class="absolute top-4 left-4 text-white text-3xl">&times;</button>
+            <div id="modalContent" class="text-center">
+                <img id="modalImg" src="" class="w-32 h-32 mx-auto mb-4 object-cover rounded-2xl shadow-lg">
+                <h3 id="pName" class="text-2xl font-bold text-yellow-400 mb-1"></h3>
+                <p id="pPrice" class="text-xl mb-6 font-black text-white"></p>
+                <form onsubmit="handleOrder(event)" class="space-y-4">
+                    <input type="text" id="custName" placeholder="اسمك الكامل" class="w-full p-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-yellow-400" required>
+                    <input type="tel" id="custPhone" placeholder="رقم الهاتف" class="w-full p-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-yellow-400" required>
+                    <button type="submit" class="w-full bg-yellow-400 text-black py-4 rounded-xl font-black text-lg shadow-xl active:scale-95 transition">إرسال الطلب ✅</button>
                 </form>
             </div>
         </div>
     </div>
 
     <script>
-        // دمج كود الحماية الخاص بك يا نصرو (المفاجأة 2)
-        function protectInput(input) {
-            if (!input) return "";
-            return input.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-        }
+        // كود الحماية الخاص بك يا نصرو
+        function protect(input) { return input.replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
+        // قائمة منتجات ضخمة ومتنوعة لمنع التكرار (روابط صور مضمونة)
         const storeData = [
             { n: "iPhone 15 Pro", p: "285,000", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=400" },
-            { n: "Sony WH-1000XM5", p: "65,000", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1618366712277-721219643115?q=80&w=400" },
-            { n: "MacBook Air M2", p: "220,000", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1517336714460-4c9889a10acc?q=80&w=400" },
-            { n: "Ninja Air Fryer", p: "34,000", c: "أدوات منزلية", i: "https://images.unsplash.com/photo-1626071494702-420443e2ee43?q=80&w=400" },
-            { n: "Nike Air Max 270", p: "26,000", c: "أحذية", i: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400" },
-            { n: "Adidas Ultraboost", p: "29,000", c: "أحذية", i: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?q=80&w=400" },
-            { n: "Premium Hoodie", p: "6,500", c: "ملابس", i: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=400" },
-            { n: "Leather Jacket", p: "12,000", c: "ملابس", i: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=400" }
+            { n: "MacBook Air M2", p: "245,000", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1517336714460-4c9889a10acc?q=80&w=400" },
+            { n: "Sony Headphones", p: "65,000", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1618366712277-721219643115?q=80&w=400" },
+            { n: "Apple Watch S9", p: "88,000", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1544117518-2b462f59024d?q=80&w=400" },
+            { n: "Ninja Air Fryer", p: "34,000", c: "منزل", i: "https://images.unsplash.com/photo-1626071494702-420443e2ee43?q=80&w=400" },
+            { n: "Coffee Machine", p: "24,500", c: "منزل", i: "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?q=80&w=400" },
+            { n: "Nike Air Max", p: "26,000", c: "أحذية", i: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400" },
+            { n: "Adidas Sneakers", p: "22,000", c: "أحذية", i: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?q=80&w=400" },
+            { n: "Classic Hoodie", p: "6,500", c: "ملابس", i: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=400" },
+            { n: "Leather Jacket", p: "14,000", c: "ملابس", i: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=400" },
+            { n: "Gaming Mouse", p: "9,500", c: "إلكترونيات", i: "https://images.unsplash.com/photo-1527814732934-765864a07fa0?q=80&w=400" },
+            { n: "Smart Vacuum", p: "55,000", c: "منزل", i: "https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?q=80&w=400" }
         ];
 
         function renderProducts(filter = 'الكل') {
             const grid = document.getElementById('mainGrid');
-            if (!grid) return;
             grid.innerHTML = '';
-            
+            // عرض 40 منتج منوع
             for (let i = 0; i < 40; i++) {
                 const p = storeData[i % storeData.length];
                 if (filter !== 'الكل' && p.c !== filter) continue;
                 
-                const card = document.createElement('div');
-                card.className = "glass p-6 rounded-[32px] cursor-pointer group relative overflow-hidden";
-                card.onclick = () => openOrder(p.n, p.p, p.i);
-                card.innerHTML = `
-                    <div class="h-48 flex items-center justify-center bg-white rounded-3xl mb-5 overflow-hidden p-4 shadow-inner transform transition duration-500 group-hover:rotate-2">
-                        <img src="${p.i}" class="max-h-full group-hover:scale-125 transition duration-700">
-                    </div>
-                    <div class="px-2">
-                        <span class="text-[10px] bg-yellow-400/20 text-yellow-400 px-3 py-1 rounded-full font-black uppercase tracking-widest">${p.c}</span>
-                        <h4 class="font-bold text-lg mt-3 truncate text-white">${p.n}</h4>
-                        <div class="flex justify-between items-center mt-4">
-                            <p class="text-yellow-400 font-black text-xl">${p.p} <span class="text-[10px] text-gray-400 font-normal">DA</span></p>
-                            <div class="w-10 h-10 bg-white/10 rounded-2xl flex items-center justify-center group-hover:bg-yellow-400 group-hover:text-black transition-all">
-                                <i class="fa-solid fa-plus text-xs"></i>
-                            </div>
+                grid.innerHTML += `
+                    <div onclick="openOrder('${p.n}', '${p.p}', '${p.i}')" class="glass p-5 rounded-[25px] cursor-pointer group">
+                        <div class="h-44 flex items-center justify-center bg-white rounded-2xl mb-4 overflow-hidden">
+                            <img src="${p.i}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                         </div>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">${p.c}</p>
+                        <h4 class="font-bold text-sm mt-1 truncate">${p.n}</h4>
+                        <p class="text-yellow-400 font-black text-xl mt-2">${p.p} DA</p>
                     </div>
                 `;
-                grid.appendChild(card);
             }
         }
 
@@ -128,22 +95,19 @@
             renderProducts(cat);
         }
 
-        function openOrder(name, price, img) {
+        function openOrder(n, p, i) {
             document.getElementById('orderModal').style.display = 'flex';
-            document.getElementById('pName').innerText = name;
-            document.getElementById('pPrice').innerText = price + " DA";
-            document.getElementById('modalImg').src = img;
+            document.getElementById('pName').innerText = n;
+            document.getElementById('pPrice').innerText = p + " DA";
+            document.getElementById('modalImg').src = i;
         }
 
         function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
 
-        function handleSecureOrder(e) {
+        function handleOrder(e) {
             e.preventDefault();
-            const name = protectInput(document.getElementById('custName').value);
-            const phone = protectInput(document.getElementById('custPhone').value);
-            
-            // المفاجأة 3: نظام التنبيه الاحترافي
-            alert(`🎉 مبروك يا ${name}!\n\nتم استلام طلبك بنجاح. سنتصل بك على الرقم (${phone}) لتأكيد الشحن.\n\nشكراً لثقتك في FLASH-BUY-DZ! ✨`);
+            const n = protect(document.getElementById('custName').value);
+            alert(`🎉 شكراً يا ${n}! تم استلام طلبك بنجاح.`);
             closeModal();
         }
 
