@@ -1,2527 +1,148 @@
-/* PROJECT: FLASH BUY DZ - SUPREME EDITION
-  AUTHOR: NASRO (NB6) - THE ALGERIAN DEVELOPER
-  SPECS: OPTIMIZED FOR 16GB RAM & MULTI-CORE PROCESSING
-  TOTAL TARGET: 6000+ LINES OF CODE
-  PART: 01/15 - CORE CONFIGURATION
-*/
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Buy DZ | Supreme NB6</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ff; --primary-glow: rgba(0, 242, 255, 0.4);
+            --secondary: #7d00ff; --accent: #ff0055;
+            --bg-deep: #020202; --bg-card: #0a0a0b;
+            --text: #ffffff; --text-dim: #a0a0a5;
+        }
 
-import React, { useState, useEffect, useMemo, useCallback, useRef, createContext, useContext } from 'react';
-import styled, { createGlobalStyle, ThemeProvider, keyframes, css } from 'styled-components';
+        body {
+            margin: 0; background-color: var(--bg-deep); color: var(--text);
+            font-family: 'Cairo', sans-serif; overflow-x: hidden;
+        }
 
-// 1. نظام الألوان "النيون الرقمي" (Deep Space & Neon Theme)
-const theme = {
-  colors: {
-    bg_deep: '#020202',
-    bg_surface: '#0a0a0b',
-    bg_card: '#121214',
-    primary: '#00f2ff', // Neon Cyan
-    primary_glow: 'rgba(0, 242, 255, 0.4)',
-    secondary: '#7d00ff', // Electric Purple
-    secondary_glow: 'rgba(125, 0, 255, 0.3)',
-    accent: '#ff0055', // Cyber Pink
-    success: '#00ff88',
-    warning: '#ffbd2e',
-    error: '#ff3131',
-    text_main: '#ffffff',
-    text_dim: '#a0a0a5',
-    border_subtle: 'rgba(255, 255, 255, 0.05)',
-    border_active: 'rgba(0, 242, 255, 0.3)'
-  },
-  fonts: {
-    main: "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif",
-    mono: "'Fira Code', 'Courier New', monospace"
-  },
-  animations: {
-    speed_fast: '0.15s',
-    speed_norm: '0.3s',
-    speed_slow: '0.6s'
-  }
-};
+        /* نظام الهيدر والبحث (الذي سيفعل 0948) */
+        header {
+            padding: 15px 5%; background: rgba(0,0,0,0.9);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px);
+        }
 
-// 2. محرك الأنيميشن (The Motion Engine)
-const pulse = keyframes`
-  0% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0.4); }
-  70% { box-shadow: 0 0 0 15px rgba(0, 242, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0); }
-`;
+        .logo { color: var(--primary); font-weight: 900; font-size: 22px; letter-spacing: 1px; }
 
-const scanline = keyframes`
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-`;
+        .search-box {
+            background: #111; border: 1px solid #222; padding: 10px 25px;
+            border-radius: 50px; color: #fff; width: 300px; outline: none;
+            transition: 0.3s;
+        }
+        .search-box:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
-const rotate = keyframes`
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-`;
+        /* قسم البطولة (Hero Section) */
+        .hero {
+            padding: 80px 5%; text-align: center;
+            background: radial-gradient(circle at center, #0a0a0b 0%, #020202 100%);
+        }
+        .hero h1 { font-size: 3.5rem; font-weight: 900; margin-bottom: 10px; }
+        .hero h1 span { color: var(--primary); text-shadow: 0 0 20px var(--primary-glow); }
 
-// 3. الأنماط العالمية (Global Architecture) - حوالي 100 سطر من التنسيق الخام
-const GlobalStyle = createGlobalStyle`
-  :root {
-    --primary: ${theme.colors.primary};
-    --secondary: ${theme.colors.secondary};
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    cursor: default;
-  }
-
-  body {
-    background-color: ${theme.colors.bg_deep};
-    color: ${theme.colors.text_main};
-    font-family: ${theme.fonts.main};
-    line-height: 1.6;
-    overflow-x: hidden;
-    user-select: none; /* حماية المحتوى من النسخ يا نصرو */
-  }
-
-  /* مخصص للمحترفين: Scrollbar النيون */
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-  ::-webkit-scrollbar-track {
-    background: ${theme.colors.bg_deep};
-  }
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(${theme.colors.primary}, ${theme.colors.secondary});
-    border-radius: 10px;
-  }
-
-  /* نظام الكتابة والخطوط */
-  h1, h2, h3, h4 {
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    text-transform: uppercase;
-  }
-
-  .nasro-glitch {
-    position: relative;
-    &::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 2px;
-      text-shadow: -1px 0 red;
-      clip: rect(0, 900px, 0, 0);
-      animation: glitch 3s infinite linear alternate-reverse;
-    }
-  }
-
-  @keyframes glitch {
-    /* سيحتوي هذا الجزء على 50 سطر من الأنيميشن لاحقاً */
-  }
-
-  /* أزرار مخصصة للسرعة العالية */
-  button, a {
-    cursor: pointer;
-    transition: all ${theme.animations.speed_norm};
-  }
-`;
-
-// 4. نظام الحالات المعقد (Global State Management)
-const NasroContext = createContext();
-
-export const FlashBuyProvider = ({ children }) => {
-  const [isNasroMode, setIsNasroMode] = useState(false); // كود السر السري 0948
-  const [cart, setCart] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [systemLoad, setSystemLoad] = useState(0);
-
-  // مراقبة أداء الـ 16GB RAM (تخيلياً)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSystemLoad(Math.floor(Math.random() * 15) + 5);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const value = {
-    isNasroMode, setIsNasroMode,
-    cart, setCart,
-    currentUser, setCurrentUser,
-    systemLoad
-  };
-
-  return <NasroContext.Provider value={value}>{children}</NasroContext.Provider>;
-};
-
-// 5. المكون الرئيسي (The Entry Point)
-const FlashBuyApp = () => {
-  return (
-    <FlashBuyProvider>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <MainStructure />
-      </ThemeProvider>
-    </FlashBuyProvider>
-  );
-};
-
-// سنبدأ الجزء الثاني من هنا...
-const MainStructure = () => {
-  const { isNasroMode, setIsNasroMode } = useContext(NasroContext);
-            // ---------------------------------------------------------
-  // الجزء 02/15: نظام الملاحة والبحث المتقدم (Advanced Navigation)
-  // ---------------------------------------------------------
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [searchFocused, setSearchFocused] = useState(false);
-
-  // مراقبة التمرير لإضافة تأثيرات نيون للهيدر
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) setScrolled(true);
-      else setScrolled(false);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // دالة معالجة البحث - تفعيل كود السر 0948
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    
-    // الميزة السرية لنصرو المبرمج
-    if (value === "0948") {
-      setIsNasroMode(true);
-      setSearchQuery(""); // تصفير البحث فور الدخول للوضع السري
-    }
-  };
-
-  // مصفوفة روابط التنقل (سنجعلها ضخمة لاحقاً)
-  const navLinks = [
-    { name: "الرئيسية", path: "#home", icon: "🏠" },
-    { name: "شحن فري فاير", path: "#ff", icon: "💎" },
-    { name: "تيك توك بيتا", path: "#tiktok", icon: "📱" },
-    { name: "بطاقات جوجل", path: "#google", icon: "🃏" },
-    { name: "خدمات برمجية", path: "#dev", icon: "💻" },
-    { name: "تواصل معنا", path: "#contact", icon: "📞" }
-  ];
-
-  return (
-    <div className="layout-engine" style={{ position: 'relative' }}>
-      
-      {/* 1. نظام الهيدر المتطور (The Cyber Header) */}
-      <header style={{
-        position: 'fixed',
-        top: 0,
-        width: '100%',
-        zIndex: 5000,
-        padding: scrolled ? '10px 5%' : '20px 5%',
-        background: scrolled ? 'rgba(2, 2, 2, 0.95)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(15px)' : 'none',
-        borderBottom: scrolled ? `1px solid ${theme.colors.border_active}` : '1px solid transparent',
-        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
+        /* شبكة المنتجات (التي ستتوسع لآلاف الأسطر) */
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px; padding: 40px 5%;
+        }
+        .card {
+            background: var(--bg-card); border: 1px solid #1a1a1c;
+            padding: 35px; border-radius: 24px; text-align: center;
+            transition: 0.4s; position: relative;
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .card .icon { font-size: 45px; margin-bottom: 15px; }
+        .card .price { color: var(--primary); font-size: 1.4rem; font-weight: 800; margin: 15px 0; }
         
-        {/* قسم الشعار مع أنيميشن النبض */}
-        <div className="brand-zone" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            background: `linear-gradient(45deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-            borderRadius: '12px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            animation: `${pulse} 2s infinite`,
-            cursor: 'pointer'
-          }}>
-            <span style={{ color: '#000', fontWeight: '900', fontSize: '20px' }}>N</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ 
-              fontSize: '20px', 
-              fontWeight: '900', 
-              color: theme.colors.primary, 
-              letterSpacing: '1px',
-              textShadow: scrolled ? `0 0 10px ${theme.colors.primary}50` : 'none'
-            }}>FLASH BUY</span>
-            <small style={{ fontSize: '9px', color: theme.colors.text_dim, letterSpacing: '2px' }}>DEVELOPED BY NB6</small>
-          </div>
-        </div>
-
-        {/* شريط البحث المتقدم (المحرك الذي سيتعرف على 0948) */}
-        <div className="search-engine-wrapper" style={{
-          position: 'relative',
-          width: searchFocused ? '350px' : '250px',
-          transition: 'all 0.5s ease'
-        }}>
-          <input 
-            type="text" 
-            placeholder="ابحث عن خدمتك الرقمية..."
-            value={searchQuery}
-            onChange={handleSearch}
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setSearchFocused(false)}
-            style={{
-              width: '100%',
-              padding: '12px 20px 12px 45px',
-              borderRadius: '30px',
-              border: `1px solid ${searchFocused ? theme.colors.primary : 'rgba(255,255,255,0.1)'}`,
-              background: 'rgba(255, 255, 255, 0.05)',
-              color: '#fff',
-              fontSize: '14px',
-              outline: 'none',
-              transition: '0.3s',
-              boxShadow: searchFocused ? `0 0 15px ${theme.colors.primary}30` : 'none'
-            }}
-          />
-          <span style={{
-            position: 'absolute',
-            left: '15px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            opacity: 0.5,
-            fontSize: '18px'
-          }}>🔍</span>
-          
-          {/* تأثير الـ Scanline الجمالي فوق البحث */}
-          {searchFocused && (
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '2px',
-              background: theme.colors.primary,
-              opacity: 0.3,
-              animation: `${scanline} 2s linear infinite`
-            }} />
-          )}
-        </div>
-
-        {/* روابط الملاحة للديسكتوب */}
-        <ul className="desktop-nav" style={{
-          display: 'flex',
-          gap: '25px',
-          listStyle: 'none'
-        }}>
-          {navLinks.map((link, idx) => (
-            <li key={idx} style={{ position: 'relative' }}>
-              <a href={link.path} style={{
-                fontSize: '14px',
-                fontWeight: '600',
-                color: theme.colors.text_dim,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                transition: '0.3s'
-              }}
-              className="nav-anchor"
-              onMouseOver={(e) => e.target.style.color = theme.colors.primary}
-              onMouseOut={(e) => e.target.style.color = theme.colors.text_dim}
-              >
-                <span>{link.icon}</span>
-                {link.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        {/* أزرار الإجراءات السريعة (Cart & Login) */}
-        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-          <div style={{ position: 'relative', cursor: 'pointer' }}>
-            <span style={{ fontSize: '24px' }}>🛒</span>
-            <span style={{
-              position: 'absolute',
-              top: '-5px',
-              right: '-8px',
-              background: theme.colors.accent,
-              color: '#fff',
-              fontSize: '10px',
-              width: '18px',
-              height: '18px',
-              borderRadius: '50%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontWeight: 'bold'
-            }}>0</span>
-          </div>
-          <button style={{
-            padding: '10px 25px',
-            borderRadius: '8px',
-            background: `linear-gradient(90deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-            color: '#000',
-            fontWeight: 'bold',
-            fontSize: '14px',
-            border: 'none'
-          }}>دخول</button>
-        </div>
-
-      </header>
-
-      {/* سيتبع في الجزء 3: واجهة الـ Hero الاحترافية وأنظمة العرض ثلاثية الأبعاد */}
-        // ---------------------------------------------------------
-  // الجزء 03/15: محرك العروض البصرية (The Ultimate Hero Engine)
-  // ---------------------------------------------------------
-
-  // مصفوفة النصوص المتحركة (لزيادة حجم الكود وتنوع المحتوى)
-  const heroMessages = [
-    "أسرع خدمة شحن في الجزائر 🇩🇿",
-    "حسابات تيك توك بيتا أصلية 📱",
-    "برمجة خاصة بلمسة Nb6 الاحترافية 💻",
-    "ضمان وموثوقية 100% مع نصرو 🛡️"
-  ];
-
-  const [msgIndex, setMsgIndex] = useState(0);
-
-  // تأثير تبديل النصوص التلقائي (لإضفاء حيوية على الواجهة)
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setMsgIndex((prev) => (prev + 1) % heroMessages.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div className="app-main-layout" style={{ marginTop: '80px' }}>
-      
-      {/* قسم البطولة (Hero Section) - تصميم عملاق بمؤثرات بصرية */}
-      <section style={{
-        minHeight: '90vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '0 5%',
-        position: 'relative',
-        overflow: 'hidden',
-        background: `radial-gradient(circle at 50% 50%, ${theme.colors.bg_surface} 0%, ${theme.colors.bg_deep} 100%)`
-      }}>
-        
-        {/* الخلفية الشبكية (Cyber Grid Background) */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `linear-gradient(${theme.colors.border_subtle} 1px, transparent 1px), 
-                          linear-gradient(90deg, ${theme.colors.border_subtle} 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-          maskImage: 'radial-gradient(ellipse at center, black, transparent 80%)',
-          opacity: 0.2,
-          zIndex: 0
-        }} />
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 1fr',
-          gap: '50px',
-          alignItems: 'center',
-          width: '100%',
-          maxWidth: '1400px',
-          zIndex: 1
-        }}>
-          
-          {/* 1. الجانب النصي (Typography & CTA) */}
-          <div className="hero-text-content">
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: '8px 15px',
-              borderRadius: '30px',
-              background: `${theme.colors.primary}10`,
-              border: `1px solid ${theme.colors.primary}30`,
-              marginBottom: '25px',
-              animation: 'fadeInLeft 1s ease'
-            }}>
-              <span style={{ 
-                width: '8px', 
-                height: '8px', 
-                borderRadius: '50%', 
-                background: theme.colors.success,
-                boxShadow: `0 0 10px ${theme.colors.success}`
-              }} />
-              <span style={{ fontSize: '12px', fontWeight: 'bold', color: theme.colors.primary, letterSpacing: '1px' }}>
-                نظام FLASH BUY DZ مفعل وجاهز للعمل
-              </span>
-            </div>
-
-            <h1 style={{
-              fontSize: 'clamp(40px, 6vw, 80px)',
-              lineHeight: '1.1',
-              marginBottom: '25px',
-              fontWeight: '900',
-              textAlign: 'right'
-            }}>
-              ارتقِ بتجربتك <br />
-              <span style={{ 
-                color: theme.colors.primary, 
-                textShadow: `0 0 30px ${theme.colors.primary}40`,
-                WebkitTextStroke: '1px rgba(255,255,255,0.1)'
-              }}>الرقمية اليوم</span>
-            </h1>
-
-            <div style={{ height: '40px', marginBottom: '35px' }}>
-               <p style={{
-                 fontSize: '20px',
-                 color: theme.colors.text_dim,
-                 fontWeight: '500',
-                 animation: 'fadeIn 0.5s ease'
-               }}>
-                 {heroMessages[msgIndex]}
-               </p>
-            </div>
-
-            <div style={{ display: 'flex', gap: '20px', justifyContent: 'flex-end' }}>
-              <button style={{
-                padding: '20px 45px',
-                fontSize: '18px',
-                fontWeight: '800',
-                borderRadius: '12px',
-                background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                color: '#000',
-                boxShadow: `0 10px 40px ${theme.colors.primary}30`,
-                border: 'none',
-                transform: 'skew(-5deg)'
-              }}>
-                ابدأ التسوق 🛒
-              </button>
-              
-              <button style={{
-                padding: '20px 45px',
-                fontSize: '18px',
-                fontWeight: '800',
-                borderRadius: '12px',
-                background: 'transparent',
-                border: `2px solid ${theme.colors.border_active}`,
-                color: '#fff',
-                transform: 'skew(-5deg)',
-                backdropFilter: 'blur(5px)'
-              }}>
-                خدمات Nb6 💻
-              </button>
-            </div>
-
-            {/* إحصائيات النظام (System Stats) */}
-            <div style={{
-              marginTop: '60px',
-              display: 'flex',
-              gap: '40px',
-              justifyContent: 'flex-end',
-              borderTop: `1px solid ${theme.colors.border_subtle}`,
-              paddingTop: '30px'
-            }}>
-              <div>
-                <h4 style={{ color: theme.colors.primary, fontSize: '24px' }}>+4.6K</h4>
-                <p style={{ fontSize: '12px', color: theme.colors.text_dim }}>متابع وفيّ</p>
-              </div>
-              <div>
-                <h4 style={{ color: theme.colors.primary, fontSize: '24px' }}>1500+</h4>
-                <p style={{ fontSize: '12px', color: theme.colors.text_dim }}>طلب مكتمل</p>
-              </div>
-              <div>
-                <h4 style={{ color: theme.colors.primary, fontSize: '24px' }}>99.9%</h4>
-                <p style={{ fontSize: '12px', color: theme.colors.text_dim }}>نسبة الرضا</p>
-              </div>
-            </div>
-          </div>
-
-          {/* 2. الجانب البصري (The Visual Sphere) */}
-          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-            {/* الدائرة الدوارة الكبيرة */}
-            <div style={{
-              width: '450px',
-              height: '450px',
-              border: `1px dashed ${theme.colors.primary}40`,
-              borderRadius: '50%',
-              position: 'relative',
-              animation: `${rotate} 20s linear infinite`,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
-               <div style={{
-                 width: '80%',
-                 height: '80%',
-                 border: `1px solid ${theme.colors.secondary}30`,
-                 borderRadius: '50%',
-                 animation: `${rotate} 10s linear infinite reverse`
-               }} />
-            </div>
-
-            {/* المركز (The Core Display) */}
-            <div style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '320px',
-              height: '420px',
-              background: `linear-gradient(180deg, ${theme.colors.bg_card}, #000)`,
-              borderRadius: '24px',
-              border: `1px solid ${theme.colors.border_active}`,
-              boxShadow: `0 0 50px ${theme.colors.primary}20`,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              padding: '20px'
-            }}>
-              <div style={{ height: '200px', background: '#1a1a1c', borderRadius: '15px', marginBottom: '15px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '80px' }}>
-                 💎
-              </div>
-              <div style={{ width: '60%', height: '15px', background: theme.colors.primary, borderRadius: '4px', marginBottom: '10px', opacity: 0.3 }} />
-              <div style={{ width: '90%', height: '10px', background: '#333', borderRadius: '4px', marginBottom: '5px' }} />
-              <div style={{ width: '80%', height: '10px', background: '#333', borderRadius: '4px', marginBottom: '20px' }} />
-              <div style={{ marginTop: 'auto', width: '100%', height: '45px', background: `linear-gradient(90deg, ${theme.colors.primary}20, ${theme.colors.secondary}20)`, border: `1px solid ${theme.colors.primary}40`, borderRadius: '8px' }} />
-            </div>
-
-            {/* عناصر طائرة (Floating Elements) لزيادة الاحترافية */}
-            <div style={{ position: 'absolute', top: '10%', right: '10%', fontSize: '40px', filter: 'drop-shadow(0 0 10px cyan)', animation: 'float 4s infinite ease-in-out' }}>💳</div>
-            <div style={{ position: 'absolute', bottom: '15%', left: '5%', fontSize: '40px', filter: 'drop-shadow(0 0 10px magenta)', animation: 'float 6s infinite ease-in-out reverse' }}>📱</div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* سيتبع في الجزء 04: "نظام المصفوفات الذكي" (The Advanced Product Architecture) */}
-  const [searchQuery, setSearchQuery] = useState("");
-                  // ---------------------------------------------------------
-  // الجزء 04/15: بنية المنتجات المتقدمة (Advanced Product Architecture)
-  // ---------------------------------------------------------
-
-  // مصفوفة ضخمة من الفئات (Categories) لزيادة تعقيد الكود والاحترافية
-  const categories = [
-    { id: 'all', name: 'الكل', icon: '🌐' },
-    { id: 'games', name: 'شحن ألعاب', icon: '🎮' },
-    { id: 'social', name: 'حسابات تواصل', icon: '📱' },
-    { id: 'cards', name: 'بطاقات رقمية', icon: '🃏' },
-    { id: 'software', name: 'برامج وسكربتات', icon: '💻' }
-  ];
-
-  const [activeCat, setActiveCat] = useState('all');
-  const [hoveredProduct, setHoveredProduct] = useState(null);
-
-  // قاعدة بيانات المنتجات (سنجعلها تنمو لتصل لآلاف الأسطر لاحقاً)
-  const productDatabase = [
-    { id: 101, category: 'games', name: '1080 Diamond - Free Fire', price: 1450, oldPrice: 1600, tag: 'Best Seller', icon: '💎' },
-    { id: 102, category: 'games', name: 'UC 660 - PUBG Mobile', price: 1850, oldPrice: 2100, tag: 'Instant', icon: '🔫' },
-    { id: 103, category: 'social', name: 'TikTok Beta Account', price: 3500, oldPrice: 4000, tag: 'Verified', icon: '🎬' },
-    { id: 104, category: 'social', name: 'Facebook Page 10K', price: 6500, oldPrice: 7200, tag: 'High Reach', icon: '👥' },
-    { id: 105, category: 'cards', name: 'Google Play 10$', price: 2400, oldPrice: 2600, tag: 'Global', icon: '🃏' },
-    { id: 106, category: 'cards', name: 'Netflix Premium 1 Month', price: 1200, oldPrice: 1500, tag: 'UHD', icon: '🍿' },
-    { id: 107, category: 'software', name: 'Windows 11 Pro Key', price: 950, oldPrice: 3000, tag: 'Lifetime', icon: '🪟' },
-    { id: 108, category: 'software', name: 'Custom Bot Script', price: 8500, oldPrice: 12000, tag: 'Custom', icon: '🤖' },
-  ];
-
-  // محرك الفلترة الذكي (Filtering Engine)
-  const filteredProducts = useMemo(() => {
-    if (activeCat === 'all') return productDatabase;
-    return productDatabase.filter(p => p.category === activeCat);
-  }, [activeCat]);
-
-  return (
-    <section id="store-section" style={{
-      padding: '100px 5%',
-      background: theme.colors.bg_deep,
-      minHeight: '120vh'
-    }}>
-      
-      {/* 1. رأس المتجر الذكي (Store Header) */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginBottom: '60px'
-      }}>
-        <h2 style={{
-          fontSize: '40px',
-          color: '#fff',
-          marginBottom: '20px',
-          display: 'flex',
-          gap: '15px'
-        }}>
-          <span style={{ color: theme.colors.primary }}>|</span> كاتالوج الخدمات الحصرية
-        </h2>
-        
-        {/* نظام التبويب المتطور (Advanced Tabs) */}
-        <div style={{
-          display: 'flex',
-          gap: '15px',
-          padding: '10px',
-          background: 'rgba(255,255,255,0.03)',
-          borderRadius: '50px',
-          border: `1px solid ${theme.colors.border_subtle}`
-        }}>
-          {categories.map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCat(cat.id)}
-              style={{
-                padding: '12px 25px',
-                borderRadius: '40px',
-                border: 'none',
-                background: activeCat === cat.id ? theme.colors.primary : 'transparent',
-                color: activeCat === cat.id ? '#000' : theme.colors.text_dim,
-                fontWeight: 'bold',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                cursor: 'pointer',
-                boxShadow: activeCat === cat.id ? `0 0 20px ${theme.colors.primary}40` : 'none'
-              }}
-            >
-              <span>{cat.icon}</span>
-              {cat.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 2. محرك عرض الكروت (Advanced Grid Engine) */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-        gap: '40px'
-      }}>
-        {filteredProducts.map((product) => (
-          <div
-            key={product.id}
-            onMouseEnter={() => setHoveredProduct(product.id)}
-            onMouseLeave={() => setHoveredProduct(null)}
-            style={{
-              background: theme.colors.bg_card,
-              borderRadius: '24px',
-              padding: '30px',
-              border: `1px solid ${hoveredProduct === product.id ? theme.colors.primary : theme.colors.border_subtle}`,
-              position: 'relative',
-              transition: 'all 0.4s ease',
-              transform: hoveredProduct === product.id ? 'translateY(-15px)' : 'translateY(0)',
-              overflow: 'hidden'
-            }}
-          >
-            {/* تأثير الضوء المار (Shine Effect) */}
-            {hoveredProduct === product.id && (
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: '-100%',
-                width: '50%',
-                height: '100%',
-                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)',
-                animation: 'shine 1.5s infinite'
-              }} />
-            )}
-
-            {/* أيقونة المنتج مع توهج النيون */}
-            <div style={{
-              width: '80px',
-              height: '80px',
-              background: '#1a1a1c',
-              borderRadius: '20px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: '40px',
-              marginBottom: '25px',
-              border: `1px solid ${theme.colors.border_subtle}`,
-              boxShadow: hoveredProduct === product.id ? `0 0 20px ${theme.colors.primary}20` : 'none'
-            }}>
-              {product.icon}
-            </div>
-
-            <div style={{
-              position: 'absolute',
-              top: '20px',
-              left: '20px',
-              padding: '5px 12px',
-              borderRadius: '6px',
-              background: theme.colors.secondary,
-              fontSize: '10px',
-              fontWeight: '900',
-              color: '#fff'
-            }}>
-              {product.tag}
-            </div>
-
-            <h3 style={{ fontSize: '22px', marginBottom: '10px', color: '#fff' }}>{product.name}</h3>
-            
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
-               <span style={{ fontSize: '24px', fontWeight: '900', color: theme.colors.success }}>{product.price} DA</span>
-               <span style={{ fontSize: '14px', color: theme.colors.text_dim, textDecoration: 'line-through' }}>{product.oldPrice} DA</span>
-            </div>
-
-            <button style={{
-              width: '100%',
-              padding: '15px',
-              borderRadius: '12px',
-              border: `1px solid ${theme.colors.primary}`,
-              background: hoveredProduct === product.id ? theme.colors.primary : 'transparent',
-              color: hoveredProduct === product.id ? '#000' : theme.colors.primary,
-              fontWeight: 'bold',
-              transition: '0.3s',
-              cursor: 'pointer'
-            }}>
-              {hoveredProduct === product.id ? 'إضافة إلى السلة ⚡' : '
-                // ---------------------------------------------------------
-  // الجزء 05/15: محرك السلة ونظام الطلب المتقدم (Advanced Cart Engine)
-  // ---------------------------------------------------------
-
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  // دالة إضافة المنتج للسلة مع التحقق من التكرار
-  const addToCart = (product) => {
-    setCart(prevCart => {
-      const exists = prevCart.find(item => item.id === product.id);
-      if (exists) {
-        return prevCart.map(item => 
-          item.id === product.id ? { ...item, qty: item.qty + 1 } : item
-        );
-      }
-      return [...prevCart, { ...product, qty: 1 }];
-    });
-    setIsCartOpen(true); // فتح السلة تلقائياً عند الإضافة لتعزيز تجربة المستخدم
-  };
-
-  // دالة حذف منتج من السلة
-  const removeFromCart = (productId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId));
-  };
-
-  // حساب المجموع الكلي باستخدام useMemo للأداء العالي
-  const cartSubtotal = useMemo(() => {
-    return cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-  }, [cart]);
-
-  const deliveryFee = cart.length > 0 ? 0 : 0; // خدمات رقمية = توصيل مجاني
-  const totalAmount = cartSubtotal + deliveryFee;
-
-  return (
-    <>
-      {/* 1. واجهة السلة الجانبية (The Side Cart Drawer) */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: isCartOpen ? 0 : '-100%',
-        width: '400px',
-        height: '100vh',
-        backgroundColor: theme.colors.bg_surface,
-        zIndex: 9999,
-        boxShadow: isCartOpen ? `20px 0 50px rgba(0,0,0,0.8)` : 'none',
-        transition: 'all 0.5s cubic-bezier(0.77, 0, 0.175, 1)',
-        borderRight: `1px solid ${theme.colors.border_active}`,
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
-        
-        {/* رأس السلة */}
-        <div style={{
-          padding: '30px',
-          borderBottom: `1px solid ${theme.colors.border_subtle}`,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          background: `linear-gradient(90deg, ${theme.colors.bg_card}, transparent)`
-        }}>
-          <h3 style={{ color: theme.colors.primary, fontSize: '20px' }}>سلة المشتريات 🛒</h3>
-          <button 
-            onClick={() => setIsCartOpen(false)}
-            style={{ color: '#fff', fontSize: '24px', cursor: 'pointer', border: 'none', background: 'none' }}
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* قائمة المنتجات في السلة */}
-        <div style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '20px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '15px'
-        }}>
-          {cart.length === 0 ? (
-            <div style={{ textAlign: 'center', marginTop: '50px', color: theme.colors.text_dim }}>
-              <p style={{ fontSize: '50px' }}>🛒</p>
-              <p>السلة فارغة حالياً يا نصرو</p>
-            </div>
-          ) : (
-            cart.map((item) => (
-              <div key={item.id} style={{
-                display: 'flex',
-                gap: '15px',
-                padding: '15px',
-                background: 'rgba(255,255,255,0.02)',
-                borderRadius: '12px',
-                border: `1px solid ${theme.colors.border_subtle}`
-              }}>
-                <div style={{ fontSize: '30px' }}>{item.icon}</div>
-                <div style={{ flex: 1 }}>
-                  <h4 style={{ fontSize: '14px', color: '#fff' }}>{item.name}</h4>
-                  <p style={{ color: theme.colors.primary, fontSize: '13px', fontWeight: 'bold' }}>
-                    {item.qty} × {item.price} DA
-                  </p>
-                </div>
-                <button 
-                  onClick={() => removeFromCart(item.id)}
-                  style={{ color: theme.colors.error, border: 'none', background: 'none', cursor: 'pointer' }}
-                >
-                  🗑️
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* ملخص الحساب وأزرار الدفع */}
-        {cart.length > 0 && (
-          <div style={{
-            padding: '30px',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            borderTop: `1px solid ${theme.colors.border_subtle}`
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-              <span style={{ color: theme.colors.text_dim }}>المجموع الفرعي:</span>
-              <span style={{ color: '#fff' }}>{cartSubtotal} DA</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '25px', borderTop: '1px solid #222', paddingTop: '10px' }}>
-              <span style={{ fontSize: '18px', fontWeight: 'bold' }}>الإجمالي الكلي:</span>
-              <span style={{ fontSize: '18px', fontWeight: 'bold', color: theme.colors.success }}>{totalAmount} DA</span>
-            </div>
-            
-            <button style={{
-              width: '100%',
-              padding: '18px',
-              borderRadius: '12px',
-              background: `linear-gradient(45deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-              color: '#000',
-              fontWeight: '900',
-              fontSize: '16px',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: `0 0 20px ${theme.colors.primary}40`
-            }}>
-              الانتقال للدفع ببريدي موب ⚡
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* خلفية معتمة عند فتح السلة */}
-      {isCartOpen && (
-        <div 
-          onClick={() => setIsCartOpen(false)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            backdropFilter: 'blur(5px)',
-            zIndex: 9998
-          }}
-        />
-      )}
-    </>
-  );
-            // ---------------------------------------------------------
-  // الجزء 06/15: نظام التوثيق والتحقق الذكي (Advanced Auth System)
-  // ---------------------------------------------------------
-
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [authData, setAuthData] = useState({ email: '', password: '' });
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-
-  // دالة محاكاة تسجيل الدخول مع تأثيرات تأخير برمجية
-  const handleLogin = (e) => {
-    e.preventDefault();
-    setIsLoggingIn(true);
-    
-    // محاكاة الاتصال بالسيرفر (تستغرق ثانيتين لإظهار الاحترافية)
-    setTimeout(() => {
-      setCurrentUser({ name: 'نصرو المبرمج', role: 'Admin' });
-      setIsLoggingIn(false);
-      setIsLoginOpen(false);
-      alert('تم تسجيل الدخول بنجاح! مرحباً بك في نظام NB6.');
-    }, 2000);
-  };
-
-  return (
-    <>
-      {/* 1. نافذة تسجيل الدخول المنبثقة (The Cyber Login Modal) */}
-      {isLoginOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 10000,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0,0,0,0.85)',
-          backdropFilter: 'blur(10px)'
-        }}>
-          <div style={{
-            width: '100%',
-            maxWidth: '450px',
-            background: theme.colors.bg_surface,
-            borderRadius: '24px',
-            border: `1px solid ${theme.colors.primary}40`,
-            padding: '40px',
-            position: 'relative',
-            boxShadow: `0 0 50px ${theme.colors.primary}20`,
-            animation: 'modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-          }}>
-            {/* زر الإغلاق */}
-            <button 
-              onClick={() => setIsLoginOpen(false)}
-              style={{ position: 'absolute', top: '20px', left: '20px', color: '#555', background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' }}
-            >✕</button>
-
-            <div style={{ textAlign: 'center', marginBottom: '35px' }}>
-              <div style={{ 
-                fontSize: '40px', 
-                marginBottom: '10px',
-                filter: `drop-shadow(0 0 10px ${theme.colors.primary})` 
-              }}>🛡️</div>
-              <h2 style={{ fontSize: '24px', color: '#fff', letterSpacing: '1px' }}>دخول النظام الآمن</h2>
-              <p style={{ color: theme.colors.text_dim, fontSize: '13px', marginTop: '5px' }}>يرجى إدخال بيانات الاعتماد الخاصة بك</p>
-            </div>
-
-            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ position: 'relative' }}>
-                <label style={{ display: 'block', color: theme.colors.primary, fontSize: '12px', marginBottom: '8px', fontWeight: 'bold' }}>البريد الإلكتروني</label>
-                <input 
-                  type="email" 
-                  required
-                  placeholder="admin@nb6.dz"
-                  value={authData.email}
-                  onChange={(e) => setAuthData({...authData, email: e.target.value})}
-                  style={{
-                    width: '100%',
-                    padding: '15px',
-                    borderRadius: '10px',
-                    background: '#050505',
-                    border: `1px solid ${theme.colors.border_subtle}`,
-                    color: '#fff',
-                    outline: 'none',
-                    transition: '0.3s'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.colors.primary}
-                  onBlur={(e) => e.target.style.borderColor = theme.colors.border_subtle}
-                />
-              </div>
-
-              <div style={{ position: 'relative' }}>
-                <label style={{ display: 'block', color: theme.colors.primary, fontSize: '12px', marginBottom: '8px', fontWeight: 'bold' }}>كلمة المرور</label>
-                <input 
-                  type="password" 
-                  required
-                  placeholder="••••••••"
-                  value={authData.password}
-                  onChange={(e) => setAuthData({...authData, password: e.target.value})}
-                  style={{
-                    width: '100%',
-                    padding: '15px',
-                    borderRadius: '10px',
-                    background: '#050505',
-                    border: `1px solid ${theme.colors.border_subtle}`,
-                    color: '#fff',
-                    outline: 'none',
-                    transition: '0.3s'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.colors.primary}
-                  onBlur={(e) => e.target.style.borderColor = theme.colors.border_subtle}
-                />
-              </div>
-
-              <button 
-                disabled={isLoggingIn}
-                type="submit" 
-                style={{
-                  marginTop: '10px',
-                  padding: '18px',
-                  borderRadius: '10px',
-                  background: isLoggingIn ? '#333' : `linear-gradient(45deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                  color: '#000',
-                  fontWeight: '900',
-                  fontSize: '16px',
-                  border: 'none',
-                  cursor: isLoggingIn ? 'not-allowed' : 'pointer',
-                  boxShadow: `0 0 20px ${theme.colors.primary}40`,
-                  transition: '0.3s'
-                }}
-              >
-                {isLoggingIn ? 'جاري التحقق من البيانات...' : 'تأكيد الهوية 🔑'}
-              </button>
-
-              <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                <a href="#" style={{ color: theme.colors.text_dim, fontSize: '12px', textDecoration: 'none' }}>نسيت كلمة المرور؟</a>
-              </div>
-            </form>
-
-            {/* تأثير الخط المتحرك في الأسفل */}
-            <div style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              width: '100%',
-              height: '3px',
-              background: `linear-gradient(90deg, transparent, ${theme.colors.primary}, transparent)`,
-              animation: 'scanline 2s linear infinite'
-            }} />
-          </div>
-        </div>
-      )}
-    </>
-  );
-            // ---------------------------------------------------------
-  // الجزء 07/15: محرك المراجعات والآراء الذكي (Advanced Reviews Engine)
-  // ---------------------------------------------------------
-
-  const [activeReview, setActiveReview] = useState(0);
-
-  // قاعدة بيانات المراجعات (سنجعلها تنمو لزيادة حجم الكود والاحترافية)
-  const reviewsDatabase = [
-    { id: 1, user: "محمد. ب", location: "وهران", comment: "أفضل خدمة شحن فري فاير في الجزائر، سرعة البرق!", rating: 5, avatar: "👤" },
-    { id: 2, user: "ياسين. ك", location: "الجزائر العاصمة", comment: "حسابات تيك توك بيتا شغالة 100%، شكراً نصرو المبرمج.", rating: 5, avatar: "🔥" },
-    { id: 3, user: "أحمد. م", location: "سطيف", comment: "ثقة وسرعة في التعامل، الدفع ببريدي موب سهل جداً.", rating: 4, avatar: "⭐" },
-    { id: 4, user: "كمال. ر", location: "غليزان", comment: "ابن ولايتي فخر للمبرمجين، موقع احترافي جداً.", rating: 5, avatar: "💻" },
-    { id: 5, user: "سامي. ج", location: "عنابة", comment: "السكربت البرمجي الذي اشتريته رائع، عمل متقن.", rating: 5, avatar: "🤖" },
-  ];
-
-  // نظام التبديل التلقائي للمراجعات (Auto-slide logic)
-  useEffect(() => {
-    const slideTimer = setInterval(() => {
-      setActiveReview((prev) => (prev + 1) % reviewsDatabase.length);
-    }, 5000);
-    return () => clearInterval(slideTimer);
-  }, [reviewsDatabase.length]);
-
-  return (
-    <section id="reviews-section" style={{
-      padding: '100px 5%',
-      background: `linear-gradient(180deg, ${theme.colors.bg_deep} 0%, #050505 100%)`,
-      position: 'relative',
-      overflow: 'hidden'
-    }}>
-      
-      {/* تأثيرات خلفية فنية لزيادة الهيبة */}
-      <div style={{
-        position: 'absolute',
-        top: '20%',
-        right: '-10%',
-        width: '400px',
-        height: '400px',
-        background: `${theme.colors.secondary}05`,
-        filter: 'blur(100px)',
-        borderRadius: '50%',
-        zIndex: 0
-      }} />
-
-      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', marginBottom: '60px' }}>
-        <h2 style={{ fontSize: '36px', color: '#fff', fontWeight: '900', letterSpacing: '1px' }}>
-          ماذا يقول <span style={{ color: theme.colors.primary }}>عملاء NB6</span>؟
-        </h2>
-        <div style={{ width: '100px', height: '4px', background: theme.colors.primary, margin: '20px auto', borderRadius: '2px' }} />
-      </div>
-
-      <div style={{
-        maxWidth: '900px',
-        margin: '0 auto',
-        position: 'relative'
-      }}>
-        {/* محرك عرض المراجعة النشطة */}
-        <div style={{
-          background: theme.colors.bg_card,
-          padding: '50px',
-          borderRadius: '30px',
-          border: `1px solid ${theme.colors.border_subtle}`,
-          boxShadow: `0 20px 40px rgba(0,0,0,0.4)`,
-          textAlign: 'center',
-          animation: 'fadeIn 0.6s ease'
-        }}>
-          <div style={{ fontSize: '50px', marginBottom: '20px' }}>
-            {reviewsDatabase[activeReview].avatar}
-          </div>
-          
-          <div style={{ marginBottom: '20px' }}>
-            {Array.from({ length: reviewsDatabase[activeReview].rating }).map((_, i) => (
-              <span key={i} style={{ color: theme.colors.warning, fontSize: '20px' }}>★</span>
-            ))}
-          </div>
-
-          <p style={{
-            fontSize: '22px',
-            color: '#fff',
-            fontStyle: 'italic',
-            lineHeight: '1.6',
-            marginBottom: '30px'
-          }}>
-            "{reviewsDatabase[activeReview].comment}"
-          </p>
-
-          <h4 style={{ color: theme.colors.primary, fontSize: '18px', marginBottom: '5px' }}>
-            {reviewsDatabase[activeReview].user}
-          </h4>
-          <span style={{ color: theme.colors.text_dim, fontSize: '13px' }}>
-            من {reviewsDatabase[activeReview].location}
-          </span>
-        </div>
-
-        {/* مؤشرات التبديل (Dots) */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '12px',
-          marginTop: '40px'
-        }}>
-          {reviewsDatabase.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setActiveReview(idx)}
-              style={{
-                width: activeReview === idx ? '30px' : '10px',
-                height: '10px',
-                borderRadius: '5px',
-                background: activeReview === idx ? theme.colors.primary : '#333',
-                border: 'none',
-                cursor: 'pointer',
-                transition: '0.4s ease'
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* قسم عرض الشعارات للشركاء (Trust Bar) */}
-      <div style={{
-        marginTop: '100px',
-        padding: '40px',
-        borderTop: `1px solid ${theme.colors.border_subtle}`,
-        display: 'flex',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        opacity: 0.5,
-        filter: 'grayscale(1)'
-      }}>
-        {['Garena', 'TikTok', 'PUBG', 'Netflix', 'Riot'].map((brand) => (
-          <span key={brand} style={{ fontSize: '20px', fontWeight: 'bold', color: '#fff' }}>{brand}</span>
-        ))}
-      </div>
-    </section>
-          // ---------------------------------------------------------
-  // الجزء 08/15: محرك الأسئلة الشائعة والدعم (Advanced FAQ Engine)
-  // ---------------------------------------------------------
-
-  const [openFaq, setOpenFaq] = useState(null);
-
-  // قاعدة بيانات الأسئلة الشائعة (قابلة للتوسع لزيادة حجم المشروع)
-  const faqDatabase = [
-    { 
-      id: 1, 
-      question: "كيف يتم استلام الخدمة بعد الدفع؟", 
-      answer: "بمجرد تأكيد وصل الدفع عبر بريدي موب، سيقوم نظام NB6 الآلي أو فريق الدعم بإرسال الكود أو تفعيل الحساب لك عبر الواتساب في أقل من 15 دقيقة." 
-    },
-    { 
-      id: 2, 
-      question: "هل طرق الدفع آمنة وموثوقة؟", 
-      answer: "نعم، نحن نعتمد بشكل أساسي على بريدي موب (BaridiMob) لضمان حقوق الطرفين، حيث تملك وصلاً رسمياً لكل عملية تحويل تقوم بها." 
-    },
-    { 
-      id: 3, 
-      question: "ماذا أفعل إذا واجهت مشكلة في الكود؟", 
-      answer: "فريق الدعم الفني بقيادة نصرو متاح 24/7. يمكنك الضغط على أيقونة الواتساب العائمة وسنقوم بحل مشكلتك في أسرع وقت ممكن." 
-    },
-    { 
-      id: 4, 
-      question: "هل يمكنني طلب خدمات برمجة خاصة؟", 
-      answer: "بالطبع! نحن متخصصون في برمجة البوتات، السكربتات، وتصميم المواقع الاحترافية مثل هذا الموقع تماماً. تواصل معنا لمناقشة مشروعك." 
-    },
-    { 
-      id: 5, 
-      question: "لماذا أسعار Flash Buy أرخص من المنافسين؟", 
-      answer: "لأننا مبرمجون ونتعامل مع الموفرين الأصليين مباشرة بدون وسطاء، مما يسمح لنا بتقديم أفضل الأسعار في السوق الجزائري." 
-    }
-  ];
-
-  const toggleFaq = (id) => {
-    setOpenFaq(openFaq === id ? null : id);
-  };
-
-  return (
-    <section id="faq-section" style={{
-      padding: '100px 5%',
-      background: theme.colors.bg_deep,
-      borderTop: `1px solid ${theme.colors.border_subtle}`
-    }}>
-      
-      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-          <h2 style={{ fontSize: '32px', color: theme.colors.primary, fontWeight: '800' }}>
-            الأسئلة المتكررة ❓
-          </h2>
-          <p style={{ color: theme.colors.text_dim, marginTop: '10px' }}>
-            كل ما تحتاج معرفته عن خدمات Flash Buy DZ في مكان واحد
-          </p>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          {faqDatabase.map((faq) => (
-            <div 
-              key={faq.id}
-              style={{
-                background: theme.colors.bg_card,
-                borderRadius: '15px',
-                border: `1px solid ${openFaq === faq.id ? theme.colors.primary : theme.colors.border_subtle}`,
-                overflow: 'hidden',
-                transition: '0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}
-            >
-              {/* عنوان السؤال */}
-              <div 
-                onClick={() => toggleFaq(faq.id)}
-                style={{
-                  padding: '25px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                  userSelect: 'none'
-                }}
-              >
-                <span style={{ 
-                  fontSize: '18px', 
-                  fontWeight: '700', 
-                  color: openFaq === faq.id ? theme.colors.primary : '#fff' 
-                }}>
-                  {faq.question}
-                </span>
-                <span style={{ 
-                  transform: openFaq === faq.id ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: '0.3s',
-                  color: theme.colors.primary,
-                  fontSize: '20px'
-                }}>
-                  ▼
-                </span>
-              </div>
-
-              {/* الإجابة المنسدلة */}
-              <div style={{
-                maxHeight: openFaq === faq.id ? '200px' : '0',
-                overflow: 'hidden',
-                transition: '0.4s ease-in-out',
-                background: 'rgba(255, 255, 255, 0.02)'
-              }}>
-                <p style={{
-                  padding: '0 25px 25px 25px',
-                  color: theme.colors.text_dim,
-                  lineHeight: '1.8',
-                  fontSize: '15px'
-                }}>
-                  {faq.answer}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* قسم الدعوة للتواصل المباشر */}
-        <div style={{
-          marginTop: '60px',
-          padding: '40px',
-          background: `linear-gradient(135deg, ${theme.colors.bg_card}, #1a1a1c)`,
-          borderRadius: '20px',
-          textAlign: 'center',
-          border: `1px dashed ${theme.colors.primary}40`
-        }}>
-          <h3 style={{ color: '#fff', marginBottom: '15px' }}>لم تجد إجابتك هنا؟</h3>
-          <p style={{ color: theme.colors.text_dim, marginBottom: '25px' }}>
-            لا تتردد في مراسلة نصرو مبرمج الموقع مباشرة عبر الواتساب.
-          </p>
-          <button style={{
-            padding: '12px 35px',
-            borderRadius: '10px',
-            background: theme.colors.success,
-            color: '#000',
-            fontWeight: 'bold',
-            border: 'none',
-            cursor: 'pointer',
-            boxShadow: `0 0 15px ${theme.colors.success}30`
-          }}>
-            تحدث معنا الآن 💬
-          </button>
-        </div>
-      </div>
-    </section>
-    // ---------------------------------------------------------
-  // الجزء 09/15: محرك المدونة التقنية (Advanced Blog Engine)
-  // ---------------------------------------------------------
-
-  const [hoveredBlog, setHoveredBlog] = useState(null);
-
-  // قاعدة بيانات المقالات (Blog Data)
-  const blogPosts = [
-    {
-      id: 501,
-      title: "كيف تحمي حسابك في فري فاير من الاختراق؟",
-      excerpt: "نصائح ذهبية من مبرمجي NB6 لتأمين حساباتكم ومنع السرقة نهائياً...",
-      date: "2026-01-20",
-      tag: "Security",
-      readTime: "5 min",
-      img: "🛡️"
-    },
-    {
-      id: 502,
-      title: "تحديثات تيك توك بيتا الجديدة في الجزائر",
-      excerpt: "اكتشف كيف تفعّل ميزة الربح من المشاهدات في حسابك الجديد بكل سهولة...",
-      date: "2026-01-18",
-      tag: "Social Media",
-      readTime: "3 min",
-      img: "📈"
-    },
-    {
-      id: 503,
-      title: "لماذا React هي الأفضل لبناء المتاجر الرقمية؟",
-      excerpt: "نظرة تقنية من نصرو مبرمج الموقع حول سرعة الأداء واستجابة الواجهات...",
-      date: "2026-01-15",
-      tag: "Programming",
-      readTime: "8 min",
-      img: "💻"
-    }
-  ];
-
-  return (
-    <section id="blog-section" style={{
-      padding: '100px 5%',
-      backgroundColor: theme.colors.bg_surface,
-      position: 'relative'
-    }}>
-      
-      {/* عنوان المدونة مع خط نيون متحرك */}
-      <div style={{ marginBottom: '60px', textAlign: 'right' }}>
-        <h2 style={{
-          fontSize: '38px',
-          fontWeight: '900',
-          color: '#fff',
-          textTransform: 'uppercase'
-        }}>
-          ركن <span style={{ color: theme.colors.secondary }}>المعرفة التقنية</span>
-        </h2>
-        <div style={{
-          width: '150px',
-          height: '2px',
-          background: `linear-gradient(to left, ${theme.colors.secondary}, transparent)`,
-          marginTop: '10px'
-        }} />
-      </div>
-
-      {/* شبكة المقالات (Blog Grid) */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-        gap: '30px'
-      }}>
-        {blogPosts.map((post) => (
-          <article
-            key={post.id}
-            onMouseEnter={() => setHoveredBlog(post.id)}
-            onMouseLeave={() => setHoveredBlog(null)}
-            style={{
-              background: theme.colors.bg_card,
-              borderRadius: '20px',
-              border: `1px solid ${hoveredBlog === post.id ? theme.colors.secondary : theme.colors.border_subtle}`,
-              overflow: 'hidden',
-              transition: '0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-              transform: hoveredBlog === post.id ? 'scale(1.02)' : 'scale(1)',
-              cursor: 'pointer'
-            }}
-          >
-            {/* واجهة المقال (Thumbnail Placeholder) */}
-            <div style={{
-              height: '200px',
-              background: `linear-gradient(45deg, #1a1a1c, ${theme.colors.bg_deep})`,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: '80px',
-              position: 'relative'
-            }}>
-              {post.img}
-              <div style={{
-                position: 'absolute',
-                bottom: '15px',
-                right: '15px',
-                padding: '5px 15px',
-                borderRadius: '50px',
-                background: theme.colors.secondary,
-                color: '#fff',
-                fontSize: '11px',
-                fontWeight: 'bold'
-              }}>
-                {post.tag}
-              </div>
-            </div>
-
-            {/* محتوى المقال */}
-            <div style={{ padding: '30px' }}>
-              <div style={{ display: 'flex', gap: '15px', color: theme.colors.text_dim, fontSize: '12px', marginBottom: '15px' }}>
-                <span>📅 {post.date}</span>
-                <span>⏱️ {post.readTime} قراءة</span>
-              </div>
-              
-              <h3 style={{
-                fontSize: '22px',
-                color: '#fff',
-                marginBottom: '15px',
-                lineHeight: '1.4',
-                transition: '0.3s',
-                color: hoveredBlog === post.id ? theme.colors.secondary : '#fff'
-              }}>
-                {post.title}
-              </h3>
-              
-              <p style={{
-                color: theme.colors.text_dim,
-                fontSize: '15px',
-                lineHeight: '1.6',
-                marginBottom: '25px',
-                height: '75px',
-                overflow: 'hidden'
-              }}>
-                {post.excerpt}
-              </p>
-
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                color: theme.colors.secondary,
-                fontWeight: 'bold',
-                fontSize: '14px'
-              }}>
-                إقرأ المزيد 
-                <span style={{ 
-                  transform: hoveredBlog === post.id ? 'translateX(-10px)' : 'translateX(0)',
-                  transition: '0.3s'
-                }}>←</span>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      {/* زر عرض كافة المقالات */}
-      <div style={{ textAlign: 'center', marginTop: '60px' }}>
-        <button style={{
-          padding: '15px 40px',
-          borderRadius: '50px',
-          border: `1px solid ${theme.colors.secondary}`,
-          background: 'transparent',
-          color: theme.colors.secondary,
-          fontWeight: 'bold',
-          transition: '0.3s',
-          cursor: 'pointer'
-        }}
-        onMouseOver={(e) => {
-          e.target.style.background = theme.colors.secondary;
-          e.target.style.color = '#fff';
-        }}
-        onMouseOut={(e) => {
-          e.target.style.background = 'transparent';
-          e.target.style.color = theme.colors.secondary;
-        }}
-        >
-          استكشف كافة الأخبار 📰
-        </button>
-      </div>
-    </section>
-    // ---------------------------------------------------------
-  // الجزء 10 & 11 من 15: نظام الإشعارات وتتبع الطلبات الذكي
-  // ---------------------------------------------------------
-
-  const [notifications, setNotifications] = useState([]);
-  const [trackingId, setTrackingId] = useState("");
-  const [orderStatus, setOrderStatus] = useState(null);
-  const [isTracking, setIsTracking] = useState(false);
-
-  // دالة إرسال إشعار نيون (Toast System)
-  const addNotification = useCallback((message, type = 'success') => {
-    const id = Date.now();
-    setNotifications(prev => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.id !== id));
-    }, 4000);
-  }, []);
-
-  // محاكاة نظام تتبع الطلبات (Tracking Logic)
-  const handleTrackOrder = (e) => {
-    e.preventDefault();
-    if (!trackingId) return addNotification("يرجى إدخال رقم الطلب أولاً", "error");
-    
-    setIsTracking(true);
-    setTimeout(() => {
-      // بيانات وهمية للاختبار يا نصرو
-      const statuses = ["قيد المعالجة ⏳", "تم استلام الدفع ✅", "جاري الشحن 💎", "اكتمل الطلب 🎉"];
-      setOrderStatus(statuses[Math.floor(Math.random() * statuses.length)]);
-      setIsTracking(false);
-      addNotification("تم تحديث حالة الطلب بنجاح");
-    }, 1500);
-  };
-
-  return (
-    <>
-      {/* الجزء 10: حاوية الإشعارات العائمة (Notification Hub) */}
-      <div style={{
-        position: 'fixed',
-        bottom: '30px',
-        right: '30px',
-        zIndex: 99999,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px'
-      }}>
-        {notifications.map(n => (
-          <div key={n.id} style={{
-            padding: '15px 25px',
-            background: n.type === 'success' ? '#00ff8820' : '#ff313120',
-            borderRight: `4px solid ${n.type === 'success' ? theme.colors.success : theme.colors.error}`,
-            borderRadius: '8px',
-            color: '#fff',
-            backdropFilter: 'blur(10px)',
-            boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
-            animation: 'slideInRight 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            minWidth: '280px'
-          }}>
-            <span>{n.type === 'success' ? '✅' : '⚠️'}</span>
-            <span style={{ fontSize: '14px', fontWeight: '500' }}>{n.message}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* الجزء 11: واجهة تتبع الطلبات (Order Tracking Section) */}
-      <section id="tracking" style={{
-        padding: '120px 5%',
-        background: `linear-gradient(45deg, ${theme.colors.bg_deep}, #0a0a0c)`,
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        {/* عنصر جمالي خلفي */}
-        <div style={{
-          position: 'absolute',
-          top: '-10%',
-          left: '-10%',
-          width: '500px',
-          height: '500px',
-          background: `${theme.colors.primary}08`,
-          borderRadius: '50%',
-          filter: 'blur(120px)'
-        }} />
-
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1.2fr',
-          gap: '80px',
-          alignItems: 'center'
-        }}>
-          
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <h2 style={{ fontSize: '42px', fontWeight: '900', color: '#fff', marginBottom: '25px' }}>
-              تتبع شحنتك <br />
-              <span style={{ color: theme.colors.primary }}>في الوقت الفعلي</span>
-            </h2>
-            <p style={{ color: theme.colors.text_dim, fontSize: '18px', lineHeight: '1.7', marginBottom: '40px' }}>
-              لا داعي للانتظار! أدخل رقم طلبك الذي استلمته في رسالة التأكيد لتعرف أين وصلت خدمتك الرقمية الآن. نظام NB6 يضمن لك الشفافية التامة.
-            </p>
-
-            <form onSubmit={handleTrackOrder} style={{ position: 'relative' }}>
-              <input 
-                type="text" 
-                placeholder="أدخل رقم الطلب (مثلاً: #NB6-9902)"
-                value={trackingId}
-                onChange={(e) => setTrackingId(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '22px 30px',
-                  borderRadius: '15px',
-                  background: 'rgba(255,255,255,0.03)',
-                  border: `2px solid ${theme.colors.border_subtle}`,
-                  color: '#fff',
-                  fontSize: '16px',
-                  outline: 'none',
-                  transition: '0.4s'
-                }}
-              />
-              <button 
-                type="submit"
-                disabled={isTracking}
-                style={{
-                  position: 'absolute',
-                  left: '10px',
-                  top: '10px',
-                  bottom: '10px',
-                  padding: '0 30px',
-                  borderRadius: '10px',
-                  background: theme.colors.primary,
-                  color: '#000',
-                  fontWeight: 'bold',
-                  border: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                {isTracking ? 'جاري البحث...' : 'تتبع الآن 🔍'}
-              </button>
-            </form>
-
-            {orderStatus && (
-              <div style={{
-                marginTop: '30px',
-                padding: '25px',
-                background: `${theme.colors.primary}10`,
-                borderRadius: '12px',
-                border: `1px solid ${theme.colors.primary}30`,
-                animation: 'fadeInUp 0.5s ease'
-              }}>
-                <span style={{ color: theme.colors.text_dim, fontSize: '14px' }}>حالة الطلب الحالية:</span>
-                <h3 style={{ color: theme.colors.primary, fontSize: '24px', marginTop: '5px' }}>{orderStatus}</h3>
-              </div>
-            )}
-          </div>
-
-          {/* الجزء البصري للتتبع (Visual Tracker) */}
-          <div style={{
-            background: theme.colors.bg_card,
-            padding: '40px',
-            borderRadius: '30px',
-            border: `1px solid ${theme.colors.border_subtle}`,
-            boxShadow: theme.shadows.glow
-          }}>
-            <h4 style={{ color: '#fff', marginBottom: '30px' }}>خطوات تنفيذ الطلب برمجياً:</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-              {[
-                { label: 'استلام الطلب وتأكيد الوصل', done: true },
-                { label: 'التحقق من البيانات الرقمية', done: true },
-                { label: 'بدء عملية الشحن التلقائي', done: false },
-                { label: 'إرسال التأكيد النهائي للزبون', done: false }
-              ].map((step, i) => (
-                <div key={i} style={{ display: 'flex', gap: '20px', alignItems: 'center', opacity: step.done ? 1 : 0.3 }}>
-                  <div style={{
-                    width: '30px',
-                    height: '30px',
-                    borderRadius: '50%',
-                    background: step.done ? theme.colors.success : 'transparent',
-                    border: `2px solid ${step.done ? theme.colors.success : '#333'}`,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: '14px'
-                  }}>
-                    {step.done ? '✓' : i + 1}
-                  </div>
-                  <span style={{ color: '#fff', fontSize: '16px' }}>{step.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </section>
-    </>
-  );
-        // ---------------------------------------------------------
-  // الجزء 10 & 11 من 15: نظام الإشعارات وتتبع الطلبات الذكي
-  // ---------------------------------------------------------
-
-  const [notifications, setNotifications] = useState([]);
-  const [trackingId, setTrackingId] = useState("");
-  const [orderStatus, setOrderStatus] = useState(null);
-  const [isTracking, setIsTracking] = useState(false);
-
-  // دالة إرسال إشعار نيون (Toast System)
-  const addNotification = useCallback((message, type = 'success') => {
-    const id = Date.now();
-    setNotifications(prev => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.id !== id));
-    }, 4000);
-  }, []);
-
-  // محاكاة نظام تتبع الطلبات (Tracking Logic)
-  const handleTrackOrder = (e) => {
-    e.preventDefault();
-    if (!trackingId) return addNotification("يرجى إدخال رقم الطلب أولاً", "error");
-    
-    setIsTracking(true);
-    setTimeout(() => {
-      // بيانات وهمية للاختبار يا نصرو
-      const statuses = ["قيد المعالجة ⏳", "تم استلام الدفع ✅", "جاري الشحن 💎", "اكتمل الطلب 🎉"];
-      setOrderStatus(statuses[Math.floor(Math.random() * statuses.length)]);
-      setIsTracking(false);
-      addNotification("تم تحديث حالة الطلب بنجاح");
-    }, 1500);
-  };
-
-  return (
-    <>
-      {/* الجزء 10: حاوية الإشعارات العائمة (Notification Hub) */}
-      <div style={{
-        position: 'fixed',
-        bottom: '30px',
-        right: '30px',
-        zIndex: 99999,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px'
-      }}>
-        {notifications.map(n => (
-          <div key={n.id} style={{
-            padding: '15px 25px',
-            background: n.type === 'success' ? '#00ff8820' : '#ff313120',
-            borderRight: `4px solid ${n.type === 'success' ? theme.colors.success : theme.colors.error}`,
-            borderRadius: '8px',
-            color: '#fff',
-            backdropFilter: 'blur(10px)',
-            boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
-            animation: 'slideInRight 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            minWidth: '280px'
-          }}>
-            <span>{n.type === 'success' ? '✅' : '⚠️'}</span>
-            <span style={{ fontSize: '14px', fontWeight: '500' }}>{n.message}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* الجزء 11: واجهة تتبع الطلبات (Order Tracking Section) */}
-      <section id="tracking" style={{
-        padding: '120px 5%',
-        background: `linear-gradient(45deg, ${theme.colors.bg_deep}, #0a0a0c)`,
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        {/* عنصر جمالي خلفي */}
-        <div style={{
-          position: 'absolute',
-          top: '-10%',
-          left: '-10%',
-          width: '500px',
-          height: '500px',
-          background: `${theme.colors.primary}08`,
-          borderRadius: '50%',
-          filter: 'blur(120px)'
-        }} />
-
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1.2fr',
-          gap: '80px',
-          alignItems: 'center'
-        }}>
-          
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <h2 style={{ fontSize: '42px', fontWeight: '900', color: '#fff', marginBottom: '25px' }}>
-              تتبع شحنتك <br />
-              <span style={{ color: theme.colors.primary }}>في الوقت الفعلي</span>
-            </h2>
-            <p style={{ color: theme.colors.text_dim, fontSize: '18px', lineHeight: '1.7', marginBottom: '40px' }}>
-              لا داعي للانتظار! أدخل رقم طلبك الذي استلمته في رسالة التأكيد لتعرف أين وصلت خدمتك الرقمية الآن. نظام NB6 يضمن لك الشفافية التامة.
-            </p>
-
-            <form onSubmit={handleTrackOrder} style={{ position: 'relative' }}>
-              <input 
-                type="text" 
-                placeholder="أدخل رقم الطلب (مثلاً: #NB6-9902)"
-                value={trackingId}
-                onChange={(e) => setTrackingId(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '22px 30px',
-                  borderRadius: '15px',
-                  background: 'rgba(255,255,255,0.03)',
-                  border: `2px solid ${theme.colors.border_subtle}`,
-                  color: '#fff',
-                  fontSize: '16px',
-                  outline: 'none',
-                  transition: '0.4s'
-                }}
-              />
-              <button 
-                type="submit"
-                disabled={isTracking}
-                style={{
-                  position: 'absolute',
-                  left: '10px',
-                  top: '10px',
-                  bottom: '10px',
-                  padding: '0 30px',
-                  borderRadius: '10px',
-                  background: theme.colors.primary,
-                  color: '#000',
-                  fontWeight: 'bold',
-                  border: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                {isTracking ? 'جاري البحث...' : 'تتبع الآن 🔍'}
-              </button>
-            </form>
-
-            {orderStatus && (
-              <div style={{
-                marginTop: '30px',
-                padding: '25px',
-                background: `${theme.colors.primary}10`,
-                borderRadius: '12px',
-                border: `1px solid ${theme.colors.primary}30`,
-                animation: 'fadeInUp 0.5s ease'
-              }}>
-                <span style={{ color: theme.colors.text_dim, fontSize: '14px' }}>حالة الطلب الحالية:</span>
-                <h3 style={{ color: theme.colors.primary, fontSize: '24px', marginTop: '5px' }}>{orderStatus}</h3>
-              </div>
-            )}
-          </div>
-
-          {/* الجزء البصري للتتبع (Visual Tracker) */}
-          <div style={{
-            background: theme.colors.bg_card,
-            padding: '40px',
-            borderRadius: '30px',
-            border: `1px solid ${theme.colors.border_subtle}`,
-            boxShadow: theme.shadows.glow
-          }}>
-            <h4 style={{ color: '#fff', marginBottom: '30px' }}>خطوات تنفيذ الطلب برمجياً:</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-              {[
-                { label: 'استلام الطلب وتأكيد الوصل', done: true },
-                { label: 'التحقق من البيانات الرقمية', done: true },
-                { label: 'بدء عملية الشحن التلقائي', done: false },
-                { label: 'إرسال التأكيد النهائي للزبون', done: false }
-              ].map((step, i) => (
-                <div key={i} style={{ display: 'flex', gap: '20px', alignItems: 'center', opacity: step.done ? 1 : 0.3 }}>
-                  <div style={{
-                    width: '30px',
-                    height: '30px',
-                    borderRadius: '50%',
-                    background: step.done ? theme.colors.success : 'transparent',
-                    border: `2px solid ${step.done ? theme.colors.success : '#333'}`,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: '14px'
-                  }}>
-                    {step.done ? '✓' : i + 1}
-                  </div>
-                  <span style={{ color: '#fff', fontSize: '16px' }}>{step.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </section>
-    </>
-  );
-        // ---------------------------------------------------------
-  // الجزء 12 من 15: لوحة تحكم المستخدم ونظام الولاء (User Dashboard)
-  // ---------------------------------------------------------
-
-  const [userPoints, setUserPoints] = useState(1250); // نقاط افتراضية للتجربة
-  const [activeTab, setActiveTab] = useState('overview');
-
-  // محاكاة استبدال النقاط بخصم
-  const redeemPoints = () => {
-    if (userPoints >= 500) {
-      setUserPoints(prev => prev - 500);
-      addNotification("تم استبدال 500 نقطة بخصم 100 DA!", "success");
-    } else {
-      addNotification("رصيد نقاطك غير كافٍ حالياً", "error");
-    }
-  };
-
-  if (!currentUser) return null; // لا تظهر اللوحة إلا إذا كان هناك مستخدم
-
-  return (
-    <section id="user-dashboard" style={{
-      padding: '120px 5%',
-      background: theme.colors.bg_deep,
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '1300px',
-        margin: '0 auto',
-        display: 'grid',
-        gridTemplateColumns: '280px 1fr',
-        gap: '40px'
-      }}>
-        
-        {/* 1. القائمة الجانبية للوحة التحكم (Sidebar) */}
-        <aside style={{
-          background: theme.colors.bg_card,
-          borderRadius: '24px',
-          padding: '30px',
-          border: `1px solid ${theme.colors.border_subtle}`,
-          height: 'fit-content'
-        }}>
-          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <div style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '50%',
-              background: `linear-gradient(45deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-              margin: '0 auto 15px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: '30px',
-              boxShadow: theme.shadows.glow
-            }}>👤</div>
-            <h3 style={{ color: '#fff', fontSize: '18px' }}>{currentUser.name}</h3>
-            <span style={{ color: theme.colors.primary, fontSize: '12px', fontWeight: 'bold' }}>عضو ذهبي 🏆</span>
-          </div>
-
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {[
-              { id: 'overview', label: 'نظرة عامة', icon: '📊' },
-              { id: 'orders', label: 'طلباتي', icon: '📦' },
-              { id: 'points', label: 'نقاط المكافأة', icon: '🪙' },
-              { id: 'settings', label: 'الإعدادات', icon: '⚙️' }
-            ].map(item => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                style={{
-                  padding: '15px 20px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  background: activeTab === item.id ? `${theme.colors.primary}15` : 'transparent',
-                  color: activeTab === item.id ? theme.colors.primary : theme.colors.text_dim,
-                  textAlign: 'right',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  transition: '0.3s'
-                }}
-              >
-                <span>{item.icon}</span>
-                {item.label}
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* 2. المحتوى المتغير للوحة التحكم (Dashboard Content) */}
-        <main style={{
-          background: 'rgba(255,255,255,0.02)',
-          borderRadius: '24px',
-          padding: '40px',
-          border: `1px solid ${theme.colors.border_subtle}`
-        }}>
-          
-          {activeTab === 'overview' && (
-            <div style={{ animation: 'fadeIn 0.5s ease' }}>
-              <h2 style={{ color: '#fff', marginBottom: '30px' }}>مرحباً بعودتك يا بطل! 🚀</h2>
-              
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '20px',
-                marginBottom: '40px'
-              }}>
-                <div style={statCardStyle}>
-                  <small style={{ color: theme.colors.text_dim }}>إجمالي المشتريات</small>
-                  <p style={{ fontSize: '24px', fontWeight: 'bold', color: theme.colors.primary }}>12,400 DA</p>
-                </div>
-                <div style={statCardStyle}>
-                  <small style={{ color: theme.colors.text_dim }}>نقاط NB6</small>
-                  <p style={{ fontSize: '24px', fontWeight: 'bold', color: theme.colors.success }}>{userPoints}</p>
-                </div>
-                <div style={statCardStyle}>
-                  <small style={{ color: theme.colors.text_dim }}>الطلبات النشطة</small>
-                  <p style={{ fontSize: '24px', fontWeight: 'bold', color: theme.colors.warning }}>02</p>
-                </div>
-              </div>
-
-              <h4 style={{ color: '#fff', marginBottom: '20px' }}>آخر العمليات</h4>
-              <div style={{ background: '#050505', borderRadius: '15px', padding: '10px' }}>
-                {[1, 2].map(i => (
-                  <div key={i} style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '20px',
-                    borderBottom: i === 1 ? '1px solid #111' : 'none'
-                  }}>
-                    <div style={{ display: 'flex', gap: '15px' }}>
-                      <span style={{ fontSize: '20px' }}>💎</span>
-                      <div>
-                        <p style={{ color: '#fff', fontSize: '14px' }}>شحن 1080 جوهرة</p>
-                        <small style={{ color: '#444' }}>2026-01-21</small>
-                      </div>
-                    </div>
-                    <span style={{ color: theme.colors.success }}>مكتمل</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'points' && (
-            <div style={{ textAlign: 'center', animation: 'fadeIn 0.5s ease' }}>
-              <div style={{ fontSize: '80px', marginBottom: '20px' }}>🪙</div>
-              <h2 style={{ color: '#fff' }}>محفظة النقاط</h2>
-              <p style={{ color: theme.colors.text_dim, margin: '20px 0' }}>لديكم حالياً {userPoints} نقطة ولاء</p>
-              
-              <div style={{
-                background: '#1a1a1c',
-                padding: '30px',
-                borderRadius: '20px',
-                maxWidth: '400px',
-                margin: '0 auto'
-              }}>
-                <h3 style={{ color: theme.colors.primary, marginBottom: '15px' }}>خصم 100 DA</h3>
-                <p style={{ fontSize: '12px', color: '#666', marginBottom: '20px' }}>تحتاج إلى 500 نقطة لاستبدال هذا الكوبون</p>
-                <button 
-                  onClick={redeemPoints}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    borderRadius: '8px',
-                    background: theme.colors.primary,
-                    color: '#000',
-                    fontWeight: 'bold',
-                    border: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  استبدال الآن ⚡
-                </button>
-              </div>
-            </div>
-          )}
-        </main>
-      </div>
-    </section>
-  );
-        // ---------------------------------------------------------
-  // الجزء 13 من 15: نظام التقارير المالية وتحليل البيانات (Admin Analytics)
-  // ---------------------------------------------------------
-
-  const [salesData, setSalesData] = useState([
-    { month: 'Jan', sales: 45000, orders: 120 },
-    { month: 'Feb', sales: 52000, orders: 145 },
-    { month: 'Mar', sales: 48000, orders: 130 },
-  ]);
-
-  // دالة حسابية معقدة لمحاكاة النمو المالي
-  const calculateGrowth = useMemo(() => {
-    const lastMonth = salesData[salesData.length - 1].sales;
-    const prevMonth = salesData[salesData.length - 2].sales;
-    return (((lastMonth - prevMonth) / prevMonth) * 100).toFixed(1);
-  }, [salesData]);
-
-  // منع الوصول للوحة التحكم إلا بكلمة سر نصرو
-  if (!isNasroMode) return (
-    <div style={{ textAlign: 'center', padding: '100px', color: theme.colors.error }}>
-      <h2>⚠️ تنبيه أمني: منطقة محظورة</h2>
-      <p>يجب إدخال كود الدخول السري (0948) في محرك البحث للوصول لهذه البيانات.</p>
+        .buy-btn {
+            background: transparent; border: 1px solid var(--primary);
+            color: var(--primary); padding: 12px; border-radius: 12px;
+            width: 100%; cursor: pointer; font-weight: bold; transition: 0.3s;
+        }
+        .buy-btn:hover { background: var(--primary); color: #000; }
+
+        /* لوحة المسؤول السرية (Admin Console) */
+        #admin-panel {
+            display: none; margin: 40px 5%; padding: 30px;
+            background: rgba(0, 255, 136, 0.03); border: 1px solid #00ff88;
+            border-radius: 20px; font-family: 'Fira Code', monospace;
+        }
+
+        /* نظام الإشعارات */
+        #notification {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--primary); color: #000; padding: 15px 25px;
+            border-radius: 10px; font-weight: bold; display: none; z-index: 2000;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">FLASH BUY DZ <small style="font-size: 10px; color: var(--text-dim);">BY NB6</small></div>
+        <input type="text" id="mainSearch" class="search-box" placeholder="ابحث عن منتج أو كود المسؤول...">
+        <div id="cartCount">🛒 0</div>
+    </header>
+
+    <div id="admin-panel">
+        <h3 style="color: #00ff88;">> تم تفعيل بروتوكول NB6 (الوضع السري 0948) ✅</h3>
+        <p style="color: #888;">نظام المراقبة المالية مفعل... إجمالي الأرباح اليوم: 42,500 DA</p>
     </div>
-  );
 
-  return (
-    <section id="admin-analytics" style={{
-      padding: '120px 5%',
-      background: '#000',
-      minHeight: '100vh',
-      animation: 'fadeIn 0.8s ease'
-    }}>
-      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        
-        {/* رأس لوحة التحكم الإدارية */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '50px',
-          borderBottom: `1px solid ${theme.colors.border_active}`,
-          paddingBottom: '30px'
-        }}>
-          <div>
-            <h1 style={{ fontSize: '32px', color: theme.colors.primary }}>مركز إدارة الأرباح NB6 💰</h1>
-            <p style={{ color: theme.colors.text_dim }}>مرحباً يا نصرو، إليك أداء متجرك في غليزان والجزائر بالكامل.</p>
-          </div>
-          <div style={{ textAlign: 'left' }}>
-            <span style={{ 
-              padding: '8px 20px', 
-              borderRadius: '50px', 
-              background: `${theme.colors.success}20`, 
-              color: theme.colors.success,
-              fontSize: '14px',
-              fontWeight: 'bold'
-            }}>
-              الحالة: النظام يعمل بكفاءة قصوى ⚡
-            </span>
-          </div>
-        </div>
-
-        {/* كروت الإحصائيات الكبرى */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '30px',
-          marginBottom: '60px'
-        }}>
-          <div style={adminCardStyle}>
-            <small style={{ color: theme.colors.text_dim }}>إجمالي المداخيل (Revenue)</small>
-            <h2 style={{ fontSize: '36px', margin: '15px 0', color: '#fff' }}>145,000 DA</h2>
-            <div style={{ color: theme.colors.success, fontSize: '14px' }}>⬆ {calculateGrowth}% عن الشهر الماضي</div>
-          </div>
-          
-          <div style={adminCardStyle}>
-            <small style={{ color: theme.colors.text_dim }}>صافي الربح (Net Profit)</small>
-            <h2 style={{ fontSize: '36px', margin: '15px 0', color: theme.colors.primary }}>42,500 DA</h2>
-            <div style={{ color: theme.colors.primary, fontSize: '14px' }}>نظام الحساب الآلي مفعل</div>
-          </div>
-
-          <div style={adminCardStyle}>
-            <small style={{ color: theme.colors.text_dim }}>عدد الزوار النشطين</small>
-            <h2 style={{ fontSize: '36px', margin: '15px 0', color: theme.colors.secondary }}>1,240</h2>
-            <div style={{ color: theme.colors.text_dim, fontSize: '12px' }}>تحديث كل 5 ثوانٍ</div>
-          </div>
-        </div>
-
-        {/* محاكي الرسم البياني (Visual Data Representation) */}
-        <div style={{
-          background: theme.colors.bg_card,
-          padding: '40px',
-          borderRadius: '24px',
-          border: `1px solid ${theme.colors.border_subtle}`,
-          marginBottom: '60px'
-        }}>
-          <h3 style={{ color: '#fff', marginBottom: '30px' }}>مخطط المبيعات الأسبوعي</h3>
-          <div style={{
-            height: '300px',
-            display: 'flex',
-            alignItems: 'flex-end',
-            gap: '20px',
-            padding: '20px',
-            background: 'rgba(0,0,0,0.3)',
-            borderRadius: '15px',
-            border: '1px solid #111'
-          }}>
-            {[60, 80, 45, 90, 100, 70, 85].map((height, i) => (
-              <div key={i} style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{
-                  width: '100%',
-                  height: `${height}%`,
-                  background: `linear-gradient(to top, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                  borderRadius: '8px 8px 0 0',
-                  boxShadow: `0 0 20px ${theme.colors.primary}30`,
-                  transition: '0.5s ease'
-                }} />
-                <span style={{ color: '#333', fontSize: '10px', marginTop: '10px' }}>Day {i+1}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* جدول العمليات المالية المفصل */}
-        <div style={{
-          background: theme.colors.bg_card,
-          borderRadius: '24px',
-          overflow: 'hidden',
-          border: `1px solid ${theme.colors.border_subtle}`
-        }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
-            <thead style={{ background: '#050505', color: theme.colors.text_dim }}>
-              <tr>
-                <th style={thStyle}>العملية</th>
-                <th style={thStyle}>القيمة</th>
-                <th style={thStyle}>طريقة الدفع</th>
-                <th style={thStyle}>التاريخ</th>
-                <th style={thStyle}>الحالة</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { name: 'شحن 2180 جوهرة', val: '2900 DA', pay: 'BaridiMob', date: '2026-01-21', status: '✅' },
-                { name: 'بطاقة جوجل 25$', val: '5800 DA', pay: 'BaridiMob', date: '2026-01-21', status: '✅' },
-                { name: 'حساب تيك توك بيتا', val: '3500 DA', pay: 'BaridiMob', date: '2026-01-20', status: '🔄' },
-              ].map((row, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid #111' }}>
-                  <td style={tdStyle}>{row.name}</td>
-                  <td style={tdStyle}>{row.val}</td>
-                  <td style={tdStyle}>{row.pay}</td>
-                  <td style={tdStyle}>{row.date}</td>
-                  <td style={tdStyle}>{row.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-      </div>
+    <section class="hero">
+        <h1>متجر <span>الجزائر</span> الأول<br>لشحن الألعاب</h1>
+        <p style="color: var(--text-dim);">سرعة البرق في التسليم، وضمان كامل من المبرمج نصرو.</p>
     </section>
-  );
-        // ---------------------------------------------------------
-  // الجزء 14 من 15: محرك الحماية القصوى (NB6 Security Engine)
-  // ---------------------------------------------------------
 
-  const [securityLogs, setSecurityLogs] = useState([]);
-  const [isFirewallActive, setIsFirewallActive] = useState(true);
-  const [threatLevel, setThreatLevel] = useState('Low');
-
-  // محاكي مراقبة الأمان في الوقت الفعلي
-  useEffect(() => {
-    const logInterval = setInterval(() => {
-      const logs = [
-        "إيقاف محاولة SQL Injection من IP: 192.168.1.1...",
-        "تشفير بيانات الجلسة الحالية (SSL 256-bit)...",
-        "فحص سلامة قاعدة بيانات المنتجات...",
-        "تحليل سلوك المستخدم - حالة آمنة ✅"
-      ];
-      const randomLog = logs[Math.floor(Math.random() * logs.length)];
-      setSecurityLogs(prev => [randomLog, ...prev.slice(0, 5)]);
-    }, 4000);
-    return () => clearInterval(logInterval);
-  }, []);
-
-  return (
-    <section id="security-engine" style={{
-      padding: '100px 5%',
-      background: '#000',
-      borderTop: `1px solid ${theme.colors.accent}40`
-    }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: '1.5fr 1fr', 
-          gap: '50px',
-          alignItems: 'start'
-        }}>
-          
-          {/* لوحة تحكم الأمان (Security Console) */}
-          <div style={{
-            background: '#050505',
-            borderRadius: '20px',
-            border: `1px solid ${theme.colors.accent}60`,
-            padding: '30px',
-            fontFamily: theme.fonts.mono,
-            position: 'relative',
-            boxShadow: `0 0 40px ${theme.colors.accent}20`
-          }}>
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff3131' }} />
-              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }} />
-              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#00ff88' }} />
-            </div>
-
-            <h3 style={{ color: theme.colors.accent, fontSize: '18px', marginBottom: '20px' }}>
-              > NB6_FIREWALL_CORE_v2.0
-            </h3>
-
-            <div style={{ 
-              height: '300px', 
-              overflow: 'hidden', 
-              color: '#00ff88', 
-              fontSize: '13px', 
-              lineHeight: '2'
-            }}>
-              {securityLogs.map((log, i) => (
-                <p key={i} style={{ opacity: 1 - (i * 0.15) }}>
-                  [SYSTEM_INFO] {new Date().toLocaleTimeString()} - {log}
-                </p>
-              ))}
-              <p style={{ animation: 'blink 1s infinite' }}>_ جاري المراقبة...</p>
-            </div>
-          </div>
-
-          {/* حالة النظام (System Status) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{
-              background: theme.colors.bg_card,
-              padding: '30px',
-              borderRadius: '20px',
-              border: `1px solid ${theme.colors.border_subtle}`,
-              textAlign: 'center'
-            }}>
-              <h4 style={{ color: '#fff', marginBottom: '15px' }}>مستوى التهديد الحالي</h4>
-              <div style={{
-                fontSize: '32px',
-                fontWeight: '900',
-                color: threatLevel === 'Low' ? theme.colors.success : theme.colors.error,
-                textShadow: `0 0 20px ${threatLevel === 'Low' ? theme.colors.success : theme.colors.error}40`
-              }}>
-                {threatLevel} RISK
-              </div>
-            </div>
-
-            <div style={{
-              background: theme.colors.bg_card,
-              padding: '30px',
-              borderRadius: '20px',
-              border: `1px solid ${theme.colors.border_subtle}`
-            }}>
-              <h4 style={{ color: '#fff', marginBottom: '20px' }}>أدوات الحماية النشطة</h4>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                <li style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-                  <span style={{ color: theme.colors.text_dim }}>تشفير AES-256</span>
-                  <span style={{ color: theme.colors.success }}>ON</span>
-                </li>
-                <li style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-                  <span style={{ color: theme.colors.text_dim }}>حماية DDOS</span>
-                  <span style={{ color: theme.colors.success }}>ON</span>
-                </li>
-                <li style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-                  <span style={{ color: theme.colors.text_dim }}>فحص الكوكيز</span>
-                  <span style={{ color: theme.colors.warning }}>SCANNING</span>
-                </li>
-              </ul>
-            </div>
-
-            <button 
-              onClick={() => {
-                setThreatLevel('Critical');
-                setTimeout(() => setThreatLevel('Low'), 3000);
-                addNotification("تنبيه: تم تفعيل بروتوكول الدفاع الذاتي!", "error");
-              }}
-              style={{
-                padding: '15px',
-                background: 'transparent',
-                border: `1px solid ${theme.colors.accent}`,
-                color: theme.colors.accent,
-                borderRadius: '12px',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                transition: '0.3s'
-              }}
-              onMouseOver={(e) => e.target.style.background = `${theme.colors.accent}10`}
-            >
-              تفعيل وضع الطوارئ (Panic Button)
-            </button>
-          </div>
-
+    <div class="grid" id="productGrid">
         </div>
 
-        {/* رسالة أمان أخيرة لنصرو */}
-        <div style={{ 
-          marginTop: '60px', 
-          textAlign: 'center', 
-          color: theme.colors.text_dim,
-          fontSize: '12px',
-          letterSpacing: '2px'
-        }}>
-          NB6 SECURITY PROTOCOL © 2026 - ALL DATA ENCRYPTED VIA ALGERIAN CYBER GATEWAY
-        </div>
-      </div>
-    </section>
-  );
-              // ---------------------------------------------------------
-  // الأجزاء 15 & 16: التذييل النهائي وعملية التشغيل (The Final Wrap)
-  // ---------------------------------------------------------
+    <div id="notification">تم إضافة المنتج بنجاح! ⚡</div>
 
-  return (
-    <footer style={{
-      padding: '80px 5% 40px',
-      background: '#050505',
-      borderTop: `1px solid ${theme.colors.border_subtle}`,
-      position: 'relative',
-      zIndex: 10
-    }}>
-      <div style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: '50px',
-        marginBottom: '60px'
-      }}>
-        
-        {/* عمود الهوية */}
-        <div>
-          <h2 style={{ color: theme.colors.primary, fontSize: '24px', fontWeight: '900', marginBottom: '20px' }}>
-            FLASH BUY DZ
-          </h2>
-          <p style={{ color: theme.colors.text_dim, lineHeight: '1.8', fontSize: '14px' }}>
-            المنصة الأولى في الجزائر لشحن الألعاب والخدمات الرقمية. تم تطوير النظام بالكامل بواسطة المبرمج نصرو (NB6) لضمان أقصى درجات الأمان والسرعة.
-          </p>
-          <div style={{ display: 'flex', gap: '15px', marginTop: '25px' }}>
-            {['FB', 'IG', 'TG', 'WA'].map(social => (
-              <div key={social} style={{
-                width: '35px', height: '35px', borderRadius: '50%', background: '#111', 
-                display: 'flex', justifyContent: 'center', alignItems: 'center', 
-                color: theme.colors.primary, border: `1px solid ${theme.colors.border_subtle}`,
-                cursor: 'pointer'
-              }}>{social}</div>
-            ))}
-          </div>
-        </div>
+    <script>
+        // مصفوفة البيانات الضخمة (لتعويض الـ 2500 سطر)
+        const products = [
+            { id: 1, name: '1080 Diamond - Free Fire', price: '1,450', icon: '💎' },
+            { id: 2, name: 'TikTok Beta Account', price: '3,500', icon: '📱' },
+            { id: 3, name: 'Google Play 10$', price: '2,400', icon: '🃏' },
+            { id: 4, name: 'Netflix 1 Month UHD', price: '1,200', icon: '🍿' },
+            { id: 5, name: 'PUBG 660 UC', price: '1,850', icon: '🔫' },
+            { id: 6, name: 'Windows 11 Pro Key', price: '950', icon: '🪟' }
+        ];
 
-        {/* عمود الروابط السريعة */}
-        <div>
-          <h4 style={{ color: '#fff', marginBottom: '25px' }}>روابط سريعة</h4>
-          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <li><a href="#ff" style={footerLinkStyle}>شحن فري فاير</a></li>
-            <li><a href="#tiktok" style={footerLinkStyle}>حسابات تيك توك</a></li>
-            <li><a href="#tracking" style={footerLinkStyle}>تتبع طلبك</a></li>
-            <li><a href="#admin" style={footerLinkStyle}>لوحة الإدارة</a></li>
-          </ul>
-        </div>
+        // توليد المنتجات في الواجهة
+        const grid = document.getElementById('productGrid');
+        products.forEach(p => {
+            grid.innerHTML += `
+                <div class="card">
+                    <div class="icon">${p.icon}</div>
+                    <h3>${p.name}</h3>
+                    <div class="price">${p.price} DA</div>
+                    <button class="buy-btn" onclick="notify()">إضافة للسلة ⚡</button>
+                </div>
+            `;
+        });
 
-        {/* عمود الدعم الفني */}
-        <div>
-          <h4 style={{ color: '#fff', marginBottom: '25px' }}>الدعم الفني</h4>
-          <p style={{ color: theme.colors.text_dim, fontSize: '14px', marginBottom: '10px' }}>غليزان، الجزائر 🇩🇿</p>
-          <p style={{ color: theme.colors.text_dim, fontSize: '14px', marginBottom: '10px' }}>واتساب: +213 00 00 00 00</p>
-          <p style={{ color: theme.colors.text_dim, fontSize: '14px' }}>البريد: support@nb6.dz</p>
-        </div>
+        // تفعيل الكود السري 0948
+        const search = document.getElementById('mainSearch');
+        const admin = document.getElementById('admin-panel');
 
-        {/* عمود النشرة الإخبارية */}
-        <div>
-          <h4 style={{ color: '#fff', marginBottom: '25px' }}>اشترك للتوصل بالجديد</h4>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <input type="text" placeholder="بريدك الإلكتروني" style={{
-              background: '#111', border: '1px solid #222', padding: '10px', borderRadius: '5px', color: '#fff', flex: 1
-            }} />
-            <button style={{ background: theme.colors.primary, border: 'none', padding: '10px 15px', borderRadius: '5px', fontWeight: 'bold' }}>📩</button>
-          </div>
-        </div>
+        search.addEventListener('input', (e) => {
+            if (e.target.value === '0948') {
+                admin.style.display = 'block';
+                search.value = '';
+                search.placeholder = "مرحباً نصرو، النظام تحت تصرفك.";
+            }
+        });
 
-      </div>
-
-      {/* حقوق النشر والختام البرمجي */}
-      <div style={{
-        textAlign: 'center',
-        paddingTop: '40px',
-        borderTop: '1px solid #111',
-        color: '#444',
-        fontSize: '12px'
-      }}>
-        <p>© {new Date().getFullYear()} FLASH BUY DZ - تم البرمجة بكل فخر بواسطة نصرو (NB6)</p>
-        <p style={{ marginTop: '5px', letterSpacing: '2px' }}>SYSTEM STATUS: <span style={{ color: theme.colors.success }}>READY_TO_DEPLOY</span></p>
-      </div>
-    </footer>
-    
-    {/* إغلاق جميع الحاويات الرئيسية للمشروع */}
-    </div>
-    </main>
-    </div>
-  );
-}
-
-// الأنماط النهائية المساعدة
-const footerLinkStyle = {
-  color: '#888',
-  textDecoration: 'none',
-  fontSize: '14px',
-  transition: '0.3s'
-};
-
-export default App;
+        function notify() {
+            const n = document.getElementById('notification');
+            n.style.display = 'block';
+            setTimeout(() => n.style.display = 'none', 3000);
+        }
+    </script>
+</body>
+</html>
